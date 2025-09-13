@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MedicalShopDiaShop.View.Windows;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,28 @@ namespace MedicalShopDiaShop
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void ForgotPasswordBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void EnterBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void RegistrationBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ChooseRoleBtn_Click(object sender, RoutedEventArgs e)
+        {
+            ChooseRoleWindow chooseRoleWindow = new ChooseRoleWindow();
+            chooseRoleWindow.Show();
+            Close();
         }
     }
 }

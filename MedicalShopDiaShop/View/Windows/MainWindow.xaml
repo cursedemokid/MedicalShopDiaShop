@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MedicalShopDiaShop"
         mc:Ignorable="d"
-        Title="MainWindow" Height="720" Width="1280">
+        Title="MainWindow" Height="720" Width="1280" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="150" />
@@ -21,7 +21,11 @@
                 <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
-            <Image Source="C:\Users\Елизавета\OneDrive\Desktop\MedicalShopDiaShop\MedicalShopDiaShop\Resources\DiaShopLogo.png"/>
+            <Button Name="ChooseRoleBtn" Width="200" Height="150" Background="{x:Null}" BorderThickness="0" Click="ChooseRoleBtn_Click">
+                <Button.Content>
+                    <Image Source="C:\Users\Елизавета\OneDrive\Desktop\MedicalShopDiaShop\MedicalShopDiaShop\Resources\DiaShopLogo.png"/>
+                </Button.Content>
+            </Button>
             <TextBlock Grid.Column="2" Text="Товары для здоровья. Диабетические товары и еда без вреда!" FontSize="35"/>
         </Grid>
         <Grid Grid.Row="2">
@@ -84,16 +88,16 @@
                                 <ColumnDefinition Width="1*" />
                                 <ColumnDefinition Width="1*" />
                             </Grid.ColumnDefinitions>
-                            <CheckBox Name="RememberMeCb" Content="Запомнить меня"  FontSize="40" VerticalAlignment="Center" />
-                            <Button Name="ForgotPasswordBtn" Height="22" Grid.Column="1" Background="{x:Null}" Content="Забыли пароль?" BorderThickness="0"/>
+                            <CheckBox Name="RememberMeCb" Content="Запомнить меня"  FontSize="40" VerticalAlignment="Center"/>
+                            <Button Name="ForgotPasswordBtn" Height="22" Grid.Column="1" Background="{x:Null}" Content="Забыли пароль?" BorderThickness="0" Click="ForgotPasswordBtn_Click"/>
 
                         </Grid>
-                        <Button Name="EnterBtn" Grid.Row="7" Grid.ColumnSpan="6" Width="200" Height="50" HorizontalAlignment="Center" Background="White" BorderThickness="2" BorderBrush="Green">
+                        <Button Name="EnterBtn" Click="EnterBtn_Click" Grid.Row="7" Grid.ColumnSpan="6" Width="200" Height="50" HorizontalAlignment="Center" Background="White" BorderThickness="2" BorderBrush="Green">
                             <Button.Content>
                                 <TextBlock Text="Войти" FontSize="40"/>
                             </Button.Content>
                         </Button>
-                        <Button Name="RegistrationBtn" Height="40" Width="270" Grid.Row="9" Grid.ColumnSpan="6" Background="{x:Null}"  BorderThickness="0">
+                        <Button Name="RegistrationBtn" Click="RegistrationBtn_Click" Height="40" Width="270" Grid.Row="9" Grid.ColumnSpan="6" Background="{x:Null}"  BorderThickness="0">
                             <Button.Content>
                                 <TextBlock Text="Зарегистрироваться" FontSize="29"/>
                             </Button.Content>
