@@ -21,7 +21,7 @@ namespace MedicalShopDiaShop.View.Windows
     {
         public StoreWindow()
         {
-            InitializeComponent();
+            InitializeComponent(); 
         }
     }
 }
