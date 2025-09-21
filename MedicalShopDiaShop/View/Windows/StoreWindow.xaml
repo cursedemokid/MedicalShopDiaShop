@@ -6,13 +6,15 @@
         xmlns:local="clr-namespace:MedicalShopDiaShop.View.Windows"
         mc:Ignorable="d"
         Title="StoreWindow" Height="720" Width="1280">
-    <Grid>
+    <Grid Background="#FF94B983">
         <Grid.RowDefinitions>
+            <RowDefinition Height="100" />
+            <RowDefinition Height="10" />
             <RowDefinition Height="100" />
             <RowDefinition Height="10" />
             <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
-        <Grid>
+        <Grid Background="White">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="150" />
                 <ColumnDefinition Width="10" />
@@ -38,20 +40,20 @@ Height="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, Ance
                         </VisualBrush.Visual>
                     </VisualBrush>
                 </Border.OpacityMask>
-                <TextBox Height="50" BorderThickness="0"/>
+                <TextBox Name="SearchTbx" Height="50" BorderThickness="0" PreviewMouseLeftButtonDown="SearchTbx_PreviewMouseLeftButtonDown"/>
             </Border>
             <Grid Grid.Column="4" VerticalAlignment="Center">
                 <Menu Name="MainMenu" Background="White" HorizontalAlignment="Center">
-                    <MenuItem Name="ProfileMI" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <MenuItem Name="ProfileMI" VerticalAlignment="Center" HorizontalAlignment="Center" Background="White" BorderThickness="0">
                         <MenuItem.Header>
                         <Grid>
                             <Image Source="C:\Users\Елизавета\OneDrive\Desktop\MedicalShopDiaShop\MedicalShopDiaShop\Resources\ProfileIcon.png" Width="70" Height="70"/>
                         </Grid>
                     </MenuItem.Header>
-                    <MenuItem Name="PersonalDataMI" Header="sad"/>
-                    <MenuItem Name="CurrentOrdersMI" Header="asdas"/>
-                    <MenuItem Name="OrderHistoryMI" Header="reggrfg"/>
-                    <MenuItem Name="ExitMI" Header="reggrfg"/>
+                    <MenuItem Name="PersonalDataMI" Header="Личные данные"/>
+                    <MenuItem Name="CurrentOrdersMI" Header="Текущие заказы"/>
+                    <MenuItem Name="OrderHistoryMI" Header="История заказов"/>
+                    <MenuItem Name="ExitMI" Header="Выход"/>
                 </MenuItem>
             </Menu>
             </Grid>
@@ -66,8 +68,103 @@ Height="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, Ance
                 </Button.Content>
             </Button>
         </Grid>
-        <Frame Name="MainFrame" Grid.Row="2">
-            
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="10" />
+            </Grid.ColumnDefinitions>
+            <Border Height="50" CornerRadius="10" Grid.Column="1" BorderThickness="0">
+                <Border.OpacityMask>
+                    <VisualBrush>
+                        <VisualBrush.Visual>
+                            <Border
+Background="Black"
+CornerRadius="{Binding CornerRadius, RelativeSource={RelativeSource FindAncestor, AncestorType=Border}}"
+Width="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=Border}}"
+Height="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, AncestorType=Border}}"
+/>
+                        </VisualBrush.Visual>
+                    </VisualBrush>
+                </Border.OpacityMask>
+                <MenuItem Name="CatalogMI" Grid.Column="1" Background="Green" BorderThickness="0">
+                    <MenuItem.Header>
+                        <Grid Width="170">
+                            <TextBlock Text="Каталог" Foreground="White" HorizontalAlignment="Center"/>
+                        </Grid>
+                    </MenuItem.Header>
+                </MenuItem>
+            </Border>
+            <Border Grid.Column="3" CornerRadius="10" Margin="5 5 5 5" >
+                <Border.OpacityMask>
+                    <VisualBrush>
+                        <VisualBrush.Visual>
+                            <Border
+Background="Black"
+CornerRadius="{Binding CornerRadius, RelativeSource={RelativeSource FindAncestor, AncestorType=Border}}"
+Width="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=Border}}"
+Height="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, AncestorType=Border}}"
+/>
+                        </VisualBrush.Visual>
+                    </VisualBrush>
+                </Border.OpacityMask>
+                <Button Background="White" BorderThickness="0" Content="Популярные товары"/>
+            </Border>
+            <Border Grid.Column="5" CornerRadius="10" Margin="5 5 5 5" >
+                <Border.OpacityMask>
+                    <VisualBrush>
+                        <VisualBrush.Visual>
+                            <Border
+Background="Black"
+CornerRadius="{Binding CornerRadius, RelativeSource={RelativeSource FindAncestor, AncestorType=Border}}"
+Width="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=Border}}"
+Height="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, AncestorType=Border}}"
+/>
+                        </VisualBrush.Visual>
+                    </VisualBrush>
+                </Border.OpacityMask>
+                <Button Background="White" BorderThickness="0" Content="Новинки"/>
+            </Border>
+            <Border Grid.Column="7" CornerRadius="10" Margin="5 5 5 5" >
+                <Border.OpacityMask>
+                    <VisualBrush>
+                        <VisualBrush.Visual>
+                            <Border
+Background="Black"
+CornerRadius="{Binding CornerRadius, RelativeSource={RelativeSource FindAncestor, AncestorType=Border}}"
+Width="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=Border}}"
+Height="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, AncestorType=Border}}"
+/>
+                        </VisualBrush.Visual>
+                    </VisualBrush>
+                </Border.OpacityMask>
+                <Button Background="White" BorderThickness="0" Content="Без глютена"/>
+            </Border>
+            <Border Grid.Column="9" CornerRadius="10" Margin="5 5 5 5" >
+                <Border.OpacityMask>
+                    <VisualBrush>
+                        <VisualBrush.Visual>
+                            <Border
+Background="Black"
+CornerRadius="{Binding CornerRadius, RelativeSource={RelativeSource FindAncestor, AncestorType=Border}}"
+Width="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=Border}}"
+Height="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, AncestorType=Border}}"
+/>
+                        </VisualBrush.Visual>
+                    </VisualBrush>
+                </Border.OpacityMask>
+                <Button Background="White" BorderThickness="0" Content="Мало углеводов"/>
+            </Border>
+        </Grid>
+        <Frame Name="MainFrame" Grid.Row="4" NavigationUIVisibility="Hidden">
         </Frame>
     </Grid>
 </Window>

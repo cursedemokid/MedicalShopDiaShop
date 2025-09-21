@@ -10,25 +10,19 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace MedicalShopDiaShop.View.Windows
+namespace MedicalShopDiaShop.View.Pages
 {
     /// <summary>
-    /// Логика взаимодействия для StoreWindow.xaml
+    /// Логика взаимодействия для PopularProductsPage.xaml
     /// </summary>
-    public partial class StoreWindow : Window
+    public partial class PopularProductsPage : Page
     {
-        public StoreWindow()
+        public PopularProductsPage()
         {
             InitializeComponent();
-
-            SearchTbx.Text = "Поиск";
-        }
-
-        private void SearchTbx_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            SearchTbx.Text = "";
         }
     }
 }

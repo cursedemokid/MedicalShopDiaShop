@@ -55,9 +55,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="View\Pages\PopularProductsPage.xaml.cs">
+      <DependentUpon>PopularProductsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Windows\StoreWindow.xaml.cs">
       <DependentUpon>StoreWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="View\Pages\PopularProductsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\Windows\ChooseRoleWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -110,7 +117,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AppData\" />
-    <Folder Include="View\Pages\" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\DiaShopLogo.png" />

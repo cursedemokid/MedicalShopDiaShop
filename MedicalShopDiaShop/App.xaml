@@ -41,5 +41,9 @@
         <Style TargetType="GroupBox">
             <Setter Property="BorderThickness" Value="0"/>
         </Style>
+        <Style TargetType="MenuItem">
+            <Setter Property="Background" Value="#FFD5EE90"/>
+            <Setter Property="BorderBrush" Value="#FFD5EE90"/>
+        </Style>
     </Application.Resources>
 </Application>
