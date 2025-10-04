@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:MedicalShopDiaShop.View.Pages"
       mc:Ignorable="d" 
-      d:DesignHeight="484" d:DesignWidth="1280"
+      d:DesignHeight="524" d:DesignWidth="1280"
       Title="PopularProductsPage">
 
     <Grid>

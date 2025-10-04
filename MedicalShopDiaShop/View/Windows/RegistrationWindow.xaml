@@ -21,7 +21,7 @@
                 <ColumnDefinition Width="20" />
                 <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
-            <Button Width="200" Height="150" Background="{x:Null}" BorderThickness="0" >
+            <Button Name="BackBtn" Width="200" Height="150" Background="{x:Null}" BorderThickness="0" Click="BackBtn_Click">
                 <Button.Content>
                     <Image Source="C:\Users\Елизавета\OneDrive\Desktop\MedicalShopDiaShop\MedicalShopDiaShop\Resources\DiaShopLogo.png"/>
                 </Button.Content>

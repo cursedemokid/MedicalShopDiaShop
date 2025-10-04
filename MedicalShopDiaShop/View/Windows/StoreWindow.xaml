@@ -5,12 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MedicalShopDiaShop.View.Windows"
         mc:Ignorable="d"
-        Title="StoreWindow" Height="720" Width="1280">
+        Title="Диабетический магазин" Height="720" Width="1280" WindowStartupLocation="CenterScreen">
     <Grid Background="#FF94B983">
         <Grid.RowDefinitions>
             <RowDefinition Height="100" />
             <RowDefinition Height="10" />
-            <RowDefinition Height="100" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="10" />
             <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
@@ -50,25 +50,25 @@ Height="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, Ance
                             <Image Source="C:\Users\Елизавета\OneDrive\Desktop\MedicalShopDiaShop\MedicalShopDiaShop\Resources\ProfileIcon.png" Width="70" Height="70"/>
                         </Grid>
                     </MenuItem.Header>
-                    <MenuItem Name="PersonalDataMI" Header="Личные данные"/>
-                    <MenuItem Name="CurrentOrdersMI" Header="Текущие заказы"/>
-                    <MenuItem Name="OrderHistoryMI" Header="История заказов"/>
-                    <MenuItem Name="ExitMI" Header="Выход"/>
+                    <MenuItem Name="PersonalDataMI" Header="Личные данные" Click="PersonalDataMI_Click"/>
+                    <MenuItem Name="CurrentOrdersMI" Header="Текущие заказы" Click="CurrentOrdersMI_Click"/>
+                    <MenuItem Name="OrderHistoryMI" Header="История заказов" Click="OrderHistoryMI_Click"/>
+                    <MenuItem Name="ExitMI" Header="Выход" Click="ExitMI_Click"/>
                 </MenuItem>
             </Menu>
             </Grid>
-            <Button Name="FavoritePageBtn" Grid.Column="6" Background="White" Height="70" Width="73" BorderThickness="0">
+            <Button Name="FavoritePageBtn" Grid.Column="6" Background="White" Height="70" Width="73" BorderThickness="0" Click="FavoritePageBtn_Click">
                 <Button.Content>
                     <Image Source="C:\Users\Елизавета\OneDrive\Desktop\MedicalShopDiaShop\MedicalShopDiaShop\Resources\HeartIcon.png" Width="70" Height="70"/>
                 </Button.Content>
             </Button>
-            <Button Name="StoreBasketBtn" Grid.Column="8" Background="White" Height="70" Width="73" BorderThickness="0" Margin="0 0 15 0"> 
+            <Button Name="StoreBasketBtn" Grid.Column="8" Background="White" Height="70" Width="73" BorderThickness="0" Margin="0 0 15 0" Click="StoreBasketBtn_Click"> 
                 <Button.Content>
                     <Image Source="C:\Users\Елизавета\OneDrive\Desktop\MedicalShopDiaShop\MedicalShopDiaShop\Resources\StoreBasketIcon.png" Width="70" Height="70"/>
                 </Button.Content>
             </Button>
         </Grid>
-        <Grid Grid.Row="2">
+        <Grid Name="MenuGrid" Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="1*" />

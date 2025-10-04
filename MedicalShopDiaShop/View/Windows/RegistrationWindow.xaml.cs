@@ -40,12 +40,19 @@ namespace MedicalShopDiaShop.View.Windows
                         LastName = "Новый",
                     });
                     App.context.SaveChanges();
-                    FeedbackService.Information("Вы успешно зарегистрировались!");
+                    FeedbackService.Information("Вы успешно зарегистрировались! Вы можете изменить подробные данные о себе в профиле");
                     MainWindow mainWindow = new MainWindow();
                     mainWindow.Show();
                     Close();
                 }
             }
+        }
+
+        private void BackBtn_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow mainWindow = new MainWindow();
+            mainWindow.Show();
+            Close();
         }
     }
 }
