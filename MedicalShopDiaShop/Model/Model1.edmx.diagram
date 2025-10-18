@@ -20,6 +20,7 @@
         <AssociationConnector Association="MedicalShopDiaShopModel.FK_ProductOrder_Order" ManuallyRouted="false" />
         <AssociationConnector Association="MedicalShopDiaShopModel.FK_User_Post" ManuallyRouted="false" />
         <AssociationConnector Association="MedicalShopDiaShopModel.FK_ProductOrder_Product" ManuallyRouted="false" />
+        <AssociationConnector Association="MedicalShopDiaShopModel.Basket" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

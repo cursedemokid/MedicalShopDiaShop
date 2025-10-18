@@ -17,6 +17,7 @@ namespace MedicalShopDiaShop.Model
         public Product()
         {
             this.ProductOrder = new HashSet<ProductOrder>();
+            this.User = new HashSet<User>();
         }
     
         public int Id { get; set; }
@@ -27,5 +28,6 @@ namespace MedicalShopDiaShop.Model
     
         public virtual Category Category { get; set; }
         public virtual ICollection<ProductOrder> ProductOrder { get; set; }
+        public virtual ICollection<User> User { get; set; }
     }
 }

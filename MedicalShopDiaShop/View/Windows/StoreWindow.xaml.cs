@@ -1,5 +1,6 @@
 ﻿using MedicalShopDiaShop.AppData;
 using MedicalShopDiaShop.Model;
+using MedicalShopDiaShop.View.Pages;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -18,7 +19,9 @@ namespace MedicalShopDiaShop.View.Windows
         {
             InitializeComponent();
 
+            SearchTbx.DataContext = _product;
             SearchTbx.Text = "Поиск";
+            MainFrame.Navigate(new PopularProductsPage());
             
         }
 
@@ -62,7 +65,12 @@ namespace MedicalShopDiaShop.View.Windows
 
         private void StoreBasketBtn_Click(object sender, RoutedEventArgs e)
         {
+            MainFrame.Navigate(new OrderBasketPage());
+        }
 
+        private void PopularProductsBtn_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new PopularProductsPage());
         }
     }
 }

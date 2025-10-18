@@ -16,8 +16,8 @@ namespace MedicalShopDiaShop.Model
     {
         public int OrderId { get; set; }
         public int ProductId { get; set; }
-        public int Quantity { get; set; }
-        public decimal TotalCost { get; set; }
+        public Nullable<int> Quantity { get; set; }
+        public Nullable<decimal> TotalCost { get; set; }
     
         public virtual Order Order { get; set; }
         public virtual Product Product { get; set; }

@@ -116,7 +116,7 @@ Height="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, Ance
                         </VisualBrush.Visual>
                     </VisualBrush>
                 </Border.OpacityMask>
-                <Button Background="White" BorderThickness="0" Content="Популярные товары"/>
+                <Button Name="PopularProductsBtn" Background="White" BorderThickness="0" Content="Популярные товары" Click="PopularProductsBtn_Click"/>
             </Border>
             <Border Grid.Column="5" CornerRadius="10" Margin="5 5 5 5" >
                 <Border.OpacityMask>
