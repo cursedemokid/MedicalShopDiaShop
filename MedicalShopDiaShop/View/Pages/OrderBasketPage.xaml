@@ -39,7 +39,7 @@
                                 <RowDefinition Height="1*" />
                                 <RowDefinition Height="0.7*" />
                             </Grid.RowDefinitions>
-                            <Grid>
+                            <Grid Background="White">
                                 <Image Source="{Binding Product.Image}"/>
                             </Grid>
                             <Grid Grid.Row="1" Margin="10" >

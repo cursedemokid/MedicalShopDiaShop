@@ -218,6 +218,46 @@
       <DependentUpon>Model1.edmx</DependentUpon>
       <LastGenOutput>Model1.cs</LastGenOutput>
     </Content>
+    <Resource Include="Resources\ProductsImages\MagnesiumB6.jpg" />
+    <Resource Include="Resources\ProductsImages\Omega3.jpg" />
+    <Resource Include="Resources\ProductsImages\ChromiumPicolinate.jpg" />
+    <Resource Include="Resources\ProductsImages\DoppelherzVitamins.jpg" />
+    <Resource Include="Resources\ProductsImages\AntisepticSpray.jpeg" />
+    <Resource Include="Resources\ProductsImages\BathFoam.jpg" />
+    <Resource Include="Resources\ProductsImages\BodyLotion.jpg" />
+    <Resource Include="Resources\ProductsImages\InjectionCream.jpg" />
+    <Resource Include="Resources\ProductsImages\FootCream.jpg" />
+    <Resource Include="Resources\ProductsImages\ProteinBar.jpg" />
+    <Resource Include="Resources\ProductsImages\Steviya.jpg" />
+    <Resource Include="Resources\ProductsImages\ChicoryDrink.jpg" />
+    <Resource Include="Resources\ProductsImages\DiabeticBread.jpg" />
+    <Resource Include="Resources\ProductsImages\DiabeticJam.jpg" />
+    <Resource Include="Resources\ProductsImages\SugarFreeSyrup.jpg" />
+    <Resource Include="Resources\ProductsImages\SugarFreeChocolate.jpg" />
+    <Resource Include="Resources\ProductsImages\DiabeticCookies.jpg" />
+    <Resource Include="Resources\ProductsImages\HypoKit.jpg" />
+    <Resource Include="Resources\ProductsImages\Diary.jpg" />
+    <Resource Include="Resources\ProductsImages\InsulinCase.jpg" />
+    <Resource Include="Resources\ProductsImages\AccuChekGuide.jpg" />
+    <Resource Include="Resources\ProductsImages\DexcomG6.jpg" />
+    <Resource Include="Resources\ProductsImages\FreestyleLibre.jpg" />
+    <Resource Include="Resources\ProductsImages\Autopen24.jpg" />
+    <Resource Include="Resources\ProductsImages\Needles8mm.jpg" />
+    <Resource Include="Resources\ProductsImages\Needles5mm.jpg" />
+    <Resource Include="Resources\ProductsImages\Needles.jpg" />
+    <Resource Include="Resources\ProductsImages\HumapenLuxura.jpg" />
+    <Resource Include="Resources\ProductsImages\Novopen.jpg" />
+    <Resource Include="Resources\ProductsImages\AccuChekCartridges.jpg" />
+    <Resource Include="Resources\ProductsImages\MedtronicSupplies.jpg" />
+    <Resource Include="Resources\ProductsImages\OmnipodDash.jpg" />
+    <Resource Include="Resources\ProductsImages\AccuChekSpirit.jpg" />
+    <Resource Include="Resources\ProductsImages\Medtronic.jpg" />
+    <Resource Include="Resources\ProductsImages\SatellitStripes.jpg" />
+    <Resource Include="Resources\ProductsImages\SatellitExpress.jpg" />
+    <Resource Include="Resources\ProductsImages\OneTouchStripes.jpg" />
+    <Resource Include="Resources\ProductsImages\OneTouchSelect.jpg" />
+    <Resource Include="Resources\ProductsImages\ContourPlus.jpg" />
+    <Resource Include="Resources\ProductsImages\ContourTS.jpg" />
     <Resource Include="Resources\ProductsImages\TestStripesRoche.jpg" />
     <Resource Include="Resources\ProductsImages\Accu-ChekProductImage.jpg" />
   </ItemGroup>
