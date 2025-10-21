@@ -1,0 +1,171 @@
+namespace MedicalShopDiaShop.View.Pages
+{
+
+    public partial class OrderBasketPage : Page
+    {
+        List<Order> _orders = App.context.Order.ToList();
+        List<ProductOrder> _productOrders = App.context.ProductOrder.ToList();
+        Order order = new Order();
+        public OrderBasketPage()
+        {
+            InitializeComponent();
+
+            order = _orders.FirstOrDefault(o => o.UserId == App.currentUser.Id);
+
+            ProductLb.ItemsSource = _productOrders.Where(pO => pO.OrderId == order.Id);
+            TotalCostTbl.DataContext = order;
+
+        }
+
+        private void DeletBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Product selectedProduct = ProductLb.SelectedItem as Product;
+            ProductOrder productOrder = _productOrders.FirstOrDefault(pO => pO.ProductId == selectedProduct.Id);
+            App.context.ProductOrder.Remove(productOrder);
+            order.TotalCost -= Convert.ToDecimal(productOrder.TotalCost);
+            App.context.SaveChanges();
+            ProductLb.ItemsSource = _productOrders.Where(pO => pO.OrderId == order.Id);
+        }
+
+        private void PlusBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Product selectedProduct = ProductLb.SelectedItem as Product;
+            ProductOrder productOrder = _productOrders.FirstOrDefault(pO => pO.ProductId == selectedProduct.Id);
+            productOrder.Quantity += 1;
+            productOrder.TotalCost += Convert.ToDecimal(productOrder.Product.Cost);
+            order.TotalCost += productOrder.Product.Cost;
+            App.context.SaveChanges();
+        }
+
+        private void MinusBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Product selectedProduct = ProductLb.SelectedItem as Product;
+            ProductOrder productOrder = _productOrders.FirstOrDefault(pO => pO.ProductId == selectedProduct.Id);
+            if (productOrder.Quantity == 1)
+            {
+                if (FeedbackService.Question("Вы уверены, что хотите удалить товар из корзины?") == MessageBoxResult.Yes)
+                {
+                    App.context.ProductOrder.Remove(productOrder);
+                    order.TotalCost -= productOrder.Product.Cost;
+                    App.context.SaveChanges();
+                    ProductLb.ItemsSource = _productOrders.Where(pO => pO.OrderId == order.Id);
+                }
+            }
+            else
+            {
+                productOrder.Quantity -= 1;
+                productOrder.TotalCost -= Convert.ToDecimal(productOrder.Product.Cost);
+                order.TotalCost -= productOrder.Product.Cost;
+                App.context.SaveChanges();
+            }
+
+        }
+
+        private void PaymentTypeCmb_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            order.PaymentTypeId = Convert.ToInt32(PaymentTypeCmb.SelectedValue);
+            App.context.SaveChanges();
+        }
+
+        private void DeliveryTypeCmb_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            order.DeliveryTypeId = Convert.ToInt32(DeliveryTypeCmb.SelectedValue);
+            App.context.SaveChanges();
+        }
+    }
+}
+
+
+
+
+
+ <Grid>
+     <Grid.RowDefinitions>
+         <RowDefinition Height="100" />
+         <RowDefinition Height="10" />
+         <RowDefinition Height="1*" />
+     </Grid.RowDefinitions>
+     <Grid Grid.Row="0" Margin="10">
+         <Grid.ColumnDefinitions>
+             <ColumnDefinition Width="1*" />
+             <ColumnDefinition Width="10" />
+             <ColumnDefinition Width="1*" />
+             <ColumnDefinition Width="10" />
+             <ColumnDefinition Width="1*" />
+             <ColumnDefinition Width="10" />
+             <ColumnDefinition Width="1*" />
+         </Grid.ColumnDefinitions>
+         <TextBlock Name="TotalCostTbl"/>
+         <ComboBox Name="PaymentTypeCmb" Grid.Column="4" SelectedValuePath="Id" DisplayMemberPath="Name" SelectionChanged="PaymentTypeCmb_SelectionChanged"/>
+         <ComboBox Name="DeliveryTypeCmb" Grid.Column="6" SelectedValuePath="Id" DisplayMemberPath="Name" SelectionChanged="DeliveryTypeCmb_SelectionChanged"/>
+     </Grid>
+     <ListBox Name="ProductLb" Grid.Row="2" Padding="42" Width="1280" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+         <ListBox.ItemsPanel>
+             <ItemsPanelTemplate>
+                 <WrapPanel Width="1280" />
+             </ItemsPanelTemplate>
+         </ListBox.ItemsPanel>
+         <ListBox.ItemTemplate>
+             <DataTemplate>
+                 <Grid>
+                     <Grid.RowDefinitions>
+                         <RowDefinition Height="1*" />
+                         <RowDefinition Height="auto" />
+                         <RowDefinition Height="1*" />
+                     </Grid.RowDefinitions>
+                     <Grid.ColumnDefinitions>
+                         <ColumnDefinition Width="1*" />
+                         <ColumnDefinition Width="auto" />
+                         <ColumnDefinition Width="1*" />
+                     </Grid.ColumnDefinitions>
+                     <Grid Grid.Row="1" Grid.Column="1" Width="220" Height="350" Background="Green" Margin="20">
+                         <Grid.RowDefinitions>
+                             <RowDefinition Height="1*" />
+                             <RowDefinition Height="0.7*" />
+                         </Grid.RowDefinitions>
+                         <Grid Background="White">
+                             <Image Source="{Binding Product.Image}"/>
+                         </Grid>
+                         <Grid Grid.Row="1" Margin="10" >
+                             <Grid.RowDefinitions>
+                                 <RowDefinition Height="20" />
+                                 <RowDefinition Height="5" />
+                                 <RowDefinition Height="40" />
+                                 <RowDefinition Height="5" />
+                                 <RowDefinition Height="10" />
+                                 <RowDefinition Height="2" />
+                                 <RowDefinition Height="1*" />
+                             </Grid.RowDefinitions>
+                             <TextBlock Grid.Row="0" Text="{Binding Product.Cost}" Foreground="White" FontSize="12" FontWeight="Bold"/>
+                             <TextBlock Grid.Row="2" Text="{Binding Product.Name}" Foreground="White" FontSize="12" TextWrapping="Wrap" VerticalAlignment="Top"/>
+                             
+                             <Grid Grid.Row="6">
+                                 <Grid.ColumnDefinitions>
+                                     <ColumnDefinition Width="1*" />
+                                     <ColumnDefinition Width="20" />
+                                     <ColumnDefinition Width="1*" />
+                                 </Grid.ColumnDefinitions>
+                                 <Button Name="DeletBtn" Background="LightGreen" Height="auto" Click="DeletBtn_Click">
+                                     <Button.Content>
+                                         <TextBlock Text="Удалить из корзины" FontSize="10"/>
+                                     </Button.Content>
+                                 </Button>
+                                 <Button Name="MinusBtn" Grid.Column="2" HorizontalAlignment="Left" Background="LightGreen" Height="auto" Click="MinusBtn_Click">
+                                     <Button.Content>
+                                         <TextBlock Text="-" FontSize="15"/>
+                                     </Button.Content>
+                                 </Button>
+                                 <TextBlock Grid.Row="4" Text="{Binding Quantity}" Foreground="White" FontSize="10" HorizontalAlignment="Center"/>
+                                 <Button Name="PlusBtn" Grid.Column="2" HorizontalAlignment="Right" Background="LightGreen" Height="auto" Click="PlusBtn_Click">
+                                     <Button.Content>
+                                         <TextBlock Text="+" FontSize="15"/>
+                                     </Button.Content>
+                                 </Button>
+                             </Grid>
+                         </Grid>
+                     </Grid>
+                 </Grid>
+             </DataTemplate>
+         </ListBox.ItemTemplate>
+     </ListBox>
+ </Grid>
