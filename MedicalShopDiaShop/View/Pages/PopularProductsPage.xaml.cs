@@ -32,13 +32,17 @@ namespace MedicalShopDiaShop.View.Pages
             {
                 if (_orders.FirstOrDefault(o => o.UserId == App.currentUser.Id) != null)
                 {
-                    if (_productOrders.FirstOrDefault(pO => pO.ProductId == product.Id && pO.OrderId == _orders.FirstOrDefault(o => o.UserId == App.currentUser.Id).Id) != null)
+                    if (_productOrders.FirstOrDefault(pO => pO.OrderId == _orders.FirstOrDefault(o => o.UserId == App.currentUser.Id).Id && pO.ProductId == product.Id) != null)
                     {
                         ProductOrder productOrder = _productOrders.FirstOrDefault(pO => pO.ProductId == product.Id && pO.OrderId == _orders.FirstOrDefault(o => o.UserId == App.currentUser.Id).Id);
                         Order order = _orders.FirstOrDefault(o => o.UserId == App.currentUser.Id);
                         order.TotalCost += productOrder.Product.Cost;
+                        productOrder.TotalCost += productOrder.Product.Cost;
                         productOrder.Quantity += 1;
                         FeedbackService.Information("Количество товара в корзине увеличено");
+                        App.context.SaveChanges();
+                        _orders = App.context.Order.ToList();
+                        _productOrders = App.context.ProductOrder.ToList();
                     }
                     else
                     {
@@ -56,6 +60,8 @@ namespace MedicalShopDiaShop.View.Pages
                             App.context.SaveChanges();
                             FeedbackService.Information("Товар успешно добавлен в корзину");
                             order.TotalCost += productOrder.Product.Cost;
+                            _orders = App.context.Order.ToList();
+                            _productOrders = App.context.ProductOrder.ToList();
                         }
                         catch (Exception ex)
                         {
@@ -90,6 +96,8 @@ namespace MedicalShopDiaShop.View.Pages
                         FeedbackService.Information("Товар успешно добавлен в корзину");
                         App.context.SaveChanges();
                         order.TotalCost += productOrder.Product.Cost;
+                        _orders = App.context.Order.ToList();
+                        _productOrders = App.context.ProductOrder.ToList();
                     }
                     catch (Exception ex)
                     {

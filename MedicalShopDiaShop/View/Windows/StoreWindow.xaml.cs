@@ -25,11 +25,6 @@ namespace MedicalShopDiaShop.View.Windows
             
         }
 
-        private void SearchTbx_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            SearchTbx.Text = "";
-
-        }
 
         private void ExitMI_Click(object sender, RoutedEventArgs e)
         {

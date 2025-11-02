@@ -14,7 +14,20 @@
             <RowDefinition Height="10" />
             <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
-        <TextBlock Name="TotalCostTbl" Text="{Binding TotalCost}"/>
+        <Grid Grid.Row="0" Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Name="TotalCostTbl" Text="{Binding TotalCost}"/>
+            <ComboBox Name="PaymentTypeCmb" Grid.Column="4" SelectedValuePath="Id" DisplayMemberPath="Name" SelectionChanged="PaymentTypeCmb_SelectionChanged"/>
+            <ComboBox Name="DeliveryTypeCmb" Grid.Column="6" SelectedValuePath="Id" DisplayMemberPath="Name" SelectionChanged="DeliveryTypeCmb_SelectionChanged"/>
+        </Grid>
         <ListBox Name="ProductLb" Grid.Row="2" Padding="42" Width="1280" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -52,28 +65,29 @@
                                     <RowDefinition Height="2" />
                                     <RowDefinition Height="1*" />
                                 </Grid.RowDefinitions>
-                                <TextBlock Grid.Row="0" Text="{Binding Product.Cost}" Foreground="White" FontSize="12" FontWeight="Bold"/>
+                                <TextBlock Grid.Row="0" Text="{Binding TotalCost}" Foreground="White" FontSize="12" FontWeight="Bold"/>
                                 <TextBlock Grid.Row="2" Text="{Binding Product.Name}" Foreground="White" FontSize="12" TextWrapping="Wrap" VerticalAlignment="Top"/>
-                                <TextBlock Grid.Row="4" Text="{Binding Quantity}" Foreground="White" FontSize="10"/>
+
                                 <Grid Grid.Row="6">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="1*" />
                                         <ColumnDefinition Width="20" />
                                         <ColumnDefinition Width="1*" />
                                     </Grid.ColumnDefinitions>
-                                    <Button Name="DeletBtn" Background="LightGreen" Height="auto" Click="DeletBtn_Click">
+                                    <Button Name="DeletBtn" Background="LightGreen" Height="30" Click="DeletBtn_Click">
                                         <Button.Content>
-                                            <TextBlock Text="Удалить из корзины" FontSize="15"/>
+                                            <TextBlock Text="Удалить из корзины" FontSize="8"/>
                                         </Button.Content>
                                     </Button>
-                                    <Button Name="MinusBtn" Grid.Column="2" HorizontalAlignment="Left" Background="LightGreen" Height="auto" Click="MinusBtn_Click">
+                                    <Button Name="MinusBtn" Width="35" Grid.Column="2" HorizontalAlignment="Left" Background="LightGreen" Height="30" Click="MinusBtn_Click">
                                         <Button.Content>
                                             <TextBlock Text="-" FontSize="15"/>
                                         </Button.Content>
                                     </Button>
-                                    <Button Name="PlusBtn" Grid.Column="2" HorizontalAlignment="Right" Background="LightGreen" Height="auto" Click="PlusBtn_Click">
+                                    <TextBlock Grid.Column="2" Text="{Binding Quantity}" Foreground="White" FontSize="10" HorizontalAlignment="Center"/>
+                                    <Button Name="PlusBtn" Grid.Column="2" HorizontalAlignment="Right" Background="LightGreen" Height="30" Width="35" Click="PlusBtn_Click">
                                         <Button.Content>
-                                            <TextBlock Text="-" FontSize="15"/>
+                                            <TextBlock Text="+" FontSize="15"/>
                                         </Button.Content>
                                     </Button>
                                 </Grid>

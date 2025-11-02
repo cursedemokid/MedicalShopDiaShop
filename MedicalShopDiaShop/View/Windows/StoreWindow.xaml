@@ -40,7 +40,7 @@ Height="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, Ance
                         </VisualBrush.Visual>
                     </VisualBrush>
                 </Border.OpacityMask>
-                <TextBox Name="SearchTbx" Height="50" BorderThickness="0" PreviewMouseLeftButtonDown="SearchTbx_PreviewMouseLeftButtonDown"/>
+                <ComboBox Background="White"/>
             </Border>
             <Grid Grid.Column="4" VerticalAlignment="Center">
                 <Menu Name="MainMenu" Background="White" HorizontalAlignment="Center">
