@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MedicalShopDiaShop"
         mc:Ignorable="d"
-        Title="MainWindow" Height="720" Width="1280" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+        Title="Окно авторизации" Height="720" Width="1280" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="150" />
@@ -78,7 +78,7 @@
                             <ColumnDefinition Width="20" />
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Row="1" Grid.ColumnSpan="5" HorizontalAlignment="Center" Text="АВТОРИЗАЦИЯ" FontSize="60"/>
-                        <TextBlock Margin="80,0,0,0" Grid.Row="3" Grid.Column="1" Text="Почта" FontSize="40"/>
+                        <TextBlock Margin="80,0,0,0" Grid.Row="3" Grid.Column="1" Text="Логин" FontSize="40"/>
                         <TextBlock Margin="80,0,0,0" Grid.Row="5" Grid.Column="1" Text="Пароль" FontSize="40"/>
                         <TextBox Name="EmailTbx" Grid.Row="3" Grid.Column="3" Width="500" HorizontalAlignment="Left"/>
                         <PasswordBox Name="PasswordPbx" Grid.Row="5" Grid.Column="3" Width="500" HorizontalAlignment="Left"/>
@@ -89,8 +89,6 @@
                                 <ColumnDefinition Width="1*" />
                             </Grid.ColumnDefinitions>
                             <CheckBox Name="RememberMeCb" Content="Запомнить меня"  FontSize="40" VerticalAlignment="Center"/>
-                            <Button Name="ForgotPasswordBtn" Height="22" Grid.Column="1" Background="{x:Null}" Content="Забыли пароль?" BorderThickness="0" Click="ForgotPasswordBtn_Click"/>
-
                         </Grid>
                         <Button Name="EnterBtn" Click="EnterBtn_Click" Grid.Row="7" Grid.ColumnSpan="6" Width="200" Height="50" HorizontalAlignment="Center" Background="White" BorderThickness="2" BorderBrush="Green">
                             <Button.Content>

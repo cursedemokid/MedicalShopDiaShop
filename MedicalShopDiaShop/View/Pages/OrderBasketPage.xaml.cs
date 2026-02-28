@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using static MedicalShopDiaShop.AppData.Status;
 
 namespace MedicalShopDiaShop.View.Pages
 {
@@ -21,18 +22,7 @@ namespace MedicalShopDiaShop.View.Pages
         Order order = new Order();
         public OrderBasketPage()
         {
-            InitializeComponent();
-
-            order = _orders.FirstOrDefault(o => o.UserId == App.currentUser.Id);
-            TotalCostRecalculate();
-
-            ProductLb.ItemsSource = _productOrders.Where(pO => pO.OrderId == order.Id);
-            TotalCostTbl.Text = order.TotalCost.ToString();
-            DeliveryTypeCmb.ItemsSource = _deliveryTypes;
-            DeliveryTypeCmb.SelectedIndex = order.DeliveryTypeId - 1;
-            PaymentTypeCmb.ItemsSource = _paymentTypes;
-            PaymentTypeCmb.SelectedIndex = order.PaymentTypeId - 1;
-
+            LoadPage();
         }
 
         private void DeletBtn_Click(object sender, RoutedEventArgs e)
@@ -50,14 +40,14 @@ namespace MedicalShopDiaShop.View.Pages
                     App.context.SaveChanges();
                     _orders = App.context.Order.ToList();
                     _productOrders = App.context.ProductOrder.ToList();
-                    order = _orders.FirstOrDefault(o => o.UserId == App.currentUser.Id);
+                    order = _orders.FirstOrDefault(o => o.UserId == App.currentUser.Id && o.Status == (int)OrderStatus.MakingOrder);
                     TotalCostRecalculate();
                     ProductLb.ItemsSource = _productOrders.Where(pO => pO.OrderId == order.Id);
                     TotalCostTbl.Text = order.TotalCost.ToString();
                 }
             }
 
-           
+
         }
 
         private void PlusBtn_Click(object sender, RoutedEventArgs e)
@@ -66,11 +56,11 @@ namespace MedicalShopDiaShop.View.Pages
             if (selectedProductOrder != null)
             {
                 Product selectedProduct = _products.FirstOrDefault(p => p.Id == selectedProductOrder.ProductId);
-                ProductOrder productOrder = _productOrders.FirstOrDefault(pO => pO.ProductId == selectedProduct.Id);
+                ProductOrder productOrder = _productOrders.FirstOrDefault(pO => pO.ProductId == selectedProduct.Id && pO.OrderId == order.Id);
                 productOrder.Quantity += 1;
                 productOrder.TotalCost = productOrder.Product.Cost * productOrder.Quantity;
                 App.context.SaveChanges();
-                order = _orders.FirstOrDefault(o => o.UserId == App.currentUser.Id);
+                order = _orders.FirstOrDefault(o => o.UserId == App.currentUser.Id && o.Status == (int)OrderStatus.MakingOrder);
                 _productOrders = App.context.ProductOrder.ToList();
                 TotalCostRecalculate();
                 TotalCostTbl.Text = order.TotalCost.ToString();
@@ -88,7 +78,7 @@ namespace MedicalShopDiaShop.View.Pages
             if (selectedProductOrder != null)
             {
                 Product selectedProduct = _products.FirstOrDefault(p => p.Id == selectedProductOrder.ProductId);
-                ProductOrder productOrder = _productOrders.FirstOrDefault(pO => pO.ProductId == selectedProduct.Id);
+                ProductOrder productOrder = _productOrders.FirstOrDefault(pO => pO.ProductId == selectedProduct.Id && pO.OrderId == order.Id);
                 if (productOrder.Quantity == 1)
                 {
                     if (FeedbackService.Question("Вы уверены, что хотите удалить товар из корзины?") == MessageBoxResult.Yes)
@@ -97,7 +87,7 @@ namespace MedicalShopDiaShop.View.Pages
                         _productOrders.Remove(productOrder);
                         App.context.SaveChanges();
                         _orders = App.context.Order.ToList();
-                        order = _orders.FirstOrDefault(o => o.UserId == App.currentUser.Id);
+                        order = _orders.FirstOrDefault(o => o.UserId == App.currentUser.Id && o.Status == (int)OrderStatus.MakingOrder);
                         ProductLb.ItemsSource = _productOrders.Where(pO => pO.OrderId == order.Id);
                         _productOrders = App.context.ProductOrder.ToList();
                         TotalCostRecalculate();
@@ -111,7 +101,7 @@ namespace MedicalShopDiaShop.View.Pages
                     productOrder.TotalCost = productOrder.Product.Cost * productOrder.Quantity;
                     ProductLb.ItemsSource = _productOrders.Where(pO => pO.OrderId == order.Id);
                     App.context.SaveChanges();
-                    order = _orders.FirstOrDefault(o => o.UserId == App.currentUser.Id);
+                    order = _orders.FirstOrDefault(o => o.UserId == App.currentUser.Id && o.Status == (int)OrderStatus.MakingOrder);
                     _productOrders = App.context.ProductOrder.ToList();
                     TotalCostRecalculate();
                     TotalCostTbl.Text = order.TotalCost.ToString();
@@ -137,12 +127,39 @@ namespace MedicalShopDiaShop.View.Pages
         private void TotalCostRecalculate()
         {
             decimal totalCost = 0;
-            foreach (ProductOrder productOrder in _productOrders)
+            foreach (ProductOrder productOrder in _productOrders.Where(pO => pO.OrderId == order.Id))
             {
                 totalCost += Convert.ToDecimal(productOrder.Product.Cost * productOrder.Quantity);
             }
             order.TotalCost = totalCost;
             App.context.SaveChanges();
+        }
+
+        private void MakeOrderBtn_Click(object sender, RoutedEventArgs e)
+        {
+            var currentOrder = App.context.Order.FirstOrDefault(o => o.UserId == App.currentUser.Id && o.Status == (int)OrderStatus.MakingOrder);
+            currentOrder.Status = (int)OrderStatus.History;
+            App.context.SaveChanges();
+            FeedbackService.Information("Заказ успешно оформлен!");
+            LoadPage();
+        }
+
+        public void LoadPage()
+        {
+            InitializeComponent();
+
+            order = _orders.FirstOrDefault(o => o.UserId == App.currentUser.Id && o.Status == (int)OrderStatus.MakingOrder);
+            if (order != null)
+            {
+                TotalCostRecalculate();
+
+                ProductLb.ItemsSource = _productOrders.Where(pO => pO.OrderId == order.Id && pO.Order.Status == (int)OrderStatus.MakingOrder);
+                TotalCostTbl.Text = order.TotalCost.ToString();
+                DeliveryTypeCmb.ItemsSource = _deliveryTypes;
+                DeliveryTypeCmb.SelectedIndex = order.DeliveryTypeId - 1;
+                PaymentTypeCmb.ItemsSource = _paymentTypes;
+                PaymentTypeCmb.SelectedIndex = order.PaymentTypeId - 1;
+            }
         }
     }
 }

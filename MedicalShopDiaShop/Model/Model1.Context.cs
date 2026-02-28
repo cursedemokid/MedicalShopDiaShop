@@ -13,10 +13,10 @@ namespace MedicalShopDiaShop.Model
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class MedicalShopDiaShopEntities : DbContext
+    public partial class MedicalShopDiaShopEntities1 : DbContext
     {
-        public MedicalShopDiaShopEntities()
-            : base("name=MedicalShopDiaShopEntities")
+        public MedicalShopDiaShopEntities1()
+            : base("name=MedicalShopDiaShopEntities1")
         {
         }
     
@@ -27,6 +27,7 @@ namespace MedicalShopDiaShop.Model
     
         public DbSet<Category> Category { get; set; }
         public DbSet<DeliveryType> DeliveryType { get; set; }
+        public DbSet<Favorites> Favorites { get; set; }
         public DbSet<Order> Order { get; set; }
         public DbSet<PaymentType> PaymentType { get; set; }
         public DbSet<Post> Post { get; set; }

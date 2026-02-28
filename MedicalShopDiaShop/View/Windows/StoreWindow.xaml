@@ -40,8 +40,9 @@ Height="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, Ance
                         </VisualBrush.Visual>
                     </VisualBrush>
                 </Border.OpacityMask>
-                <ComboBox Background="White"/>
+                <ComboBox Name="SearchByProductNameCmb" Background="White" IsEditable="True" Height="50" DisplayMemberPath="Name" SelectedValuePath="Id" SelectionChanged="SearchByProductNameCmb_SelectionChanged" BorderThickness="0"/>
             </Border>
+                <TextBlock Margin="0 0 5 0" Grid.Column="2" Background="White" HorizontalAlignment="Right" Width="10"/>
             <Grid Grid.Column="4" VerticalAlignment="Center">
                 <Menu Name="MainMenu" Background="White" HorizontalAlignment="Center">
                     <MenuItem Name="ProfileMI" VerticalAlignment="Center" HorizontalAlignment="Center" Background="White" BorderThickness="0">
@@ -95,13 +96,7 @@ Height="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, Ance
                         </VisualBrush.Visual>
                     </VisualBrush>
                 </Border.OpacityMask>
-                <MenuItem Name="CatalogMI" Grid.Column="1" Background="Green" BorderThickness="0">
-                    <MenuItem.Header>
-                        <Grid Width="170">
-                            <TextBlock Text="Каталог" Foreground="White" HorizontalAlignment="Center"/>
-                        </Grid>
-                    </MenuItem.Header>
-                </MenuItem>
+                <Button Name="CatalogBtn" Grid.Column="1" Background="Green" BorderThickness="0" Click="CatalogBtn_Click" Foreground="White">Каталог</Button>
             </Border>
             <Border Grid.Column="3" CornerRadius="10" Margin="5 5 5 5" >
                 <Border.OpacityMask>
@@ -116,7 +111,7 @@ Height="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, Ance
                         </VisualBrush.Visual>
                     </VisualBrush>
                 </Border.OpacityMask>
-                <Button Name="PopularProductsBtn" Background="White" BorderThickness="0" Content="Популярные товары" Click="PopularProductsBtn_Click"/>
+                <Button Name="PopularProductsBtn" Background="White" BorderThickness="0" Content="Популярные товары" Foreground="DarkGreen" Click="PopularProductsBtn_Click"/>
             </Border>
             <Border Grid.Column="5" CornerRadius="10" Margin="5 5 5 5" >
                 <Border.OpacityMask>
@@ -131,7 +126,7 @@ Height="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, Ance
                         </VisualBrush.Visual>
                     </VisualBrush>
                 </Border.OpacityMask>
-                <Button Background="White" BorderThickness="0" Content="Новинки"/>
+                <Button Name="NewProductsBtn" Background="White" BorderThickness="0" Content="Новинки" Foreground="DarkGreen" Click="NewProductsBtn_Click"/>
             </Border>
             <Border Grid.Column="7" CornerRadius="10" Margin="5 5 5 5" >
                 <Border.OpacityMask>
@@ -146,7 +141,7 @@ Height="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, Ance
                         </VisualBrush.Visual>
                     </VisualBrush>
                 </Border.OpacityMask>
-                <Button Background="White" BorderThickness="0" Content="Без глютена"/>
+                <Button Name="WithoutGlutenBtn" Background="White" BorderThickness="0" Content="Без глютена" Foreground="DarkGreen" Click="WithoutGlutenBtn_Click"/>
             </Border>
             <Border Grid.Column="9" CornerRadius="10" Margin="5 5 5 5" >
                 <Border.OpacityMask>
@@ -161,7 +156,7 @@ Height="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, Ance
                         </VisualBrush.Visual>
                     </VisualBrush>
                 </Border.OpacityMask>
-                <Button Background="White" BorderThickness="0" Content="Мало углеводов"/>
+                <Button Name="LowCarbohydratesBtn" Background="White" BorderThickness="0" Content="Мало углеводов" Foreground="DarkGreen" Click="LowCarbohydratesBtn_Click"/>
             </Border>
         </Grid>
         <Frame Name="MainFrame" Grid.Row="4" NavigationUIVisibility="Hidden">

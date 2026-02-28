@@ -1,5 +1,6 @@
 ﻿using MedicalShopDiaShop.AppData;
 using MedicalShopDiaShop.Model;
+using MedicalShopDiaShop.Properties;
 using MedicalShopDiaShop.View.Windows;
 using System;
 using System.Collections.Generic;
@@ -27,11 +28,16 @@ namespace MedicalShopDiaShop
         public MainWindow()
         {
             InitializeComponent();
-        }
 
-        private void ForgotPasswordBtn_Click(object sender, RoutedEventArgs e)
-        {
-
+            if (!string.IsNullOrEmpty(Settings.Default.SavedLogin))
+            {
+                EmailTbx.Text = Settings.Default.SavedLogin;
+                if(!string.IsNullOrEmpty(Settings.Default.SavedPassword))
+                {
+                    PasswordPbx.Password = Settings.Default.SavedPassword;
+                }
+                RememberMeCb.IsChecked = true;
+            }
         }
 
         private void EnterBtn_Click(object sender, RoutedEventArgs e)
@@ -55,6 +61,17 @@ namespace MedicalShopDiaShop
                 {
                     App.currentUser = _users.FirstOrDefault(u => u.Email == EmailTbx.Text && u.Password == PasswordPbx.Password);
                     FeedbackService.Information($"Добро пожаловать, {App.currentUser.FirstName}! Вы успешно авторизовались!");
+                    if(RememberMeCb.IsChecked == true)
+                    {
+                        Settings.Default.SavedLogin = EmailTbx.Text;
+                        Settings.Default.SavedPassword = PasswordPbx.Password; 
+                    }
+                    else
+                    {
+                        Settings.Default.SavedLogin = string.Empty;
+                        Settings.Default.SavedPassword = string.Empty;
+                    }
+                    Settings.Default.Save();
                     StoreWindow storeWindow = new StoreWindow();
                     storeWindow.Show();
                     Close();

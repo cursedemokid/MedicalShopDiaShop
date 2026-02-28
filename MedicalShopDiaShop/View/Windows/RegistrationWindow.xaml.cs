@@ -38,6 +38,7 @@ namespace MedicalShopDiaShop.View.Windows
                         Password = PasswordPbx.Password,
                         FirstName = "Пользователь",
                         LastName = "Новый",
+                        PostId = '1',
                     });
                     App.context.SaveChanges();
                     FeedbackService.Information("Вы успешно зарегистрировались! Вы можете изменить подробные данные о себе в профиле");

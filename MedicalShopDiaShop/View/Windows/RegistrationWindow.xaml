@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MedicalShopDiaShop.View.Windows"
         mc:Ignorable="d"
-            Title="MainWindow" Height="720" Width="1280" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+            Title="Окно регистрации" Height="720" Width="1280" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="150" />
@@ -77,8 +77,8 @@
                             <ColumnDefinition Width="1*" />
                             <ColumnDefinition Width="20" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Row="1" Grid.ColumnSpan="5" HorizontalAlignment="Center" Text="АВТОРИЗАЦИЯ" FontSize="60"/>
-                        <TextBlock Margin="80,0,0,0" Grid.Row="3" Grid.Column="1" Text="Почта" FontSize="20"/>
+                        <TextBlock Grid.Row="1" Grid.ColumnSpan="5" HorizontalAlignment="Center" Text="РЕГИСТРАЦИЯ" FontSize="60"/>
+                        <TextBlock Margin="80,0,0,0" Grid.Row="3" Grid.Column="1" Text="Логин" FontSize="20"/>
                         <TextBlock Margin="80,0,0,0" Grid.Row="5" Grid.Column="1" Text="Пароль" FontSize="20"/>
                         <TextBlock Margin="0,0,0,0" Grid.Row="7" Grid.Column="1" Text="Подтверждение пароля" FontSize="20"/>
                         <TextBox Name="EmailTbx" Grid.Row="3" Grid.Column="3" Width="500" HorizontalAlignment="Left"/>

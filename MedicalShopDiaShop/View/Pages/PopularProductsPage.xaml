@@ -36,6 +36,39 @@
                             <Grid Background="White">
                                 <Image Source="{Binding Image}"/>
                             </Grid>
+                            <Button Name="IsFavorite" Background="White" VerticalAlignment="Top" HorizontalAlignment="Right" Click="IsFavorite_Click">
+                                <Button.Content>
+                                    <Grid>
+                                        
+                                <Image x:Name="HeartFull" Source="/Resources/heart.png">
+                                    <Image.Style>
+                                        <Style TargetType="Image">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsFavorite}" Value="True">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Image.Style>
+                                </Image>
+
+                                <Image x:Name="HeartOutline" Source="/Resources/HeartIcon.png">
+                                    <Image.Style>
+                                        <Style TargetType="Image">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsFavorite}" Value="True">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Image.Style>
+                                </Image>
+                        </Grid>
+                                </Button.Content>
+
+                        </Button>
                             <Grid Grid.Row="1" Margin="10" >
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="20" />

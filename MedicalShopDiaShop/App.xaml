@@ -8,7 +8,6 @@
             <Setter Property="FontSize" Value="20"/>
             <Setter Property="FontFamily" Value="Tahoma"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="Foreground" Value="DarkGreen"/>
         </Style>
         <Style TargetType="TextBox">
             <Setter Property="FontSize" Value="20"/>

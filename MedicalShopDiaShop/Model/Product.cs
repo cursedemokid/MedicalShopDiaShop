@@ -16,8 +16,8 @@ namespace MedicalShopDiaShop.Model
     {
         public Product()
         {
+            this.Favorites = new HashSet<Favorites>();
             this.ProductOrder = new HashSet<ProductOrder>();
-            this.User = new HashSet<User>();
         }
     
         public int Id { get; set; }
@@ -25,9 +25,10 @@ namespace MedicalShopDiaShop.Model
         public int CategoryId { get; set; }
         public decimal Cost { get; set; }
         public string Image { get; set; }
+        public System.DateTime AddDate { get; set; }
     
         public virtual Category Category { get; set; }
+        public virtual ICollection<Favorites> Favorites { get; set; }
         public virtual ICollection<ProductOrder> ProductOrder { get; set; }
-        public virtual ICollection<User> User { get; set; }
     }
 }
