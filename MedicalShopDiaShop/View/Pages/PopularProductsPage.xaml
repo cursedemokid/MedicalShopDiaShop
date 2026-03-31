@@ -28,7 +28,7 @@
                             <ColumnDefinition Width="auto" />
                             <ColumnDefinition Width="1*" />
                         </Grid.ColumnDefinitions>
-                        <Grid Grid.Row="1" Grid.Column="1" Width="220" Height="350" Background="Green" Margin="20">
+                        <Grid Grid.Row="1" Grid.Column="1" Width="220" Height="350" Margin="20">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="1*" />
                                 <RowDefinition Height="0.7*" />
@@ -79,16 +79,16 @@
                                     <RowDefinition Height="2" />
                                     <RowDefinition Height="1*" />
                                 </Grid.RowDefinitions>
-                                <TextBlock Grid.Row="0" Text="{Binding Cost}" Foreground="White" FontSize="12" FontWeight="Bold"/>
-                                <TextBlock Grid.Row="2" Text="{Binding Name}" Foreground="White" FontSize="12" TextWrapping="Wrap" VerticalAlignment="Top"/>
-                                <TextBlock Grid.Row="4" Text="Есть в наличии" Foreground="White" FontSize="10"/>
+                                <TextBlock Grid.Row="0" Text="{Binding Cost}" FontSize="12" FontWeight="Bold"/>
+                                <TextBlock Grid.Row="2" Text="{Binding Name}" FontSize="12" TextWrapping="Wrap" VerticalAlignment="Top"/>
+                                <TextBlock Grid.Row="4" Text="Есть в наличии" FontSize="10"/>
                                 <Grid Grid.Row="6">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="1*" />
                                         <ColumnDefinition Width="20" />
                                         <ColumnDefinition Width="1*" />
                                     </Grid.ColumnDefinitions>
-                                    <Button Name="AddToBasketBtn" Background="LightGreen" Height="auto" Click="AddToBasketBtn_Click">
+                                    <Button Name="AddToBasketBtn" Height="auto" Click="AddToBasketBtn_Click">
                                         <Button.Content>
                                             <TextBlock Text="В корзину" FontSize="15"/>
                                         </Button.Content>
