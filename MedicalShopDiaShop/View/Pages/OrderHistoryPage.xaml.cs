@@ -13,37 +13,37 @@ namespace MedicalShopDiaShop.View.Pages
         public OrderHistoryPage()
         {
             InitializeComponent();
-            LoadOrders();
+            //LoadOrders();
         }
 
-        private void LoadOrders()
-        {
-            var historyOrders = App.context.Order
-                .Where(o => o.UserId == App.currentUser.Id && o.Status == (int)OrderStatus.History)
-                .ToList();
+        //private void LoadOrders()
+        //{
+        //    var historyOrders = App.context.Order
+        //        .Where(o => o.UserId == App.currentUser.Id && o.Status == (int)OrderStatus.History)
+        //        .ToList();
 
-            var orderHistoryItems = new List<OrderHistoryItem>();
+        //    var orderHistoryItems = new List<OrderHistoryItem>();
 
-            foreach (var order in historyOrders)
-            {
-                var productOrders = App.context.ProductOrder
-                    .Where(po => po.OrderId == order.Id)
-                    .Select(po => new OrderProductItem
-                    {
-                        Product = po.Product,
-                        Quantity = po.Quantity ?? 0
-                    })
-                    .ToList();
+        //    foreach (var order in historyOrders)
+        //    {
+        //        var productOrders = App.context.ProductOrder
+        //            .Where(po => po.OrderId == order.Id)
+        //            .Select(po => new OrderProductItem
+        //            {
+        //                Product = po.Product,
+        //                Quantity = po.Quantity ?? 0
+        //            })
+        //            .ToList();
 
-                orderHistoryItems.Add(new OrderHistoryItem
-                {
-                    Order = order,
-                    Products = productOrders
-                });
-            }
+        //        orderHistoryItems.Add(new OrderHistoryItem
+        //        {
+        //            Order = order,
+        //            Products = productOrders
+        //        });
+        //    }
 
-            OrdersListBox.ItemsSource = orderHistoryItems;
-        }
+        //    OrdersListBox.ItemsSource = orderHistoryItems;
+        //}
     }
 
     public class OrderProductItem

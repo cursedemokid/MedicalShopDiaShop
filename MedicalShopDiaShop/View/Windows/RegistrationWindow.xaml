@@ -23,14 +23,14 @@
             </Grid.ColumnDefinitions>
             <Button Name="BackBtn" Width="200" Height="150" Background="{x:Null}" BorderThickness="0" Click="BackBtn_Click">
                 <Button.Content>
-                    <Image Source="C:\Users\Елизавета\OneDrive\Desktop\MedicalShopDiaShop\MedicalShopDiaShop\Resources\DiaShopLogo.png"/>
+                    <Image Source="\Resources\DiaShopLogo.png"/>
                 </Button.Content>
             </Button>
             <TextBlock Grid.Column="2" Text="Товары для здоровья. Диабетические товары и еда без вреда!" FontSize="35"/>
         </Grid>
         <Grid Grid.Row="2">
             <Grid.Background>
-                <ImageBrush ImageSource="C:\Users\Елизавета\OneDrive\Desktop\MedicalShopDiaShop\MedicalShopDiaShop\Resources\DiaShopBackground.png"/>
+                <ImageBrush ImageSource="\Resources\DiaShopBackground.png"/>
             </Grid.Background>
             <Grid.RowDefinitions>
                 <RowDefinition Height="30" />

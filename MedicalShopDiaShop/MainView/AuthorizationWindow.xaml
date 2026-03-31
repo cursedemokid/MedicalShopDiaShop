@@ -1,0 +1,56 @@
+﻿<Window x:Class="MedicalShopDiaShop.MainView.AuthorizationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MedicalShopDiaShop.MainView"
+        mc:Ignorable="d"
+        Title="" MaxWidth="1280" MaxHeight="720" Width="600" Height="300">
+    <Grid Margin="10">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock Text="Личный кабинет" HorizontalAlignment="Center"/>
+                <Image Source="/Resources/illustration_dashboard.png"/>
+
+            </StackPanel>
+            
+            <Grid Grid.Column="2" VerticalAlignment="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="10" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="200" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Логин" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                <TextBlock Grid.Row="2" Grid.Column="1" Text="Пароль" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+
+                <TextBox Grid.Row="0" Grid.Column="3"/>
+                <PasswordBox Grid.Row="2" Grid.Column="3"/>
+
+                <CheckBox Grid.Row="4" Grid.ColumnSpan="5" HorizontalAlignment="Center" Content="Запомнить меня"/>
+
+                <Button Name="EnterBtn" Grid.Row="6" Grid.ColumnSpan="5" HorizontalAlignment="Center" Content="Войти" Click="EnterBtn_Click"/>
+                <TextBlock Name="RegistrationBtn" Grid.Row="8" Text="Регистрация" Grid.ColumnSpan="5" HorizontalAlignment="Center" Foreground="Blue" MouseDown="RegistrationBtn_MouseDown"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

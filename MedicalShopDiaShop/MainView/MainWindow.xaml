@@ -1,0 +1,246 @@
+﻿<Window x:Class="MedicalShopDiaShop.MainView.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MedicalShopDiaShop.MainView"
+        mc:Ignorable="d"
+        Title="" Height="720" Width="1280">
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+        
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" Name="MenuGrid"/>
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <Grid Name="MaximizedButtons" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="1*" />
+                </Grid.RowDefinitions>
+                <Button Grid.Row="1" Height="60" Background="White" HorizontalContentAlignment="Left" Click="ProfileBtn_Click">
+                    <Button.Content>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="5" />
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="1*" />
+                            </Grid.ColumnDefinitions>
+                            <Image Source="/Resources/ProfileIcon.png" Height="50"/>
+                            <TextBlock Text="Профиль" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+                        </Grid>
+                    </Button.Content>
+                </Button>
+                <Button Grid.Row="3" Height="60" Background="White" HorizontalContentAlignment="Left" Click="ProductsBtn_Click">
+                    <Button.Content>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="5" />
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="1*" />
+                            </Grid.ColumnDefinitions>
+                            <Image Source="/Resources/box.png" />
+                            <TextBlock Text="Товары" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+                        </Grid>
+                    </Button.Content>
+                </Button>
+                <Button Grid.Row="5" Height="60" Background="White" HorizontalContentAlignment="Left" Click="StatsBtn_Click">
+                    <Button.Content>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="5" />
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="1*" />
+                            </Grid.ColumnDefinitions>
+                            <Image Source="/Resources/chart.png" />
+                            <TextBlock Text="Статистика" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+                        </Grid>
+                    </Button.Content>
+                </Button>
+                <Button Grid.Row="7" Height="60" Background="White" HorizontalContentAlignment="Left" Click="ClientsBtn_Click">
+                    <Button.Content>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="5" />
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="1*" />
+                            </Grid.ColumnDefinitions>
+                            <Image Source="/Resources/customer.png" />
+                            <TextBlock Text="Клиенты" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+                        </Grid>
+                    </Button.Content>
+                </Button>
+                <Button Grid.Row="9" Height="60" Background="White" HorizontalContentAlignment="Left" Click="SuppliesBtn_Click">
+                    <Button.Content>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="5" />
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="1*" />
+                            </Grid.ColumnDefinitions>
+                            <Image Source="/Resources/delivery.png" />
+                            <TextBlock Text="Поставщики" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+                        </Grid>
+                    </Button.Content>
+                </Button>
+                <Button Grid.Row="11" Height="60" Background="White" HorizontalContentAlignment="Left" Click="ExitBtn_Click">
+                    <Button.Content>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="5" />
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="1*" />
+                            </Grid.ColumnDefinitions>
+                            <Image Source="/Resources/logout.png" />
+
+                            <TextBlock Text="Выход" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+                        </Grid>
+                    </Button.Content>
+                </Button>
+                <Button Grid.Row="13" Height="60" Background="White" HorizontalContentAlignment="Left" Click="EmployeesBtn_Click">
+                    <Button.Content>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="5" />
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="1*" />
+                            </Grid.ColumnDefinitions>
+                            <Image Source="/Resources/teamwork.png" />
+                            <TextBlock Text="Сотруднки" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+                        </Grid>
+                    </Button.Content>
+                </Button>
+            </Grid>
+            
+            <Grid Name="MinimizedButtons" Visibility="Visible">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="1*" />
+                </Grid.RowDefinitions>
+                <Button Name="ProfileBtn" Grid.Row="1" Height="60" Background="White" Click="ProfileBtn_Click">
+                    <Button.Content>
+                        <StackPanel>
+                            <Image Source="/Resources/ProfileIcon.png" Height="30"/>
+                            <TextBlock Text="Профиль"/>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+                <Button Name="ProductsBtn" Grid.Row="3" Height="60" Background="White" Click="ProductsBtn_Click">
+                    <Button.Content>
+                        <StackPanel>
+                            <Image Source="/Resources/box.png" Height="30"/>
+                            <TextBlock Text="Товары"/>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+                <Button Name="StatsBtn" Grid.Row="5" Height="60" Background="White" Click="StatsBtn_Click">
+                    <Button.Content>
+                        <StackPanel>
+                            <Image Source="/Resources/chart.png" Height="30"/>
+                            <TextBlock Text="Статистика"/>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+                <Button Name="ClientsBtn" Grid.Row="7" Height="60" Background="White" Click="ClientsBtn_Click">
+                    <Button.Content>
+                        <StackPanel>
+                            <Image Source="/Resources/customer.png" Height="30"/>
+                            <TextBlock Text="Клиенты"/>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+                <Button Name="SuppliesBtn" Grid.Row="9" Height="60" Background="White" Click="SuppliesBtn_Click">
+                    <Button.Content>
+                        <StackPanel>
+                            <Image Source="/Resources/delivery.png" Height="30"/>
+                            <TextBlock Text="Поставщики"/>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+                <Button Name="ExitBtn" Grid.Row="11" Height="60" Background="White" Click="ExitBtn_Click">
+                    <Button.Content>
+                        <StackPanel>
+                            <Image Source="/Resources/logout.png" Height="30"/>
+                            <TextBlock Text="Выход"/>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+                <Button Name="EmployeesBtn" Grid.Row="13" Height="60" Background="White" Click="EmployeesBtn_Click">
+                    <Button.Content>
+                        <StackPanel>
+                            <Image Source="/Resources/teamwork.png" Height="30"/>
+                            <TextBlock Text="Сотрудники"/>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+            </Grid>
+            
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="7*" />
+                </Grid.RowDefinitions>
+                <Separator Height="Auto" Background="Green">
+                    <Separator.LayoutTransform>
+                        <RotateTransform Angle="90"/>
+                    </Separator.LayoutTransform>
+                </Separator>
+                <Separator Grid.Row="2" Height="Auto" Background="Green">
+                    <Separator.LayoutTransform>
+                        <RotateTransform Angle="90"/>
+                    </Separator.LayoutTransform>
+                </Separator>
+                <Button Name="MinimizeOrMaximizeBtn" Grid.Row="1" Background="White" Width="20" Height="20" Padding="2" Click="MinimizeOrMaximizeBtn_Click">
+                    <Button.Content>
+                        <Image Source="/Resources/left-arrow.png" Name="ArrowIcon"/>
+                    </Button.Content>
+
+                </Button>
+
+            </Grid>
+            <Frame Grid.Column="4" Name="MainFrame" NavigationUIVisibility="Hidden">
+                
+            </Frame>
+        </Grid>
+    </Grid>
+</Window>

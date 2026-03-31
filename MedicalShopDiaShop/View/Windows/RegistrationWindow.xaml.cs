@@ -11,7 +11,7 @@ namespace MedicalShopDiaShop.View.Windows
     /// </summary>
     public partial class RegistrationWindow : Window
     {
-        List<User> _users = App.context.User.ToList();
+        //List<User> _users = App.context.User.ToList();
         public RegistrationWindow()
         {
             InitializeComponent();
@@ -19,41 +19,41 @@ namespace MedicalShopDiaShop.View.Windows
 
         private void RegistrationBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(EmailTbx.Text) || string.IsNullOrEmpty(PasswordPbx.Password) || string.IsNullOrEmpty(ConfirmPasswordPbx.Password))
-            {
-                FeedbackService.Error("Заполните все поля и повторите попытку!");
-            }
-            else if (PasswordPbx.Password != ConfirmPasswordPbx.Password)
-            {
-                FeedbackService.Error("Пароли не совпадают! Проверьте корректность введенных данных и повторите попытку");
-            }
-            else
-            {
+            //    if (string.IsNullOrEmpty(EmailTbx.Text) || string.IsNullOrEmpty(PasswordPbx.Password) || string.IsNullOrEmpty(ConfirmPasswordPbx.Password))
+            //    {
+            //        FeedbackService.Error("Заполните все поля и повторите попытку!");
+            //    }
+            //    else if (PasswordPbx.Password != ConfirmPasswordPbx.Password)
+            //    {
+            //        FeedbackService.Error("Пароли не совпадают! Проверьте корректность введенных данных и повторите попытку");
+            //    }
+            //    else
+            //    {
 
-                if (_users.FirstOrDefault(u => u.Email == EmailTbx.Text) == null)
-                {
-                    App.context.User.Add(new User
-                    {
-                        Email = EmailTbx.Text,
-                        Password = PasswordPbx.Password,
-                        FirstName = "Пользователь",
-                        LastName = "Новый",
-                        PostId = '1',
-                    });
-                    App.context.SaveChanges();
-                    FeedbackService.Information("Вы успешно зарегистрировались! Вы можете изменить подробные данные о себе в профиле");
-                    MainWindow mainWindow = new MainWindow();
-                    mainWindow.Show();
-                    Close();
-                }
-            }
+            //        if (_users.FirstOrDefault(u => u.Email == EmailTbx.Text) == null)
+            //        {
+            //            App.context.User.Add(new User
+            //            {
+            //                Email = EmailTbx.Text,
+            //                Password = PasswordPbx.Password,
+            //                FirstName = "Пользователь",
+            //                LastName = "Новый",
+            //                PostId = '1',
+            //            });
+            //            App.context.SaveChanges();
+            //            FeedbackService.Information("Вы успешно зарегистрировались! Вы можете изменить подробные данные о себе в профиле");
+            //            MainWindow mainWindow = new MainWindow();
+            //            mainWindow.Show();
+            //            Close();
+            //        }
+            //    }
         }
 
         private void BackBtn_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow mainWindow = new MainWindow();
-            mainWindow.Show();
-            Close();
+            //MainWindow mainWindow = new MainWindow();
+            //mainWindow.Show();
+            //Close();
         }
     }
 }
