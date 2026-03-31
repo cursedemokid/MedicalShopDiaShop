@@ -26,7 +26,7 @@
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
-            <Image Source="C:\Users\Елизавета\OneDrive\Desktop\MedicalShopDiaShop\MedicalShopDiaShop\Resources\DiaShopLogo.png"/>
+            <Image Source="\Resources\DiaShopLogo.png"/>
             <Border Grid.Column="2" Height="67" CornerRadius="10" BorderThickness="2" BorderBrush="Black">
                 <Border.OpacityMask>
                     <VisualBrush>
@@ -48,7 +48,7 @@ Height="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, Ance
                     <MenuItem Name="ProfileMI" VerticalAlignment="Center" HorizontalAlignment="Center" Background="White" BorderThickness="0">
                         <MenuItem.Header>
                         <Grid>
-                            <Image Source="C:\Users\Елизавета\OneDrive\Desktop\MedicalShopDiaShop\MedicalShopDiaShop\Resources\ProfileIcon.png" Width="70" Height="70"/>
+                            <Image Source="\Resources\ProfileIcon.png" Width="70" Height="70"/>
                         </Grid>
                     </MenuItem.Header>
                     <MenuItem Name="PersonalDataMI" Header="Личные данные" Click="PersonalDataMI_Click"/>
@@ -60,12 +60,12 @@ Height="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, Ance
             </Grid>
             <Button Name="FavoritePageBtn" Grid.Column="6" Background="White" Height="70" Width="73" BorderThickness="0" Click="FavoritePageBtn_Click">
                 <Button.Content>
-                    <Image Source="C:\Users\Елизавета\OneDrive\Desktop\MedicalShopDiaShop\MedicalShopDiaShop\Resources\HeartIcon.png" Width="70" Height="70"/>
+                    <Image Source="\Resources\HeartIcon.png" Width="70" Height="70"/>
                 </Button.Content>
             </Button>
             <Button Name="StoreBasketBtn" Grid.Column="8" Background="White" Height="70" Width="73" BorderThickness="0" Margin="0 0 15 0" Click="StoreBasketBtn_Click"> 
                 <Button.Content>
-                    <Image Source="C:\Users\Елизавета\OneDrive\Desktop\MedicalShopDiaShop\MedicalShopDiaShop\Resources\StoreBasketIcon.png" Width="70" Height="70"/>
+                    <Image Source="\Resources\StoreBasketIcon.png" Width="70" Height="70"/>
                 </Button.Content>
             </Button>
         </Grid>
@@ -96,7 +96,7 @@ Height="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, Ance
                         </VisualBrush.Visual>
                     </VisualBrush>
                 </Border.OpacityMask>
-                <Button Name="CatalogBtn" Grid.Column="1" Background="Green" BorderThickness="0" Click="CatalogBtn_Click" Foreground="White">Каталог</Button>
+                <Button Name="CatalogBtn" Grid.Column="1" BorderThickness="0" Click="CatalogBtn_Click">Каталог</Button>
             </Border>
             <Border Grid.Column="3" CornerRadius="10" Margin="5 5 5 5" >
                 <Border.OpacityMask>
@@ -111,7 +111,7 @@ Height="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, Ance
                         </VisualBrush.Visual>
                     </VisualBrush>
                 </Border.OpacityMask>
-                <Button Name="PopularProductsBtn" Background="White" BorderThickness="0" Content="Популярные товары" Foreground="DarkGreen" Click="PopularProductsBtn_Click"/>
+                <Button Name="PopularProductsBtn" BorderThickness="0" Content="Популярные товары" Click="PopularProductsBtn_Click"/>
             </Border>
             <Border Grid.Column="5" CornerRadius="10" Margin="5 5 5 5" >
                 <Border.OpacityMask>
@@ -126,7 +126,7 @@ Height="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, Ance
                         </VisualBrush.Visual>
                     </VisualBrush>
                 </Border.OpacityMask>
-                <Button Name="NewProductsBtn" Background="White" BorderThickness="0" Content="Новинки" Foreground="DarkGreen" Click="NewProductsBtn_Click"/>
+                <Button Name="NewProductsBtn" BorderThickness="0" Content="Новинки" Click="NewProductsBtn_Click"/>
             </Border>
             <Border Grid.Column="7" CornerRadius="10" Margin="5 5 5 5" >
                 <Border.OpacityMask>
@@ -141,7 +141,7 @@ Height="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, Ance
                         </VisualBrush.Visual>
                     </VisualBrush>
                 </Border.OpacityMask>
-                <Button Name="WithoutGlutenBtn" Background="White" BorderThickness="0" Content="Без глютена" Foreground="DarkGreen" Click="WithoutGlutenBtn_Click"/>
+                <Button Name="WithoutGlutenBtn" BorderThickness="0" Content="Без глютена" Click="WithoutGlutenBtn_Click"/>
             </Border>
             <Border Grid.Column="9" CornerRadius="10" Margin="5 5 5 5" >
                 <Border.OpacityMask>
@@ -156,7 +156,7 @@ Height="{Binding ActualHeight, RelativeSource={RelativeSource FindAncestor, Ance
                         </VisualBrush.Visual>
                     </VisualBrush>
                 </Border.OpacityMask>
-                <Button Name="LowCarbohydratesBtn" Background="White" BorderThickness="0" Content="Мало углеводов" Foreground="DarkGreen" Click="LowCarbohydratesBtn_Click"/>
+                <Button Name="LowCarbohydratesBtn" BorderThickness="0" Content="Мало углеводов" Click="LowCarbohydratesBtn_Click"/>
             </Border>
         </Grid>
         <Frame Name="MainFrame" Grid.Row="4" NavigationUIVisibility="Hidden">
