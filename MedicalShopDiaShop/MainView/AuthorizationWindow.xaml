@@ -15,7 +15,7 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel VerticalAlignment="Center">
-                <TextBlock Text="Личный кабинет" HorizontalAlignment="Center"/>
+                <TextBlock Text="Личный кабинет" HorizontalAlignment="Center" FontFamily="{StaticResource GothamProFamily}"/>
                 <Image Source="/Resources/illustration_dashboard.png"/>
 
             </StackPanel>
@@ -40,16 +40,16 @@
                     <ColumnDefinition Width="200" />
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="Логин" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                <TextBlock Grid.Row="2" Grid.Column="1" Text="Пароль" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                <TextBlock Text="Логин" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right" FontFamily="{StaticResource GothamProFamily}"/>
+                <TextBlock Grid.Row="2" Grid.Column="1" Text="Пароль" VerticalAlignment="Center" HorizontalAlignment="Right" FontFamily="{StaticResource GothamProFamily}"/>
 
-                <TextBox Grid.Row="0" Grid.Column="3"/>
-                <PasswordBox Grid.Row="2" Grid.Column="3"/>
+                <TextBox Grid.Row="0" Grid.Column="3" FontFamily="{StaticResource GothamProFamily}"/>
+                <PasswordBox Grid.Row="2" Grid.Column="3" FontFamily="{StaticResource GothamProFamily}"/>
 
-                <CheckBox Grid.Row="4" Grid.ColumnSpan="5" HorizontalAlignment="Center" Content="Запомнить меня"/>
+                <CheckBox Grid.Row="4" Grid.ColumnSpan="5" HorizontalAlignment="Center" Content="Запомнить меня" FontFamily="{StaticResource GothamProFamily}"/>
 
-                <Button Name="EnterBtn" Grid.Row="6" Grid.ColumnSpan="5" HorizontalAlignment="Center" Content="Войти" Click="EnterBtn_Click"/>
-                <TextBlock Name="RegistrationBtn" Grid.Row="8" Text="Регистрация" Grid.ColumnSpan="5" HorizontalAlignment="Center" Foreground="Blue" MouseDown="RegistrationBtn_MouseDown"/>
+                <Button Name="EnterBtn" Grid.Row="6" Grid.ColumnSpan="5" HorizontalAlignment="Center" Content="Войти" Click="EnterBtn_Click" FontFamily="{StaticResource GothamProFamily}"/>
+                <TextBlock Name="RegistrationBtn" Grid.Row="8" Text="Регистрация" Grid.ColumnSpan="5" HorizontalAlignment="Center" Foreground="Blue" MouseDown="RegistrationBtn_MouseDown" FontFamily="{StaticResource GothamProFamily}"/>
             </Grid>
         </Grid>
     </Grid>

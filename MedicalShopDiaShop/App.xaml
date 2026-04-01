@@ -48,6 +48,20 @@
                 <materialDesign:BundledTheme BaseTheme="Light" PrimaryColor="Green" SecondaryColor="LightGreen" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign3.Defaults.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <FontFamily x:Key="GothamProFamily">
+                /Fonts/gothampro.ttf#Gotham Pro,
+                /Fonts/gothampro_bold.ttf#Gotham Pro,
+                /Fonts/gothampro_italic.ttf#Gotham Pro,
+                /Fonts/gothampro_bolditalic.ttf#Gotham Pro,
+                /Fonts/gothampro_light.ttf#Gotham Pro,
+                /Fonts/gothampro_lightitalic.ttf#Gotham Pro,
+                /Fonts/gothampro_medium.ttf#Gotham Pro,
+                /Fonts/gothampro_mediumitalic.ttf#Gotham Pro
+            </FontFamily>
+            
+            <Style TargetType="TextElement">
+                <Setter Property="FontFamily" Value="{StaticResource GothamProFamily}"/>
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -8,8 +8,26 @@
         Title="" Height="720" Width="1280">
     <Grid Margin="5">
         <Grid.RowDefinitions>
+            <RowDefinition Height="80" />
             <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
+
+        <Grid Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="10" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Диа" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="Green" FontSize="30" FontFamily="{StaticResource GothamProFamily}" FontWeight="Black"/>
+                <TextBlock Text="Шоп" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="Black" FontSize="30" FontFamily="{StaticResource GothamProFamily}" FontWeight="Bold"/>
+            </StackPanel>
+        </Grid>
         
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
@@ -19,8 +37,10 @@
                 <ColumnDefinition Width="5" />
                 <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
-            <Grid Name="MaximizedButtons" Visibility="Collapsed">
+            <Grid Name="MaximizedButtons" Visibility="Visible">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="auto" />
                     <RowDefinition Height="10" />
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="10" />
@@ -37,7 +57,7 @@
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="1*" />
                 </Grid.RowDefinitions>
-                <Button Grid.Row="1" Height="60" Background="White" HorizontalContentAlignment="Left" Click="ProfileBtn_Click">
+                <Button Name="MaxProfileBtn" Grid.Row="1" Height="60" Background="White" HorizontalContentAlignment="Left" Click="ProfileBtn_Click">
                     <Button.Content>
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -47,11 +67,11 @@
                                 <ColumnDefinition Width="1*" />
                             </Grid.ColumnDefinitions>
                             <Image Source="/Resources/ProfileIcon.png" Height="50"/>
-                            <TextBlock Text="Профиль" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+                            <TextBlock Text="Профиль" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
                         </Grid>
                     </Button.Content>
                 </Button>
-                <Button Grid.Row="3" Height="60" Background="White" HorizontalContentAlignment="Left" Click="ProductsBtn_Click">
+                <Button Name="MaxProductsBtn" Grid.Row="3" Height="60" Background="White" HorizontalContentAlignment="Left" Click="ProductsBtn_Click">
                     <Button.Content>
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -61,11 +81,11 @@
                                 <ColumnDefinition Width="1*" />
                             </Grid.ColumnDefinitions>
                             <Image Source="/Resources/box.png" />
-                            <TextBlock Text="Товары" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+                            <TextBlock Text="Товары" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
                         </Grid>
                     </Button.Content>
                 </Button>
-                <Button Grid.Row="5" Height="60" Background="White" HorizontalContentAlignment="Left" Click="StatsBtn_Click">
+                <Button Name="MaxStatsBtn" Grid.Row="5" Height="60" Background="White" HorizontalContentAlignment="Left" Click="StatsBtn_Click">
                     <Button.Content>
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -75,11 +95,11 @@
                                 <ColumnDefinition Width="1*" />
                             </Grid.ColumnDefinitions>
                             <Image Source="/Resources/chart.png" />
-                            <TextBlock Text="Статистика" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+                            <TextBlock Text="Статистика" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
                         </Grid>
                     </Button.Content>
                 </Button>
-                <Button Grid.Row="7" Height="60" Background="White" HorizontalContentAlignment="Left" Click="ClientsBtn_Click">
+                <Button Name="MaxClientsBtn" Grid.Row="7" Height="60" Background="White" HorizontalContentAlignment="Left" Click="ClientsBtn_Click">
                     <Button.Content>
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -89,11 +109,11 @@
                                 <ColumnDefinition Width="1*" />
                             </Grid.ColumnDefinitions>
                             <Image Source="/Resources/customer.png" />
-                            <TextBlock Text="Клиенты" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+                            <TextBlock Text="Клиенты" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
                         </Grid>
                     </Button.Content>
                 </Button>
-                <Button Grid.Row="9" Height="60" Background="White" HorizontalContentAlignment="Left" Click="SuppliesBtn_Click">
+                <Button Name="MaxSuppliesBtn" Grid.Row="9" Height="60" Background="White" HorizontalContentAlignment="Left" Click="SuppliesBtn_Click">
                     <Button.Content>
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -103,11 +123,11 @@
                                 <ColumnDefinition Width="1*" />
                             </Grid.ColumnDefinitions>
                             <Image Source="/Resources/delivery.png" />
-                            <TextBlock Text="Поставщики" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+                            <TextBlock Text="Поставщики" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
                         </Grid>
                     </Button.Content>
                 </Button>
-                <Button Grid.Row="11" Height="60" Background="White" HorizontalContentAlignment="Left" Click="ExitBtn_Click">
+                <Button Name="MaxExitBtn" Grid.Row="11" Height="60" Background="White" HorizontalContentAlignment="Left" Click="ExitBtn_Click">
                     <Button.Content>
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -118,11 +138,11 @@
                             </Grid.ColumnDefinitions>
                             <Image Source="/Resources/logout.png" />
 
-                            <TextBlock Text="Выход" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+                            <TextBlock Text="Выход" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
                         </Grid>
                     </Button.Content>
                 </Button>
-                <Button Grid.Row="13" Height="60" Background="White" HorizontalContentAlignment="Left" Click="EmployeesBtn_Click">
+                <Button Name="MaxEmployeesBtn" Grid.Row="13" Height="60" Background="White" HorizontalContentAlignment="Left" Click="EmployeesBtn_Click">
                     <Button.Content>
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -132,14 +152,30 @@
                                 <ColumnDefinition Width="1*" />
                             </Grid.ColumnDefinitions>
                             <Image Source="/Resources/teamwork.png" />
-                            <TextBlock Text="Сотруднки" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"/>
+                            <TextBlock Text="Сотруднки" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
+                        </Grid>
+                    </Button.Content>
+                </Button>
+                <Button Name="MaxOrdersBtn" Grid.Row="15" Height="60" Background="White" HorizontalContentAlignment="Left" Click="OrdersBtn_Click">
+                    <Button.Content>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="5" />
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="1*" />
+                            </Grid.ColumnDefinitions>
+                            <Image Source="/Resources/teamwork.png" />
+                            <TextBlock Text="Заказы" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
                         </Grid>
                     </Button.Content>
                 </Button>
             </Grid>
             
-            <Grid Name="MinimizedButtons" Visibility="Visible">
+            <Grid Name="MinimizedButtons" Visibility="Collapsed">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="auto" />
                     <RowDefinition Height="10" />
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="10" />
@@ -160,7 +196,7 @@
                     <Button.Content>
                         <StackPanel>
                             <Image Source="/Resources/ProfileIcon.png" Height="30"/>
-                            <TextBlock Text="Профиль"/>
+                            <TextBlock Text="Профиль" FontFamily="{StaticResource GothamProFamily}"/>
                         </StackPanel>
                     </Button.Content>
                 </Button>
@@ -168,7 +204,7 @@
                     <Button.Content>
                         <StackPanel>
                             <Image Source="/Resources/box.png" Height="30"/>
-                            <TextBlock Text="Товары"/>
+                            <TextBlock Text="Товары" FontFamily="{StaticResource GothamProFamily}"/>
                         </StackPanel>
                     </Button.Content>
                 </Button>
@@ -176,7 +212,7 @@
                     <Button.Content>
                         <StackPanel>
                             <Image Source="/Resources/chart.png" Height="30"/>
-                            <TextBlock Text="Статистика"/>
+                            <TextBlock Text="Статистика" FontFamily="{StaticResource GothamProFamily}"/>
                         </StackPanel>
                     </Button.Content>
                 </Button>
@@ -184,7 +220,7 @@
                     <Button.Content>
                         <StackPanel>
                             <Image Source="/Resources/customer.png" Height="30"/>
-                            <TextBlock Text="Клиенты"/>
+                            <TextBlock Text="Клиенты" FontFamily="{StaticResource GothamProFamily}"/>
                         </StackPanel>
                     </Button.Content>
                 </Button>
@@ -192,7 +228,7 @@
                     <Button.Content>
                         <StackPanel>
                             <Image Source="/Resources/delivery.png" Height="30"/>
-                            <TextBlock Text="Поставщики"/>
+                            <TextBlock Text="Поставщики" FontFamily="{StaticResource GothamProFamily}"/>
                         </StackPanel>
                     </Button.Content>
                 </Button>
@@ -200,7 +236,7 @@
                     <Button.Content>
                         <StackPanel>
                             <Image Source="/Resources/logout.png" Height="30"/>
-                            <TextBlock Text="Выход"/>
+                            <TextBlock Text="Выход" FontFamily="{StaticResource GothamProFamily}"/>
                         </StackPanel>
                     </Button.Content>
                 </Button>
@@ -208,7 +244,15 @@
                     <Button.Content>
                         <StackPanel>
                             <Image Source="/Resources/teamwork.png" Height="30"/>
-                            <TextBlock Text="Сотрудники"/>
+                            <TextBlock Text="Сотрудники" FontFamily="{StaticResource GothamProFamily}"/>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+                <Button Name="OrdersBtn" Grid.Row="15" Height="60" Background="White" Click="OrdersBtn_Click">
+                    <Button.Content>
+                        <StackPanel>
+                            <Image Source="/Resources/teamwork.png" Height="30"/>
+                            <TextBlock Text="Заказы" FontFamily="{StaticResource GothamProFamily}"/>
                         </StackPanel>
                     </Button.Content>
                 </Button>
