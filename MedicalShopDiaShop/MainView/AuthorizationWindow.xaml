@@ -15,7 +15,7 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel VerticalAlignment="Center">
-                <TextBlock Text="Личный кабинет" HorizontalAlignment="Center" FontFamily="{StaticResource GothamProFamily}"/>
+                <TextBlock Text="Личный кабинет" HorizontalAlignment="Center" FontFamily="{StaticResource GothamProFamily}" FontWeight="Bold"/>
                 <Image Source="/Resources/illustration_dashboard.png"/>
 
             </StackPanel>
