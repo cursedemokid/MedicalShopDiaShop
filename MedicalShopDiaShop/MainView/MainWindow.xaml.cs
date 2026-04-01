@@ -132,6 +132,16 @@ namespace MedicalShopDiaShop.MainView
             SetActiveButton("Orders");
         }
 
+        private void NotificationsBtn_Click(object sender, RoutedEventArgs e)
+        {
+            BlurGrid.Visibility = Visibility.Visible;
+            NotificationGrid.Visibility = Visibility.Visible;
+        }
 
+        private void BlurGrid_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            BlurGrid.Visibility = Visibility.Collapsed;
+            NotificationGrid.Visibility = Visibility.Collapsed;
+        }
     }
 }

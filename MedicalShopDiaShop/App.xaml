@@ -5,49 +5,12 @@
              StartupUri="\MainView\AuthorizationWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
-            <!--<Style TargetType="TextBlock">
-                <Setter Property="FontSize" Value="20"/>
-                <Setter Property="FontFamily" Value="Tahoma"/>
-                <Setter Property="VerticalAlignment" Value="Center"/>
-            </Style>
-            <Style TargetType="TextBox">
-                <Setter Property="FontSize" Value="20"/>
-                <Setter Property="FontFamily" Value="Tahoma"/>
-                <Setter Property="VerticalContentAlignment" Value="Center"/>
-            </Style>
-            <Style TargetType="PasswordBox">
-                <Setter Property="FontSize" Value="20"/>
-                <Setter Property="FontFamily" Value="Tahoma"/>
-                <Setter Property="VerticalContentAlignment" Value="Center"/>
-            </Style>
-            <Style TargetType="Button">
-                <Setter Property="FontSize" Value="20"/>
-                <Setter Property="FontFamily" Value="Tahoma"/>
-                <Setter Property="VerticalContentAlignment" Value="Center"/>
-                <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                <Setter Property="Height" Value="50"/>
-            </Style>
-            <Style TargetType="DatePicker">
-                <Setter Property="FontSize" Value="20"/>
-                <Setter Property="FontFamily" Value="Tahoma"/>
-                <Setter Property="VerticalContentAlignment" Value="Center"/>
-                <Setter Property="Height" Value="50"/>
-            </Style>
-            <Style TargetType="ComboBox">
-                <Setter Property="FontSize" Value="20"/>
-                <Setter Property="FontFamily" Value="Tahoma"/>
-                <Setter Property="VerticalContentAlignment" Value="Center"/>
-                <Setter Property="Height" Value="50"/>
-            </Style>
-            <Style TargetType="GroupBox">
-                <Setter Property="BorderThickness" Value="0"/>
-            </Style>
-            <Style TargetType="MenuItem">
-            </Style>-->
+            
             <ResourceDictionary.MergedDictionaries>
                 <materialDesign:BundledTheme BaseTheme="Light" PrimaryColor="Green" SecondaryColor="LightGreen" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign3.Defaults.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            
             <FontFamily x:Key="GothamProFamily">
                 /Fonts/gothampro.ttf#Gotham Pro,
                 /Fonts/gothampro_bold.ttf#Gotham Pro,
@@ -58,10 +21,8 @@
                 /Fonts/gothampro_medium.ttf#Gotham Pro,
                 /Fonts/gothampro_mediumitalic.ttf#Gotham Pro
             </FontFamily>
-            
-            <Style TargetType="TextElement">
-                <Setter Property="FontFamily" Value="{StaticResource GothamProFamily}"/>
-            </Style>
+
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

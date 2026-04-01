@@ -279,6 +279,8 @@
       <DependentUpon>Model1.edmx</DependentUpon>
       <LastGenOutput>Model1.cs</LastGenOutput>
     </Content>
+    <Resource Include="Resources\check_1742953.png" />
+    <Resource Include="Resources\notification.png" />
     <Resource Include="Resources\teamwork.png" />
     <Resource Include="Resources\left-arrow.png" />
     <Resource Include="Resources\arrow-right.png" />
