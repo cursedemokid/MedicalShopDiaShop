@@ -1,4 +1,5 @@
-﻿using MedicalShopDiaShop.MainView.Pages;
+﻿using MedicalShopDiaShop.AppData;
+using MedicalShopDiaShop.MainView.Pages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace MedicalShopDiaShop.MainView
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Dictionary<string, (Button Maximized, Button Minimized)> _buttonPairs;
+        private Dictionary<string, (Button Maximized, Button Minimized, Button Visual)> _buttonPairs;
         private string _currentActiveKey;
         public MainWindow()
         {
@@ -30,18 +31,23 @@ namespace MedicalShopDiaShop.MainView
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            _buttonPairs = new Dictionary<string, (Button, Button)>
+            _buttonPairs = new Dictionary<string, (Button, Button, Button)>
             {
-                ["Profile"] = (MaxProfileBtn, ProfileBtn),
-                ["Products"] = (MaxProductsBtn, ProductsBtn),
-                ["Stats"] = (MaxStatsBtn, StatsBtn),
-                ["Clients"] = (MaxClientsBtn, ClientsBtn),
-                ["Supplies"] = (MaxSuppliesBtn, SuppliesBtn),
-                ["Employees"] = (MaxEmployeesBtn, EmployeesBtn),
-                ["Orders"] = (MaxOrdersBtn, OrdersBtn),
-                ["Exit"] = (MaxExitBtn, ExitBtn),
-                ["Orders"] = (MaxOrdersBtn, OrdersBtn)
+                ["Profile"] = (MaxProfileBtn, ProfileBtn, ProfileVisualBtn),
+                ["Products"] = (MaxProductsBtn, ProductsBtn, ProductsVisualBtn),
+                ["Stats"] = (MaxStatsBtn, StatsBtn, StatsVisualBtn),
+                ["Clients"] = (MaxClientsBtn, ClientsBtn, ClientsVisualBtn),
+                ["Supplies"] = (MaxSuppliesBtn, SuppliesBtn, SuppliesVisualBtn),
+                ["Employees"] = (MaxEmployeesBtn, EmployeesBtn, EmployeesVisualBtn),
+                ["Orders"] = (MaxOrdersBtn, OrdersBtn, OrdersVisualBtn),
+                ["Exit"] = (MaxExitBtn, ExitBtn, ExitVisualBtn)
             };
+
+            foreach (var pair in _buttonPairs.Values)
+            {
+                if (pair.Visual != null)
+                    pair.Visual.Visibility = Visibility.Collapsed;
+            }
 
             SetActiveButton("Profile");
         }
@@ -63,12 +69,16 @@ namespace MedicalShopDiaShop.MainView
                     prevPair.Maximized.Background = Brushes.White;
                 if (prevPair.Minimized != null)
                     prevPair.Minimized.Background = Brushes.White;
+                if (prevPair.Visual != null)
+                    prevPair.Visual.Visibility = Visibility.Hidden;
             }
 
             if (currentPair.Maximized != null)
-                currentPair.Maximized.Background = Brushes.Green;
+                //currentPair.Maximized.Background = Brushes.Green;
             if (currentPair.Minimized != null)
-                currentPair.Minimized.Background = Brushes.Green;
+                //currentPair.Minimized.Background = Brushes.Green;
+            if (currentPair.Visual != null)
+                currentPair.Visual.Visibility = Visibility.Visible;
 
             _currentActiveKey = key;
         }
@@ -99,6 +109,7 @@ namespace MedicalShopDiaShop.MainView
         private void ExitBtn_Click(object sender, RoutedEventArgs e)
         {
             SetActiveButton("Exit");
+            FeedbackService.Question("Вы уверены, что хотите выйти?");
         }
 
         private void SuppliesBtn_Click(object sender, RoutedEventArgs e)
@@ -142,6 +153,16 @@ namespace MedicalShopDiaShop.MainView
         {
             BlurGrid.Visibility = Visibility.Collapsed;
             NotificationGrid.Visibility = Visibility.Collapsed;
+        }
+
+        private void NextNotificationPageBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void PreviousNotificationPageBtn_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
