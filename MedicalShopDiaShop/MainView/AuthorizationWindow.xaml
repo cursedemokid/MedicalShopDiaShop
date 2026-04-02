@@ -5,22 +5,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MedicalShopDiaShop.MainView"
         mc:Ignorable="d"
-        Title="" MaxWidth="1280" MaxHeight="720" Width="600" Height="300">
-    <Grid Margin="10">
-        <Grid>
+        Title="" MaxWidth="1280" MaxHeight="720" Width="1280" Height="720" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Image Source="/Resources/BackgroundPattern.png" Stretch="Fill"/>
+
+        <Grid Height="280" Width="580" Margin="10" Background="White">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="300" />
             </Grid.ColumnDefinitions>
 
             <StackPanel VerticalAlignment="Center">
-                <TextBlock Text="Личный кабинет" HorizontalAlignment="Center" FontFamily="{StaticResource GothamProFamily}" FontWeight="Bold"/>
+                <TextBlock Text="Личный кабинет" HorizontalAlignment="Center" FontFamily="{StaticResource GothamProFamily}" FontWeight="Bold" FontSize="20"/>
                 <Image Source="/Resources/illustration_dashboard.png"/>
 
             </StackPanel>
             
-            <Grid Grid.Column="2" VerticalAlignment="Center">
+            <Grid Grid.Column="2" VerticalAlignment="Center" Margin="10">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="10" />
@@ -40,17 +42,18 @@
                     <ColumnDefinition Width="200" />
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="Логин" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right" FontFamily="{StaticResource GothamProFamily}"/>
-                <TextBlock Grid.Row="2" Grid.Column="1" Text="Пароль" VerticalAlignment="Center" HorizontalAlignment="Right" FontFamily="{StaticResource GothamProFamily}"/>
+                <TextBlock Text="Логин" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right" FontFamily="{StaticResource GothamProFamily}" FontSize="20"/>
+                <TextBlock Grid.Row="2" Grid.Column="1" Text="Пароль" VerticalAlignment="Center" HorizontalAlignment="Right" FontFamily="{StaticResource GothamProFamily}" FontSize="20"/>
 
                 <TextBox Grid.Row="0" Grid.Column="3" FontFamily="{StaticResource GothamProFamily}"/>
                 <PasswordBox Grid.Row="2" Grid.Column="3" FontFamily="{StaticResource GothamProFamily}"/>
 
-                <CheckBox Grid.Row="4" Grid.ColumnSpan="5" HorizontalAlignment="Center" Content="Запомнить меня" FontFamily="{StaticResource GothamProFamily}"/>
+                <CheckBox Grid.Row="4" Grid.ColumnSpan="5" HorizontalAlignment="Center" Content="Запомнить меня" FontFamily="{StaticResource GothamProFamily}" FontSize="20" Width="280"/>
 
-                <Button Name="EnterBtn" Grid.Row="6" Grid.ColumnSpan="5" HorizontalAlignment="Center" Content="Войти" Click="EnterBtn_Click" FontFamily="{StaticResource GothamProFamily}"/>
-                <TextBlock Name="RegistrationBtn" Grid.Row="8" Text="Регистрация" Grid.ColumnSpan="5" HorizontalAlignment="Center" Foreground="Blue" MouseDown="RegistrationBtn_MouseDown" FontFamily="{StaticResource GothamProFamily}"/>
+                <Button Name="EnterBtn" Grid.Row="6" Grid.ColumnSpan="5" HorizontalAlignment="Center" Content="Войти" Click="EnterBtn_Click" FontFamily="{StaticResource GothamProFamily}" FontSize="20" Width="280"/>
+                <TextBlock Name="RegistrationBtn" Grid.Row="8" Text="Регистрация" Grid.ColumnSpan="5" HorizontalAlignment="Center" Foreground="Blue" MouseDown="RegistrationBtn_MouseDown" FontFamily="{StaticResource GothamProFamily}" FontSize="20"/>
             </Grid>
         </Grid>
+        
     </Grid>
 </Window>

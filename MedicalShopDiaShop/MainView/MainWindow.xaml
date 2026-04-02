@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MedicalShopDiaShop.MainView"
         mc:Ignorable="d"
-        Title="" Height="720" Width="1280" WindowStartupLocation="CenterScreen">
+        Title="" Height="720" Width="1280" WindowStartupLocation="CenterScreen"
+        Icon="/Resources/medical-symbol.png">
     <Grid Margin="5">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
@@ -29,7 +30,7 @@
                     <ColumnDefinition Width="10" />
                 </Grid.ColumnDefinitions>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Диа" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="Green" FontSize="30" FontFamily="{StaticResource GothamProFamily}" />
+                    <TextBlock Text="Диа" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="Purple" FontSize="30" FontFamily="{StaticResource GothamProFamily}" />
                     <TextBlock Text="Шоп" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="Black" FontSize="30" FontFamily="{StaticResource GothamProFamily}" />
                 </StackPanel>
 
@@ -65,7 +66,7 @@
                     <ColumnDefinition Width="auto" />
                 </Grid.ColumnDefinitions>
                 <Image Source="/Resources/ProfileIcon.png" Height="50" VerticalAlignment="Center"/>
-                <TextBlock Grid.Column="2" Text="Профиль" FontFamily="{StaticResource GothamProFamily}" VerticalAlignment="Center" FontSize="20"/>
+                <TextBlock Foreground="Black" Grid.Column="2" Text="Профиль" FontFamily="{StaticResource GothamProFamily}" VerticalAlignment="Center" FontSize="20"/>
             </Grid>
         </Grid>
         
@@ -146,7 +147,7 @@
                                     <ColumnDefinition Width="1*" />
                                 </Grid.ColumnDefinitions>
                                 <Image Source="/Resources/ProfileIcon.png" Height="50"/>
-                                <TextBlock Text="Профиль" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
+                                <TextBlock Text="Профиль" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Foreground="Black"/>
                             </Grid>
                         </Button.Content>
                     </Button>
@@ -160,7 +161,7 @@
                                     <ColumnDefinition Width="1*" />
                                 </Grid.ColumnDefinitions>
                                 <Image Source="/Resources/box.png" />
-                                <TextBlock Text="Товары" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
+                                <TextBlock Foreground="Black" Text="Товары" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
                             </Grid>
                         </Button.Content>
                     </Button>
@@ -174,7 +175,7 @@
                                     <ColumnDefinition Width="1*" />
                                 </Grid.ColumnDefinitions>
                                 <Image Source="/Resources/chart.png" />
-                                <TextBlock Text="Статистика" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
+                                <TextBlock Foreground="Black" Text="Статистика" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
                             </Grid>
                         </Button.Content>
                     </Button>
@@ -188,7 +189,7 @@
                                     <ColumnDefinition Width="1*" />
                                 </Grid.ColumnDefinitions>
                                 <Image Source="/Resources/customer.png" />
-                                <TextBlock Text="Клиенты" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
+                                <TextBlock Foreground="Black" Text="Клиенты" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
                             </Grid>
                         </Button.Content>
                     </Button>
@@ -202,7 +203,7 @@
                                     <ColumnDefinition Width="1*" />
                                 </Grid.ColumnDefinitions>
                                 <Image Source="/Resources/delivery.png" />
-                                <TextBlock Text="Поставщики" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
+                                <TextBlock Foreground="Black" Text="Поставщики" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
                             </Grid>
                         </Button.Content>
                     </Button>
@@ -217,7 +218,7 @@
                                 </Grid.ColumnDefinitions>
                                 <Image Source="/Resources/logout.png" />
 
-                                <TextBlock Text="Выход" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
+                                <TextBlock Foreground="Black" Text="Выход" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
                             </Grid>
                         </Button.Content>
                     </Button>
@@ -231,7 +232,7 @@
                                     <ColumnDefinition Width="1*" />
                                 </Grid.ColumnDefinitions>
                                 <Image Source="/Resources/teamwork.png" />
-                                <TextBlock Text="Сотруднки" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
+                                <TextBlock Foreground="Black" Text="Сотруднки" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
                             </Grid>
                         </Button.Content>
                     </Button>
@@ -245,7 +246,7 @@
                                     <ColumnDefinition Width="1*" />
                                 </Grid.ColumnDefinitions>
                                 <Image Source="/Resources/check_1742953.png" />
-                                <TextBlock Text="Заказы" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
+                                <TextBlock Foreground="Black" Text="Заказы" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
                             </Grid>
                         </Button.Content>
                     </Button>
@@ -275,7 +276,7 @@
                         <Button.Content>
                             <StackPanel>
                                 <Image Source="/Resources/ProfileIcon.png" Height="30"/>
-                                <TextBlock Text="Профиль" FontFamily="{StaticResource GothamProFamily}"/>
+                                <TextBlock Foreground="Black" Text="Профиль" FontFamily="{StaticResource GothamProFamily}"/>
                             </StackPanel>
                         </Button.Content>
                     </Button>
@@ -283,7 +284,7 @@
                         <Button.Content>
                             <StackPanel>
                                 <Image Source="/Resources/box.png" Height="30"/>
-                                <TextBlock Text="Товары" FontFamily="{StaticResource GothamProFamily}"/>
+                                <TextBlock Foreground="Black" Text="Товары" FontFamily="{StaticResource GothamProFamily}"/>
                             </StackPanel>
                         </Button.Content>
                     </Button>
@@ -291,7 +292,7 @@
                         <Button.Content>
                             <StackPanel>
                                 <Image Source="/Resources/chart.png" Height="30"/>
-                                <TextBlock Text="Статистика" FontFamily="{StaticResource GothamProFamily}"/>
+                                <TextBlock Foreground="Black" Text="Статистика" FontFamily="{StaticResource GothamProFamily}"/>
                             </StackPanel>
                         </Button.Content>
                     </Button>
@@ -299,7 +300,7 @@
                         <Button.Content>
                             <StackPanel>
                                 <Image Source="/Resources/customer.png" Height="30"/>
-                                <TextBlock Text="Клиенты" FontFamily="{StaticResource GothamProFamily}"/>
+                                <TextBlock Foreground="Black" Text="Клиенты" FontFamily="{StaticResource GothamProFamily}"/>
                             </StackPanel>
                         </Button.Content>
                     </Button>
@@ -307,7 +308,7 @@
                         <Button.Content>
                             <StackPanel>
                                 <Image Source="/Resources/delivery.png" Height="30"/>
-                                <TextBlock Text="Поставщики" FontFamily="{StaticResource GothamProFamily}"/>
+                                <TextBlock Foreground="Black" Text="Поставщики" FontFamily="{StaticResource GothamProFamily}"/>
                             </StackPanel>
                         </Button.Content>
                     </Button>
@@ -315,7 +316,7 @@
                         <Button.Content>
                             <StackPanel>
                                 <Image Source="/Resources/logout.png" Height="30"/>
-                                <TextBlock Text="Выход" FontFamily="{StaticResource GothamProFamily}"/>
+                                <TextBlock Foreground="Black" Text="Выход" FontFamily="{StaticResource GothamProFamily}"/>
                             </StackPanel>
                         </Button.Content>
                     </Button>
@@ -323,7 +324,7 @@
                         <Button.Content>
                             <StackPanel>
                                 <Image Source="/Resources/teamwork.png" Height="30"/>
-                                <TextBlock Text="Сотрудники" FontFamily="{StaticResource GothamProFamily}"/>
+                                <TextBlock Foreground="Black" Text="Сотрудники" FontFamily="{StaticResource GothamProFamily}"/>
                             </StackPanel>
                         </Button.Content>
                     </Button>
@@ -331,7 +332,7 @@
                         <Button.Content>
                             <StackPanel>
                                 <Image Source="/Resources/check_1742953.png" Height="30"/>
-                                <TextBlock Text="Заказы" FontFamily="{StaticResource GothamProFamily}"/>
+                                <TextBlock Foreground="Black" Text="Заказы" FontFamily="{StaticResource GothamProFamily}"/>
                             </StackPanel>
                         </Button.Content>
                     </Button>
@@ -343,12 +344,12 @@
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="7*" />
                     </Grid.RowDefinitions>
-                    <Separator Height="Auto" Background="Green">
+                    <Separator Height="Auto" Background="Purple">
                         <Separator.LayoutTransform>
                             <RotateTransform Angle="90"/>
                         </Separator.LayoutTransform>
                     </Separator>
-                    <Separator Grid.Row="2" Height="Auto" Background="Green">
+                    <Separator Grid.Row="2" Height="Auto" Background="Purple">
                         <Separator.LayoutTransform>
                             <RotateTransform Angle="90"/>
                         </Separator.LayoutTransform>
@@ -375,7 +376,7 @@
                 <RowDefinition Height="50" />
             </Grid.RowDefinitions>
             <Grid Width="300">
-                <TextBlock Text="Уведомления" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Margin="10 0 0 0"/>
+                <TextBlock Foreground="Black" Text="Уведомления" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Margin="10 0 0 0"/>
             </Grid>
             <ListBox Name="NotificationListBox" Grid.Row="2">
                 <ListBox.ItemTemplate>
@@ -387,8 +388,8 @@
                                 <RowDefinition Height="auto" />
                             </Grid.RowDefinitions>
                             <Ellipse HorizontalAlignment="Right" VerticalAlignment="Top" Fill="Blue" Height="10" Width="10" Visibility="{Binding Visibility}"/>
-                            <TextBlock Grid.Row="0" Text="Заголовок" FontFamily="{StaticResource GothamProFamily}" FontSize="20" FontWeight="Bold" TextWrapping="Wrap"/>
-                            <TextBlock Grid.Row="2" Text="10 минут назад" FontFamily="{StaticResource GothamProFamily}" FontSize="15" FontWeight="Light" TextWrapping="Wrap"/>
+                            <TextBlock Foreground="Black" Grid.Row="0" Text="Заголовок" FontFamily="{StaticResource GothamProFamily}" FontSize="20" FontWeight="Bold" TextWrapping="Wrap"/>
+                            <TextBlock Foreground="Black" Grid.Row="2" Text="10 минут назад" FontFamily="{StaticResource GothamProFamily}" FontSize="15" FontWeight="Light" TextWrapping="Wrap"/>
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
