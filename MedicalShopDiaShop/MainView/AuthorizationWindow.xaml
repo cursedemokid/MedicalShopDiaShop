@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MedicalShopDiaShop.MainView"
         mc:Ignorable="d"
-        Title="" MaxWidth="1280" MaxHeight="720" Width="1280" Height="720" WindowStartupLocation="CenterScreen">
+        Title="" MaxWidth="1280" MaxHeight="720" Width="1280" Height="720" WindowStartupLocation="CenterScreen" Icon="/Resources/sugar.png">
     <Grid>
         <Image Source="/Resources/BackgroundPattern.png" Stretch="Fill"/>
 
@@ -51,7 +51,7 @@
                 <CheckBox Grid.Row="4" Grid.ColumnSpan="5" HorizontalAlignment="Center" Content="Запомнить меня" FontFamily="{StaticResource GothamProFamily}" FontSize="20" Width="280"/>
 
                 <Button Name="EnterBtn" Grid.Row="6" Grid.ColumnSpan="5" HorizontalAlignment="Center" Content="Войти" Click="EnterBtn_Click" FontFamily="{StaticResource GothamProFamily}" FontSize="20" Width="280"/>
-                <TextBlock Name="RegistrationBtn" Grid.Row="8" Text="Регистрация" Grid.ColumnSpan="5" HorizontalAlignment="Center" Foreground="Blue" MouseDown="RegistrationBtn_MouseDown" FontFamily="{StaticResource GothamProFamily}" FontSize="20"/>
+                <TextBlock Name="RegistrationBtn" Grid.Row="8" Text="Регистрация" Grid.ColumnSpan="5" HorizontalAlignment="Center" Foreground="MediumPurple" MouseDown="RegistrationBtn_MouseDown" FontFamily="{StaticResource GothamProFamily}" FontSize="20" Cursor="Hand"/>
             </Grid>
         </Grid>
         

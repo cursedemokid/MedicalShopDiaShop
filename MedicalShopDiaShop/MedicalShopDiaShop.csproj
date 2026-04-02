@@ -286,6 +286,7 @@
       <DependentUpon>Model1.edmx</DependentUpon>
       <LastGenOutput>Model1.cs</LastGenOutput>
     </Content>
+    <Resource Include="Resources\sugar.png" />
     <Resource Include="Resources\BackgroundPattern.png" />
     <Resource Include="Resources\medical-symbol.png" />
     <Resource Include="Resources\wellness.png" />

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:MedicalShopDiaShop.MainView"
         mc:Ignorable="d"
         Title="" Height="720" Width="1280" WindowStartupLocation="CenterScreen"
-        Icon="/Resources/medical-symbol.png">
+        Icon="/Resources/sugar.png">
     <Grid Margin="5">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />

@@ -21,9 +21,9 @@
 
         <!-- Иконка и заголовок -->
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,15">
-            <materialDesign:PackIcon Name="Icon" Kind="Information" Width="32" Height="32" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                <materialDesign:PackIcon Name="Icon" Kind="Information" Width="32" Height="32" Margin="0,0,10,0" VerticalAlignment="Center" Foreground="#FF673AB7"/>
             <TextBlock Name="TitleText" Text="Заголовок" FontSize="22" FontWeight="Bold" 
-                       FontFamily="{StaticResource GothamProFamily}" VerticalAlignment="Center"/>
+                       FontFamily="{StaticResource GothamProFamily}" VerticalAlignment="Center" Foreground="#FF673AB7"/>
         </StackPanel>
 
         <!-- Текст сообщения -->
