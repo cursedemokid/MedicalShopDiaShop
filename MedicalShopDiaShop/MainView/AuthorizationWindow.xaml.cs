@@ -31,9 +31,69 @@ namespace MedicalShopDiaShop.MainView
 
         private void EnterBtn_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow mainWindow = new MainWindow();
-            mainWindow.Show();
-            Close();
+            if (ValidateFields())
+            {
+                MainWindow mainWindow = new MainWindow();
+                mainWindow.Show();
+                Close();
+            }
+        }
+
+        private void LoginTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(LoginTextBox.Text))
+                ClearLoginError();
+        }
+
+        private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(PasswordBox.Password))
+                ClearPasswordError();
+        }
+
+        private void ClearPasswordError()
+        {
+            PasswordGroupBox.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF673AB7"));
+            PasswordHeader.Foreground = Brushes.Black;
+            PasswordErrorText.Visibility = Visibility.Collapsed;
+        }
+
+        private bool ValidateFields()
+        {
+            bool isValid = true;
+
+            if (string.IsNullOrWhiteSpace(LoginTextBox.Text))
+            {
+                LoginGroupBox.BorderBrush = Brushes.Red;
+                LoginHeader.Foreground = Brushes.Red;
+                LoginErrorText.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+            else
+            {
+                ClearLoginError();
+            }
+
+            if (string.IsNullOrWhiteSpace(PasswordBox.Password))
+            {
+                PasswordGroupBox.BorderBrush = Brushes.Red;
+                PasswordHeader.Foreground = Brushes.Red;
+                PasswordErrorText.Visibility = Visibility.Visible;
+                isValid = false;
+            }
+            else
+            {
+                ClearPasswordError();
+            }
+
+            return isValid;
+        }
+
+        private void ClearLoginError()
+        {
+            LoginGroupBox.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF673AB7"));
+            LoginHeader.Foreground = Brushes.Black;
+            LoginErrorText.Visibility = Visibility.Collapsed;
         }
     }
 }

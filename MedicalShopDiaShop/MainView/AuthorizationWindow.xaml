@@ -5,69 +5,106 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MedicalShopDiaShop.MainView"
         mc:Ignorable="d"
-        Title="" MaxWidth="1280" MaxHeight="720" Width="1280" Height="720" WindowStartupLocation="CenterScreen" Icon="/Resources/sugar.png">
+        Title="" MaxWidth="1280" MaxHeight="720" Width="1280" Height="720" 
+        WindowStartupLocation="CenterScreen" Icon="/Resources/sugar.png">
     <Grid>
         <Image Source="/Resources/BackgroundPatternPurple.png" Stretch="Fill"/>
 
-        <Border CornerRadius="20" BorderThickness="1" BorderBrush="White" Height="300" Width="600" Background="White">
-            
-        <Grid Height="280" Width="580" Margin="10" Background="White">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="300" />
-            </Grid.ColumnDefinitions>
-
-            <StackPanel VerticalAlignment="Center">
-                <TextBlock Text="Личный кабинет" HorizontalAlignment="Center" FontFamily="{StaticResource GothamProFamily}" FontWeight="Bold" FontSize="20"/>
-                <Image Source="/Resources/illustration_dashboard.png"/>
-
-            </StackPanel>
-            
-            <Grid Grid.Column="2" VerticalAlignment="Center" Margin="10">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="10" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="10" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="10" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="10" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="10" />
-                </Grid.RowDefinitions>
+        <Border CornerRadius="20" BorderThickness="1" BorderBrush="White" Height="350" Width="600" Background="White">
+            <Grid  Width="580" Margin="10" Background="White">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="auto" />
                     <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="200" />
-                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="300" />
                 </Grid.ColumnDefinitions>
-                <!--<TextBlock Text="Логин" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right" FontFamily="{StaticResource GothamProFamily}" FontSize="20"/>-->
-                <!--<TextBlock Grid.Row="2" Grid.Column="1" Text="Пароль" VerticalAlignment="Center" HorizontalAlignment="Right" FontFamily="{StaticResource GothamProFamily}" FontSize="20"/>-->
 
-                <GroupBox Style="{x:Null}" Grid.Column="1" Grid.ColumnSpan="3" BorderBrush="#FF673AB7" Width="280">
-                    <GroupBox.Header>
-                        <TextBlock Text="Логин" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
-                    </GroupBox.Header>
-                    <TextBox Grid.Row="0" Grid.Column="3" FontSize="15" FontFamily="{StaticResource GothamProFamily}"/>
-                </GroupBox>
-                <GroupBox Style="{x:Null}" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="3" BorderBrush="#FF673AB7">
-                    <GroupBox.Header>
-                        <TextBlock Text="Пароль" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
-                    </GroupBox.Header>
-                        <PasswordBox Grid.Row="2" Grid.Column="3" FontFamily="{StaticResource GothamProFamily}" FontSize="15"/>
-                </GroupBox>
+                <!-- Левая панель -->
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="Личный кабинет" HorizontalAlignment="Center" 
+                               FontFamily="{StaticResource GothamProFamily}" FontWeight="Bold" FontSize="20"/>
+                    <Image Source="/Resources/illustration_dashboard.png"/>
+                </StackPanel>
 
-                <CheckBox Grid.Row="4" Grid.ColumnSpan="5" HorizontalAlignment="Center" Content="Запомнить меня" FontFamily="{StaticResource GothamProFamily}" FontSize="20" Width="280"/>
+                <!-- Правая панель с формой -->
+                <Grid Grid.Column="2" VerticalAlignment="Center" Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <!-- 0: логин -->
+                        <RowDefinition Height="auto" />
+                        <!-- 1: ошибка логина -->
+                        <RowDefinition Height="10" />
+                        <!-- 2: отступ -->
+                        <RowDefinition Height="auto" />
+                        <!-- 3: пароль -->
+                        <RowDefinition Height="auto" />
+                        <!-- 4: ошибка пароля -->
+                        <RowDefinition Height="10" />
+                        <!-- 5: отступ -->
+                        <RowDefinition Height="auto" />
+                        <!-- 6: чекбокс -->
+                        <RowDefinition Height="10" />
+                        <!-- 7: отступ -->
+                        <RowDefinition Height="auto" />
+                        <!-- 8: кнопка -->
+                        <RowDefinition Height="10" />
+                        <!-- 9: отступ -->
+                        <RowDefinition Height="auto" />
+                        <!-- 10: ссылка регистрации -->
+                        <RowDefinition Height="1*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="200" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
 
-                <Button Name="EnterBtn" Grid.Row="6" Grid.ColumnSpan="5" HorizontalAlignment="Center" Content="Войти" Click="EnterBtn_Click" FontFamily="{StaticResource GothamProFamily}" FontSize="20" Width="280"/>
-                <TextBlock Name="RegistrationBtn" Grid.Row="8" Text="Регистрация" Grid.ColumnSpan="5" HorizontalAlignment="Center" Foreground="MediumPurple" MouseDown="RegistrationBtn_MouseDown" FontFamily="{StaticResource GothamProFamily}" FontSize="20" Cursor="Hand"/>
+                    <!-- Логин -->
+                    <GroupBox x:Name="LoginGroupBox" Style="{x:Null}" Grid.Column="1" Grid.ColumnSpan="3" 
+                              BorderBrush="#FF673AB7" Width="280">
+                        <GroupBox.Header>
+                            <TextBlock x:Name="LoginHeader" Text="Логин" FontSize="20" 
+                                       FontFamily="{StaticResource GothamProFamily}"/>
+                        </GroupBox.Header>
+                        <TextBox x:Name="LoginTextBox" FontSize="15" FontFamily="{StaticResource GothamProFamily}"
+                                 TextChanged="LoginTextBox_TextChanged"/>
+                    </GroupBox>
+                    <TextBlock x:Name="LoginErrorText" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3"
+                               Text="это поле обязательно для заполнения!" Foreground="Red" FontSize="14" 
+                               Visibility="Collapsed" Margin="0,2,0,0" HorizontalAlignment="Left"/>
+
+                    <!-- Пароль -->
+                    <GroupBox x:Name="PasswordGroupBox" Style="{x:Null}" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" 
+                              BorderBrush="#FF673AB7" Width="280">
+                        <GroupBox.Header>
+                            <TextBlock x:Name="PasswordHeader" Text="Пароль" FontSize="20" 
+                                       FontFamily="{StaticResource GothamProFamily}"/>
+                        </GroupBox.Header>
+                        <PasswordBox x:Name="PasswordBox" FontFamily="{StaticResource GothamProFamily}" FontSize="15"
+                                     PasswordChanged="PasswordBox_PasswordChanged"/>
+                    </GroupBox>
+                    <TextBlock x:Name="PasswordErrorText" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3"
+                               Text="это поле обязательно для заполнения!" Foreground="Red" FontSize="14" 
+                               Visibility="Collapsed" Margin="0,2,0,0" HorizontalAlignment="Left"/>
+
+                    <!-- Запомнить меня -->
+                    <CheckBox x:Name="RememberMeCheckBox" Grid.Row="6" Grid.ColumnSpan="5" 
+                              HorizontalAlignment="Center" Content="Запомнить меня" 
+                              FontFamily="{StaticResource GothamProFamily}" FontSize="20" Width="280"/>
+
+                    <!-- Кнопка входа -->
+                    <Button Name="EnterBtn" Grid.Row="8" Grid.ColumnSpan="4" HorizontalAlignment="Center" 
+                            Content="Войти" Click="EnterBtn_Click" FontFamily="{StaticResource GothamProFamily}" 
+                            FontSize="20" Width="280"/>
+
+                    <!-- Регистрация -->
+                    <TextBlock Name="RegistrationBtn" Grid.Row="10" Text="Регистрация" Grid.ColumnSpan="5" 
+                               HorizontalAlignment="Center" Foreground="MediumPurple" 
+                               MouseDown="RegistrationBtn_MouseDown" FontFamily="{StaticResource GothamProFamily}" 
+                               FontSize="20" Cursor="Hand"/>
+                </Grid>
             </Grid>
-        </Grid>
         </Border>
-
     </Grid>
-        
 </Window>

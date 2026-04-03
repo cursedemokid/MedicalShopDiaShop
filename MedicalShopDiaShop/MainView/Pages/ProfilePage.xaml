@@ -93,7 +93,7 @@
                     </Grid.RowDefinitions>
                     <TextBlock Text="Расписание" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
                     <Border Grid.Row="2" CornerRadius="30" BorderBrush="White" BorderThickness="1">
-                        <Calendar Language="Ru"/>
+                        <Calendar Language="Ru" FontFamily="{StaticResource GothamProLight}"/>
                     </Border>
                 </Grid>
             </Border>
@@ -120,9 +120,33 @@
                     <ListBox Name="TasksListBox" Grid.Row="2">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <Grid>
-                                    
-                                </Grid>
+                                <Grid Margin="10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="10" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                    <StackPanel Orientation="Horizontal">
+                                        <ComboBox/>
+                                        <TextBlock Grid.Row="0" Text="Заголовок" FontFamily="{StaticResource GothamProFamily}" FontSize="20" FontWeight="Bold" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                    <Grid Grid.Row="2">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="auto" />
+                                            <RowDefinition Height="5" />
+                                            <RowDefinition Height="auto" />
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="5" />
+                                            <ColumnDefinition Width="auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="Начало" FontFamily="{StaticResource GothamPro}" FontSize="15" FontWeight="Light" TextWrapping="Wrap"/>
+                                        <TextBlock Grid.Column="2" Text="Дедлайн" FontFamily="{StaticResource GothamPro}" FontSize="15" FontWeight="Light" TextWrapping="Wrap"/>
+                                        <TextBlock Grid.Column="0" Grid.Row="2" Text="16:00 2025.04.03" FontFamily="{StaticResource GothamProLight}" FontSize="15" FontWeight="Light" TextWrapping="Wrap"/>
+                                        <TextBlock Grid.Column="2" Grid.Row="2" Text="16:00 2025.04.31" FontFamily="{StaticResource GothamProLight}" FontSize="15" FontWeight="Light" TextWrapping="Wrap"/>
+                                    </Grid>
+                                 </Grid>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
