@@ -30,7 +30,7 @@
                     <ColumnDefinition Width="10" />
                 </Grid.ColumnDefinitions>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Диа" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="Purple" FontSize="30" FontFamily="{StaticResource GothamProFamily}" />
+                    <TextBlock Text="Диа" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="#FF673AB7" FontSize="30" FontFamily="{StaticResource GothamProFamily}" />
                     <TextBlock Text="Шоп" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="Black" FontSize="30" FontFamily="{StaticResource GothamProFamily}" />
                 </StackPanel>
 
@@ -344,12 +344,12 @@
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="7*" />
                     </Grid.RowDefinitions>
-                    <Separator Height="Auto" Background="Purple">
+                    <Separator Height="Auto" Background="#FF673AB7">
                         <Separator.LayoutTransform>
                             <RotateTransform Angle="90"/>
                         </Separator.LayoutTransform>
                     </Separator>
-                    <Separator Grid.Row="2" Height="Auto" Background="Purple">
+                    <Separator Grid.Row="2" Height="Auto" Background="#FF673AB7">
                         <Separator.LayoutTransform>
                             <RotateTransform Angle="90"/>
                         </Separator.LayoutTransform>

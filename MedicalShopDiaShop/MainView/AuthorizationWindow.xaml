@@ -7,8 +7,10 @@
         mc:Ignorable="d"
         Title="" MaxWidth="1280" MaxHeight="720" Width="1280" Height="720" WindowStartupLocation="CenterScreen" Icon="/Resources/sugar.png">
     <Grid>
-        <Image Source="/Resources/BackgroundPattern.png" Stretch="Fill"/>
+        <Image Source="/Resources/BackgroundPatternPurple.png" Stretch="Fill"/>
 
+        <Border CornerRadius="20" BorderThickness="1" BorderBrush="White" Height="300" Width="600" Background="White">
+            
         <Grid Height="280" Width="580" Margin="10" Background="White">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />
@@ -42,11 +44,21 @@
                     <ColumnDefinition Width="200" />
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="Логин" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right" FontFamily="{StaticResource GothamProFamily}" FontSize="20"/>
-                <TextBlock Grid.Row="2" Grid.Column="1" Text="Пароль" VerticalAlignment="Center" HorizontalAlignment="Right" FontFamily="{StaticResource GothamProFamily}" FontSize="20"/>
+                <!--<TextBlock Text="Логин" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right" FontFamily="{StaticResource GothamProFamily}" FontSize="20"/>-->
+                <!--<TextBlock Grid.Row="2" Grid.Column="1" Text="Пароль" VerticalAlignment="Center" HorizontalAlignment="Right" FontFamily="{StaticResource GothamProFamily}" FontSize="20"/>-->
 
-                <TextBox Grid.Row="0" Grid.Column="3" FontFamily="{StaticResource GothamProFamily}"/>
-                <PasswordBox Grid.Row="2" Grid.Column="3" FontFamily="{StaticResource GothamProFamily}"/>
+                <GroupBox Style="{x:Null}" Grid.Column="1" Grid.ColumnSpan="3" BorderBrush="#FF673AB7" Width="280">
+                    <GroupBox.Header>
+                        <TextBlock Text="Логин" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
+                    </GroupBox.Header>
+                    <TextBox Grid.Row="0" Grid.Column="3" FontSize="15" FontFamily="{StaticResource GothamProFamily}"/>
+                </GroupBox>
+                <GroupBox Style="{x:Null}" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="3" BorderBrush="#FF673AB7" >
+                    <GroupBox.Header>
+                        <TextBlock Text="Пароль" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
+                    </GroupBox.Header>
+                        <PasswordBox Grid.Row="2" Grid.Column="3" FontFamily="{StaticResource GothamProFamily}" FontSize="15"/>
+                </GroupBox>
 
                 <CheckBox Grid.Row="4" Grid.ColumnSpan="5" HorizontalAlignment="Center" Content="Запомнить меня" FontFamily="{StaticResource GothamProFamily}" FontSize="20" Width="280"/>
 
@@ -54,6 +66,8 @@
                 <TextBlock Name="RegistrationBtn" Grid.Row="8" Text="Регистрация" Grid.ColumnSpan="5" HorizontalAlignment="Center" Foreground="MediumPurple" MouseDown="RegistrationBtn_MouseDown" FontFamily="{StaticResource GothamProFamily}" FontSize="20" Cursor="Hand"/>
             </Grid>
         </Grid>
-        
+        </Border>
+
     </Grid>
+        
 </Window>
