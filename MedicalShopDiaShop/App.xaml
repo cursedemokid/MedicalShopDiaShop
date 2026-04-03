@@ -21,7 +21,8 @@
                 /Fonts/gothampro_medium.ttf#Gotham Pro,
                 /Fonts/gothampro_mediumitalic.ttf#Gotham Pro
             </FontFamily>
-
+            
+            <FontFamily x:Key="GothamProLight">/Fonts/gothampro_light.ttf#Gotham Pro</FontFamily>
 
         </ResourceDictionary>
     </Application.Resources>

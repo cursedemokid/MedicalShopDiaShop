@@ -286,6 +286,8 @@
       <DependentUpon>Model1.edmx</DependentUpon>
       <LastGenOutput>Model1.cs</LastGenOutput>
     </Content>
+    <Resource Include="Resources\avatarka.png" />
+    <Resource Include="Resources\BackgroundPatternGreen.png" />
     <Resource Include="Resources\BackgroundPatternPurple.png" />
     <Resource Include="Resources\BackgroundPatternGreenLowScale.png" />
     <Resource Include="Resources\sugar.png" />

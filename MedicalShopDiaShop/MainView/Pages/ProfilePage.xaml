@@ -14,17 +14,57 @@
             <ColumnDefinition Width="10" />
             <ColumnDefinition Width="2*" />
         </Grid.ColumnDefinitions>
-        <Grid>
+
+        <Border CornerRadius="30" 
+        Background="White" 
+        ClipToBounds="False" 
+        UseLayoutRounding="True"
+                Margin="10">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="20" 
+                          ShadowDepth="0" 
+                          Opacity="0.25" 
+                          Color="Gray"/>
+            </Border.Effect>
+
+            <Grid Margin="10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="10" />
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="10" />
                 <RowDefinition Height="auto" />
+                <RowDefinition Height="5" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="5" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="5" />
+                <RowDefinition Height="auto" />
                 <RowDefinition Height="1*" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="30" />
             </Grid.RowDefinitions>
-            <Image Source="{Binding AvatarPath}" Height="200" Width="200"/>
-            <Separator Grid.Row="1"/>
-        </Grid>
+            <Image Source="/Resources/avatarka.png" Height="200" Width="200">
+                <Image.Clip>
+                    <EllipseGeometry Center="100,100" RadiusX="100" RadiusY="100"/>
+                </Image.Clip>
+            </Image>
+            <TextBlock Grid.Row="2" Text="salchichon" FontSize="20" FontFamily="{StaticResource GothamProFamily}" HorizontalAlignment="Center"/>
+            <Separator Grid.Row="3"/>
+            <TextBlock Grid.Row="4" Text="ФИО" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
+            <TextBlock Grid.Row="6" Text="Фамилия Имя Отчество" FontSize="20" FontFamily="{StaticResource GothamProLight}" TextWrapping="Wrap"/>
+            <TextBlock Grid.Row="8" Text="Роль" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
+                <TextBlock Grid.Row="10" Text="Администратор" FontSize="20" FontFamily="{StaticResource GothamProLight}" FontWeight="Light" TextWrapping="Wrap"/>
+            <TextBlock Grid.Row="12" Text="Магазин" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
+            <TextBlock Grid.Row="14" Text="ул. Бэмбикс, Мамиксовый переулок" FontSize="20" FontFamily="{StaticResource GothamProLight}" FontWeight="Light" TextWrapping="Wrap"/>
+
+                <Button Grid.Row="16" Content="Сменить пароль" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
+            </Grid>
+        </Border>
+
     </Grid>
 </Page>
