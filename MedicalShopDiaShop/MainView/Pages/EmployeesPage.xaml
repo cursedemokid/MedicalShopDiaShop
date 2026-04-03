@@ -10,7 +10,105 @@
 
     <Grid Background="White">
         <Grid.RowDefinitions>
-            
+            <RowDefinition Height="100" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="100" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
+        <Grid Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+            
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <ComboBox Width="400" IsEditable="True" Height="50" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
+                <Button Grid.Column="2" Padding="2" Height="50" Background="White" BorderBrush="White">
+                    <Button.Content>
+                        <Image Source="/Resources/search.png"/>
+                    </Button.Content>
+                </Button>
+            </Grid>
+
+            <Button Name="AddBtn" Grid.Column="3" Content="Добавить" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Click="AddBtn_Click" Height="50"/>
+            <Button Name="EditBtn" Grid.Column="5" Content="Изменить" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Click="EditBtn_Click" Height="50"/>
+            <Button Name="DeleteBtn" Grid.Column="7" Content="Удалить" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Click="DeleteBtn_Click" Height="50"/>
+        </Grid>
+
+        <Grid Grid.Row="2" Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="7">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="2" Background="White" Padding="1" BorderThickness="0" Height="50">
+                    <Button.Content>
+                        <Image Source="/Resources/dots.png" Width="70"/>
+                    </Button.Content>
+                </Button>
+                <Button Background="White" Padding="1" BorderThickness="0" Height="50">
+                    <Button.Content>
+                        <Image Source="/Resources/menu.png" Width="70"/>
+                    </Button.Content>
+                </Button>
+            </Grid>
+
+            <GroupBox Grid.Column="1" Style="{x:Null}" BorderBrush="Black" BorderThickness="2">
+                <GroupBox.Header>
+                    <TextBlock Text="Должность" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
+                </GroupBox.Header>
+                <ComboBox/>
+            </GroupBox>
+
+            <GroupBox Grid.Column="3" Style="{x:Null}" BorderBrush="Black" BorderThickness="2">
+                <GroupBox.Header>
+                    <TextBlock Text="Должность" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
+                </GroupBox.Header>
+                <ComboBox/>
+            </GroupBox>
+        </Grid>
+
+        <Grid Grid.Row="4" Margin="10">
+            <ListView Name="EmployeesListView" Visibility="Hidden">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <ListBox Name="EmployeesListBox" Visibility="Hidden">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+        
     </Grid>
 </Page>

@@ -293,6 +293,8 @@
       <DependentUpon>Model1.edmx</DependentUpon>
       <LastGenOutput>Model1.cs</LastGenOutput>
     </Content>
+    <Resource Include="Resources\dots.png" />
+    <Resource Include="Resources\menu.png" />
     <Resource Include="Resources\avatarka.png" />
     <Resource Include="Resources\BackgroundPatternGreen.png" />
     <Resource Include="Resources\BackgroundPatternPurple.png" />

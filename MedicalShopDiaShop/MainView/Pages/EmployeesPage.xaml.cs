@@ -24,5 +24,20 @@ namespace MedicalShopDiaShop.MainView.Pages
         {
             InitializeComponent();
         }
+
+        private void AddBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void EditBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void DeleteBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

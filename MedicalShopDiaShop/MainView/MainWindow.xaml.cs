@@ -164,6 +164,7 @@ namespace MedicalShopDiaShop.MainView
         private void EmployeesBtn_Click(object sender, RoutedEventArgs e)
         {
             SetActiveButton("Employees");
+            MainFrame.Navigate(new EmployeesPage());
         }
 
         private void ExitBtn_Click(object sender, RoutedEventArgs e)
