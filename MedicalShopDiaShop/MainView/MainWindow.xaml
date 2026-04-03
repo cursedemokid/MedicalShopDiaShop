@@ -383,12 +383,21 @@
         </Grid>
 
         <!-- Затемнение и уведомления -->
-        <Grid Name="BlurGrid" Background="White" Opacity="0.4" Visibility="Collapsed" MouseDown="BlurGrid_MouseDown" />
+        <Grid Name="BlurGrid" Background="White" Opacity="0" Visibility="Collapsed" MouseDown="BlurGrid_MouseDown" />
         <Grid Name="NotificationGrid" Visibility="Collapsed" HorizontalAlignment="Right" Grid.Column="1" Background="White"
               Width="300" RenderTransformOrigin="0.5,0.5">
             <Grid.RenderTransform>
                 <TranslateTransform X="300"/>
             </Grid.RenderTransform>
+
+            <Grid.Effect>
+                <DropShadowEffect Direction="180" 
+                          ShadowDepth="5" 
+                          BlurRadius="15" 
+                          Opacity="0.3" 
+                          Color="Black"/>
+            </Grid.Effect>
+
             <Grid.RowDefinitions>
                 <RowDefinition Height="50" />
                 <RowDefinition Height="10" />

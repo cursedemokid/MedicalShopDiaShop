@@ -66,5 +66,40 @@
             </Grid>
         </Border>
 
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+
+            <Border CornerRadius="30" 
+                Background="White" 
+                ClipToBounds="False" 
+                UseLayoutRounding="True"
+                Margin="10" Grid.Column="2">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="20" 
+                  ShadowDepth="0" 
+                  Opacity="0.25" 
+                  Color="Gray"/>
+                </Border.Effect>
+
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="1*" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Расписание" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
+                    <Border Grid.Row="2" CornerRadius="30" BorderBrush="White" BorderThickness="1">
+                        <Calendar Language="Ru"/>
+                    </Border>
+                </Grid>
+            </Border>
+        </Grid>
+        
+
     </Grid>
 </Page>
