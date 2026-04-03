@@ -172,7 +172,9 @@ namespace MedicalShopDiaShop.MainView
             var result = FeedbackService.Question("Вы уверены, что хотите выйти?");
             if (result == MessageBoxResult.Yes)
             {
-                Application.Current.Shutdown();
+                AuthorizationWindow authorizationWindow = new AuthorizationWindow();
+                authorizationWindow.Show();
+                Close();
             }
         }
 
