@@ -53,7 +53,7 @@
                     </GroupBox.Header>
                     <TextBox Grid.Row="0" Grid.Column="3" FontSize="15" FontFamily="{StaticResource GothamProFamily}"/>
                 </GroupBox>
-                <GroupBox Style="{x:Null}" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="3" BorderBrush="#FF673AB7" >
+                <GroupBox Style="{x:Null}" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="3" BorderBrush="#FF673AB7">
                     <GroupBox.Header>
                         <TextBlock Text="Пароль" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
                     </GroupBox.Header>

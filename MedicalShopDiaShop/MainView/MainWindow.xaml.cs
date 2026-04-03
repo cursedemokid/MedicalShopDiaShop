@@ -46,7 +46,7 @@ namespace MedicalShopDiaShop.MainView
             foreach (var pair in _buttonPairs.Values)
             {
                 if (pair.Visual != null)
-                    pair.Visual.Visibility = Visibility.Collapsed;
+                    pair.Visual.Visibility = Visibility.Hidden;
             }
 
             SetActiveButton("Profile");
