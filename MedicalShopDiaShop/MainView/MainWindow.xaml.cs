@@ -2,27 +2,19 @@
 using MedicalShopDiaShop.MainView.Pages;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using System.Windows.Media.Animation;
 
 namespace MedicalShopDiaShop.MainView
 {
-    /// <summary>
-    /// Логика взаимодействия для MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         private Dictionary<string, (Button Maximized, Button Minimized, Button Visual)> _buttonPairs;
         private string _currentActiveKey;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -74,30 +66,98 @@ namespace MedicalShopDiaShop.MainView
             }
 
             if (currentPair.Maximized != null)
-                //currentPair.Maximized.Background = Brushes.Green;
+                AnimateButtonActivation(currentPair.Maximized);
             if (currentPair.Minimized != null)
-                //currentPair.Minimized.Background = Brushes.Green;
+                AnimateButtonActivation(currentPair.Minimized);
             if (currentPair.Visual != null)
                 currentPair.Visual.Visibility = Visibility.Visible;
 
             _currentActiveKey = key;
         }
 
-        private void MinimizeOrMaximizeBtn_Click(object sender, RoutedEventArgs e)
+        private void AnimateButtonActivation(Button btn)
         {
-            bool isExpanded = MaximizedButtons.Visibility == Visibility.Visible;
-            MaximizedButtons.Visibility = isExpanded ? Visibility.Collapsed : Visibility.Visible;
-            MinimizedButtons.Visibility = isExpanded ? Visibility.Visible : Visibility.Collapsed;
+            if (btn == null) return;
 
-            var transform = ArrowIcon.RenderTransform as RotateTransform;
-            if (transform == null)
+            var colorAnim = new ColorAnimation
             {
-                ArrowIcon.RenderTransform = new RotateTransform(isExpanded ? 180 : 0);
-                ArrowIcon.RenderTransformOrigin = new Point(0.5, 0.5);
+                From = Colors.White,
+                To = Colors.White,
+                Duration = TimeSpan.FromSeconds(0.15)
+            };
+            var brush = new SolidColorBrush(Colors.White);
+            btn.Background = brush;
+            brush.BeginAnimation(SolidColorBrush.ColorProperty, colorAnim);
+
+            if (btn.RenderTransform == null || !(btn.RenderTransform is ScaleTransform))
+            {
+                btn.RenderTransform = new ScaleTransform(1, 1);
+                btn.RenderTransformOrigin = new Point(0.5, 0.5);
+            }
+            var scaleTransform = (ScaleTransform)btn.RenderTransform;
+            var scaleUpAnim = new DoubleAnimation(1.05, TimeSpan.FromSeconds(0.1))
+            {
+                EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut },
+                AutoReverse = true
+            };
+            scaleTransform.BeginAnimation(ScaleTransform.ScaleXProperty, scaleUpAnim);
+            scaleTransform.BeginAnimation(ScaleTransform.ScaleYProperty, scaleUpAnim);
+        }
+
+        private void AnimateMenu(bool expand)
+        {
+            if (expand)
+            {
+                MaximizedButtons.Visibility = Visibility.Visible;
+                MaximizedButtons.Opacity = 0;
+                MaximizedButtons.MaxWidth = 60;
+                var widthAnim = new DoubleAnimation(250, TimeSpan.FromSeconds(0.2));
+                widthAnim.EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut };
+                var opacityAnim = new DoubleAnimation(1, TimeSpan.FromSeconds(0.15));
+
+                widthAnim.Completed += (s, _) =>
+                {
+                    MaximizedButtons.MaxWidth = double.PositiveInfinity;
+                    ArrowIcon.RenderTransform = new RotateTransform(0);
+                };
+                MaximizedButtons.BeginAnimation(Grid.MaxWidthProperty, widthAnim);
+                MaximizedButtons.BeginAnimation(Grid.OpacityProperty, opacityAnim);
+
+                MinimizedButtons.Visibility = Visibility.Collapsed;
             }
             else
             {
-                transform.Angle = isExpanded ? 180 : 0;
+                MaximizedButtons.MaxWidth = 250;
+                var widthAnim = new DoubleAnimation(60, TimeSpan.FromSeconds(0.2));
+                widthAnim.EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut };
+                var opacityAnim = new DoubleAnimation(0, TimeSpan.FromSeconds(0.15));
+
+                widthAnim.Completed += (s, _) =>
+                {
+                    MaximizedButtons.Visibility = Visibility.Collapsed;
+                    MinimizedButtons.Visibility = Visibility.Visible;
+                    MaximizedButtons.MaxWidth = 300;
+                    ArrowIcon.RenderTransform = new RotateTransform(180);
+                };
+                MaximizedButtons.BeginAnimation(Grid.MaxWidthProperty, widthAnim);
+                MaximizedButtons.BeginAnimation(Grid.OpacityProperty, opacityAnim);
+            }
+        }
+
+        private void MinimizeOrMaximizeBtn_Click(object sender, RoutedEventArgs e)
+        {
+            bool isExpanded = MaximizedButtons.Visibility == Visibility.Visible;
+            if (isExpanded)
+            {
+                ArrowIcon.RenderTransform = new RotateTransform(180);
+                ArrowIcon.RenderTransformOrigin = new Point(0.5, 0.5);
+                AnimateMenu(false);
+            }
+            else
+            {
+                ArrowIcon.RenderTransform = new RotateTransform(0);
+                ArrowIcon.RenderTransformOrigin = new Point(0.5, 0.5);
+                AnimateMenu(true);
             }
         }
 
@@ -109,7 +169,11 @@ namespace MedicalShopDiaShop.MainView
         private void ExitBtn_Click(object sender, RoutedEventArgs e)
         {
             SetActiveButton("Exit");
-            FeedbackService.Question("Вы уверены, что хотите выйти?");
+            var result = FeedbackService.Question("Вы уверены, что хотите выйти?");
+            if (result == MessageBoxResult.Yes)
+            {
+                Application.Current.Shutdown();
+            }
         }
 
         private void SuppliesBtn_Click(object sender, RoutedEventArgs e)
@@ -132,11 +196,11 @@ namespace MedicalShopDiaShop.MainView
             SetActiveButton("Products");
         }
 
-        private void ProfileBtn_Click(object sender, RoutedEventArgs e) 
+        private void ProfileBtn_Click(object sender, RoutedEventArgs e)
         {
             MainFrame.Navigate(new ProfilePage());
             SetActiveButton("Profile");
-        } 
+        }
 
         private void OrdersBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -147,22 +211,29 @@ namespace MedicalShopDiaShop.MainView
         {
             BlurGrid.Visibility = Visibility.Visible;
             NotificationGrid.Visibility = Visibility.Visible;
+            var story = (Storyboard)FindResource("ShowNotificationAnimation");
+            story.Begin(NotificationGrid);
         }
 
         private void BlurGrid_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            BlurGrid.Visibility = Visibility.Collapsed;
-            NotificationGrid.Visibility = Visibility.Collapsed;
+            var story = (Storyboard)FindResource("HideNotificationAnimation");
+            story.Completed += (s, _) =>
+            {
+                BlurGrid.Visibility = Visibility.Collapsed;
+                NotificationGrid.Visibility = Visibility.Collapsed;
+            };
+            story.Begin(NotificationGrid);
         }
 
         private void NextNotificationPageBtn_Click(object sender, RoutedEventArgs e)
         {
-
+            // TODO: реализовать пагинацию уведомлений
         }
 
         private void PreviousNotificationPageBtn_Click(object sender, RoutedEventArgs e)
         {
-
+            // TODO: реализовать пагинацию уведомлений
         }
     }
 }

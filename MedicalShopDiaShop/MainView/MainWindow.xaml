@@ -7,17 +7,78 @@
         mc:Ignorable="d"
         Title="" Height="720" Width="1280" WindowStartupLocation="CenterScreen"
         Icon="/Resources/sugar.png">
+
+    <Window.Resources>
+        <!-- Анимация разворачивания меню -->
+        <Storyboard x:Key="ExpandMenuAnimation">
+            <DoubleAnimation Storyboard.TargetName="MaximizedButtons" 
+                             Storyboard.TargetProperty="Width"
+                             From="60" To="250" Duration="0:0:0.2">
+                <DoubleAnimation.EasingFunction>
+                    <QuadraticEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="MaximizedButtons" 
+                             Storyboard.TargetProperty="Opacity"
+                             From="0" To="1" Duration="0:0:0.15"/>
+        </Storyboard>
+
+        <!-- Анимация сворачивания меню -->
+        <Storyboard x:Key="CollapseMenuAnimation">
+            <DoubleAnimation Storyboard.TargetName="MaximizedButtons" 
+                             Storyboard.TargetProperty="Width"
+                             From="250" To="60" Duration="0:0:0.2">
+                <DoubleAnimation.EasingFunction>
+                    <QuadraticEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="MaximizedButtons" 
+                             Storyboard.TargetProperty="Opacity"
+                             From="1" To="0" Duration="0:0:0.15"/>
+        </Storyboard>
+
+        <!-- Анимация появления уведомлений (выезд справа) -->
+        <Storyboard x:Key="ShowNotificationAnimation">
+            <DoubleAnimation Storyboard.TargetName="NotificationGrid" 
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                             From="300" To="0" Duration="0:0:0.3">
+                <DoubleAnimation.EasingFunction>
+                    <QuadraticEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="NotificationGrid" 
+                             Storyboard.TargetProperty="Opacity"
+                             From="0" To="1" Duration="0:0:0.2"/>
+        </Storyboard>
+
+        <!-- Анимация скрытия уведомлений -->
+        <Storyboard x:Key="HideNotificationAnimation">
+            <DoubleAnimation Storyboard.TargetName="NotificationGrid" 
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                             From="0" To="300" Duration="0:0:0.3">
+                <DoubleAnimation.EasingFunction>
+                    <QuadraticEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="NotificationGrid" 
+                             Storyboard.TargetProperty="Opacity"
+                             From="1" To="0" Duration="0:0:0.2"/>
+        </Storyboard>
+    </Window.Resources>
+
     <Grid Margin="5">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
             <ColumnDefinition Width="auto" />
         </Grid.ColumnDefinitions>
-        
+
         <Grid Grid.ColumnSpan="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="80" />
                 <RowDefinition Height="1*" />
             </Grid.RowDefinitions>
+
+            <!-- Верхняя панель -->
             <Grid Margin="10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto" />
@@ -47,103 +108,99 @@
                         </Button.Content>
                     </Button>
                 </Grid>
-                
+
                 <Button Name="NotificationsBtn" Grid.Column="4" VerticalContentAlignment="Center" Height="50" Padding="0" Background="White" BorderBrush="White" Click="NotificationsBtn_Click">
                     <Button.Content>
                         <Grid>
                             <Grid HorizontalAlignment="Right" VerticalAlignment="Top">
                                 <Ellipse Name="NotificationCheck" Fill="Red" Height="10" Width="10"/>
                             </Grid>
-                            <Image Source="/Resources/notification.png"  Height="50"/>
+                            <Image Source="/Resources/notification.png" Height="50"/>
                         </Grid>
                     </Button.Content>
                 </Button>
 
-                <Grid Grid.Column="6" >
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto" />
-                    <ColumnDefinition Width="5" />
-                    <ColumnDefinition Width="auto" />
-                </Grid.ColumnDefinitions>
-                <Image Source="/Resources/ProfileIcon.png" Height="50" VerticalAlignment="Center"/>
-                <TextBlock Foreground="Black" Grid.Column="2" Text="Профиль" FontFamily="{StaticResource GothamProFamily}" VerticalAlignment="Center" FontSize="20"/>
+                <Grid Grid.Column="6">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
+                    <Image Source="/Resources/ProfileIcon.png" Height="50" VerticalAlignment="Center"/>
+                    <TextBlock Foreground="Black" Grid.Column="2" Text="Профиль" FontFamily="{StaticResource GothamProFamily}" VerticalAlignment="Center" FontSize="20"/>
+                </Grid>
             </Grid>
-        </Grid>
-        
-        <Grid Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto" Name="MenuGrid"/>
-                <ColumnDefinition Width="5" />
-                <ColumnDefinition Width="auto" />
-                <ColumnDefinition Width="5" />
-                <ColumnDefinition Width="1*" />
-            </Grid.ColumnDefinitions>
 
+            <!-- Основная область -->
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Скрытые визуальные кнопки для подсветки (занимают место) -->
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="10" />
-                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
-                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
-                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
-                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
-                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
-                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
-                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
-                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="1*" />
                     </Grid.RowDefinitions>
-                    <Button Name="ProfileVisualBtn" Grid.Row="1" Height="60" Click="ProfileBtn_Click" Visibility="Hidden">
-                    </Button>
-                    <Button Name="ProductsVisualBtn" Grid.Row="3" Height="60" Click="ProductsBtn_Click" Visibility="Hidden">
-                    </Button>
-                    <Button Name="StatsVisualBtn" Grid.Row="5" Height="60" Click="StatsBtn_Click" Visibility="Hidden">
-                    </Button>
-                    <Button Name="ClientsVisualBtn" Grid.Row="7" Height="60"  Click="ClientsBtn_Click" Visibility="Hidden">
-                    </Button>
-                    <Button Name="SuppliesVisualBtn" Grid.Row="9" Height="60"  Click="SuppliesBtn_Click" Visibility="Hidden">
-                    </Button>
-                    <Button Name="ExitVisualBtn" Grid.Row="15" Height="60" Click="ExitBtn_Click" Visibility="Hidden">
-                    </Button>
-                    <Button Name="EmployeesVisualBtn" Grid.Row="13" Height="60" Click="EmployeesBtn_Click" Visibility="Hidden">
-                    </Button>
-                    <Button Name="OrdersVisualBtn" Grid.Row="11" Height="60" Click="OrdersBtn_Click" Visibility="Hidden">
-                    </Button>
+                    <Button Name="ProfileVisualBtn" Grid.Row="1" Height="60" Click="ProfileBtn_Click" Visibility="Hidden" />
+                    <Button Name="ProductsVisualBtn" Grid.Row="3" Height="60" Click="ProductsBtn_Click" Visibility="Hidden" />
+                    <Button Name="StatsVisualBtn" Grid.Row="5" Height="60" Click="StatsBtn_Click" Visibility="Hidden" />
+                    <Button Name="ClientsVisualBtn" Grid.Row="7" Height="60" Click="ClientsBtn_Click" Visibility="Hidden" />
+                    <Button Name="SuppliesVisualBtn" Grid.Row="9" Height="60" Click="SuppliesBtn_Click" Visibility="Hidden" />
+                    <Button Name="OrdersVisualBtn" Grid.Row="11" Height="60" Click="OrdersBtn_Click" Visibility="Hidden" />
+                    <Button Name="EmployeesVisualBtn" Grid.Row="13" Height="60" Click="EmployeesBtn_Click" Visibility="Hidden" />
+                    <Button Name="ExitVisualBtn" Grid.Row="15" Height="60" Click="ExitBtn_Click" Visibility="Hidden" />
                 </Grid>
-            
-                <Grid Name="MaximizedButtons" Visibility="Visible" Margin="10 0 0 0">
+
+                <!-- Максимизированное меню (с текстом) -->
+                <Grid Name="MaximizedButtons" Margin="10 0 0 0" Visibility="Visible">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="10" />
-                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
-                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
-                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
-                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
-                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
-                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
-                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
-                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="1*" />
                     </Grid.RowDefinitions>
-                    <Button Name="MaxProfileBtn" Grid.Row="1" Height="60" Background="White" HorizontalContentAlignment="Left" Click="ProfileBtn_Click">
+                    <!-- Кнопки (оставлены как у вас, но добавлен x:Name) -->
+                    <Button x:Name="MaxProfileBtn" Grid.Row="1" Height="60" Background="White" HorizontalContentAlignment="Left" Click="ProfileBtn_Click">
                         <Button.Content>
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="5" />
-                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="1*" />
                                 </Grid.ColumnDefinitions>
                                 <Image Source="/Resources/ProfileIcon.png" Height="50"/>
@@ -151,197 +208,158 @@
                             </Grid>
                         </Button.Content>
                     </Button>
-                    <Button Name="MaxProductsBtn" Grid.Row="3" Height="60" Background="White" HorizontalContentAlignment="Left" Click="ProductsBtn_Click">
+                    <Button x:Name="MaxProductsBtn" Grid.Row="3" Height="60" Background="White" HorizontalContentAlignment="Left" Click="ProductsBtn_Click">
                         <Button.Content>
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="5" />
-                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="1*" />
                                 </Grid.ColumnDefinitions>
-                                <Image Source="/Resources/box.png" />
-                                <TextBlock Foreground="Black" Text="Товары" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
+                                <Image Source="/Resources/box.png" Height="50"/>
+                                <TextBlock Text="Товары" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Foreground="Black"/>
                             </Grid>
                         </Button.Content>
                     </Button>
-                    <Button Name="MaxStatsBtn" Grid.Row="5" Height="60" Background="White" HorizontalContentAlignment="Left" Click="StatsBtn_Click">
+                    <Button x:Name="MaxStatsBtn" Grid.Row="5" Height="60" Background="White" HorizontalContentAlignment="Left" Click="StatsBtn_Click">
                         <Button.Content>
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="5" />
-                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="1*" />
                                 </Grid.ColumnDefinitions>
-                                <Image Source="/Resources/chart.png" />
-                                <TextBlock Foreground="Black" Text="Статистика" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
+                                <Image Source="/Resources/chart.png" Height="50"/>
+                                <TextBlock Text="Статистика" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Foreground="Black"/>
                             </Grid>
                         </Button.Content>
                     </Button>
-                    <Button Name="MaxClientsBtn" Grid.Row="7" Height="60" Background="White" HorizontalContentAlignment="Left" Click="ClientsBtn_Click">
+                    <Button x:Name="MaxClientsBtn" Grid.Row="7" Height="60" Background="White" HorizontalContentAlignment="Left" Click="ClientsBtn_Click">
                         <Button.Content>
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="5" />
-                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="1*" />
                                 </Grid.ColumnDefinitions>
-                                <Image Source="/Resources/customer.png" />
-                                <TextBlock Foreground="Black" Text="Клиенты" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
+                                <Image Source="/Resources/customer.png" Height="50"/>
+                                <TextBlock Text="Клиенты" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Foreground="Black"/>
                             </Grid>
                         </Button.Content>
                     </Button>
-                    <Button Name="MaxSuppliesBtn" Grid.Row="9" Height="60" Background="White" HorizontalContentAlignment="Left" Click="SuppliesBtn_Click">
+                    <Button x:Name="MaxSuppliesBtn" Grid.Row="9" Height="60" Background="White" HorizontalContentAlignment="Left" Click="SuppliesBtn_Click">
                         <Button.Content>
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="5" />
-                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="1*" />
                                 </Grid.ColumnDefinitions>
-                                <Image Source="/Resources/delivery.png" />
-                                <TextBlock Foreground="Black" Text="Поставщики" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
+                                <Image Source="/Resources/delivery.png" Height="50"/>
+                                <TextBlock Text="Поставщики" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Foreground="Black"/>
                             </Grid>
                         </Button.Content>
                     </Button>
-                    <Button Name="MaxExitBtn" Grid.Row="15" Height="60" Background="White" HorizontalContentAlignment="Left" Click="ExitBtn_Click">
+                    <Button x:Name="MaxOrdersBtn" Grid.Row="11" Height="60" Background="White" HorizontalContentAlignment="Left" Click="OrdersBtn_Click">
                         <Button.Content>
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="5" />
-                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="1*" />
                                 </Grid.ColumnDefinitions>
-                                <Image Source="/Resources/logout.png" />
-
-                                <TextBlock Foreground="Black" Text="Выход" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
+                                <Image Source="/Resources/check_1742953.png" Height="50"/>
+                                <TextBlock Text="Заказы" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Foreground="Black"/>
                             </Grid>
                         </Button.Content>
                     </Button>
-                    <Button Name="MaxEmployeesBtn" Grid.Row="13" Height="60" Background="White" HorizontalContentAlignment="Left" Click="EmployeesBtn_Click">
+                    <Button x:Name="MaxEmployeesBtn" Grid.Row="13" Height="60" Background="White" HorizontalContentAlignment="Left" Click="EmployeesBtn_Click">
                         <Button.Content>
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="5" />
-                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="1*" />
                                 </Grid.ColumnDefinitions>
-                                <Image Source="/Resources/teamwork.png" />
-                                <TextBlock Foreground="Black" Text="Сотруднки" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
+                                <Image Source="/Resources/teamwork.png" Height="50"/>
+                                <TextBlock Text="Сотрудники" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Foreground="Black"/>
                             </Grid>
                         </Button.Content>
                     </Button>
-                    <Button Name="MaxOrdersBtn" Grid.Row="11" Height="60" Background="White" HorizontalContentAlignment="Left" Click="OrdersBtn_Click">
+                    <Button x:Name="MaxExitBtn" Grid.Row="15" Height="60" Background="White" HorizontalContentAlignment="Left" Click="ExitBtn_Click">
                         <Button.Content>
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="5" />
-                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="1*" />
                                 </Grid.ColumnDefinitions>
-                                <Image Source="/Resources/check_1742953.png" />
-                                <TextBlock Foreground="Black" Text="Заказы" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
+                                <Image Source="/Resources/logout.png" Height="50"/>
+                                <TextBlock Text="Выход" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Foreground="Black"/>
                             </Grid>
                         </Button.Content>
                     </Button>
                 </Grid>
-            
-                <Grid Name="MinimizedButtons" Visibility="Collapsed" Margin="10 0 0 0">
+
+                <!-- Свёрнутое меню (только иконки) -->
+                <Grid Name="MinimizedButtons" Width="60" Margin="10 0 0 0" Visibility="Collapsed">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="10" />
-                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
-                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
-                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
-                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
-                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
-                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
-                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="10" />
-                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="1*" />
                     </Grid.RowDefinitions>
-                    <Button Name="ProfileBtn" Grid.Row="1" Height="60" Background="White" Click="ProfileBtn_Click">
-                        <Button.Content>
-                            <StackPanel>
-                                <Image Source="/Resources/ProfileIcon.png" Height="30"/>
-                                <TextBlock Foreground="Black" Text="Профиль" FontFamily="{StaticResource GothamProFamily}"/>
-                            </StackPanel>
-                        </Button.Content>
+                    <Button x:Name="ProfileBtn" Grid.Row="1" Height="60" Background="White" Click="ProfileBtn_Click">
+                        <Image Source="/Resources/ProfileIcon.png" Height="30"/>
                     </Button>
-                    <Button Name="ProductsBtn" Grid.Row="3" Height="60" Background="White" Click="ProductsBtn_Click">
-                        <Button.Content>
-                            <StackPanel>
-                                <Image Source="/Resources/box.png" Height="30"/>
-                                <TextBlock Foreground="Black" Text="Товары" FontFamily="{StaticResource GothamProFamily}"/>
-                            </StackPanel>
-                        </Button.Content>
+                    <Button x:Name="ProductsBtn" Grid.Row="3" Height="60" Background="White" Click="ProductsBtn_Click">
+                        <Image Source="/Resources/box.png" Height="30"/>
                     </Button>
-                    <Button Name="StatsBtn" Grid.Row="5" Height="60" Background="White" Click="StatsBtn_Click">
-                        <Button.Content>
-                            <StackPanel>
-                                <Image Source="/Resources/chart.png" Height="30"/>
-                                <TextBlock Foreground="Black" Text="Статистика" FontFamily="{StaticResource GothamProFamily}"/>
-                            </StackPanel>
-                        </Button.Content>
+                    <Button x:Name="StatsBtn" Grid.Row="5" Height="60" Background="White" Click="StatsBtn_Click">
+                        <Image Source="/Resources/chart.png" Height="30"/>
                     </Button>
-                    <Button Name="ClientsBtn" Grid.Row="7" Height="60" Background="White" Click="ClientsBtn_Click">
-                        <Button.Content>
-                            <StackPanel>
-                                <Image Source="/Resources/customer.png" Height="30"/>
-                                <TextBlock Foreground="Black" Text="Клиенты" FontFamily="{StaticResource GothamProFamily}"/>
-                            </StackPanel>
-                        </Button.Content>
+                    <Button x:Name="ClientsBtn" Grid.Row="7" Height="60" Background="White" Click="ClientsBtn_Click">
+                        <Image Source="/Resources/customer.png" Height="30"/>
                     </Button>
-                    <Button Name="SuppliesBtn" Grid.Row="9" Height="60" Background="White" Click="SuppliesBtn_Click">
-                        <Button.Content>
-                            <StackPanel>
-                                <Image Source="/Resources/delivery.png" Height="30"/>
-                                <TextBlock Foreground="Black" Text="Поставщики" FontFamily="{StaticResource GothamProFamily}"/>
-                            </StackPanel>
-                        </Button.Content>
+                    <Button x:Name="SuppliesBtn" Grid.Row="9" Height="60" Background="White" Click="SuppliesBtn_Click">
+                        <Image Source="/Resources/delivery.png" Height="30"/>
                     </Button>
-                    <Button Name="ExitBtn" Grid.Row="15" Height="60" Background="White" Click="ExitBtn_Click">
-                        <Button.Content>
-                            <StackPanel>
-                                <Image Source="/Resources/logout.png" Height="30"/>
-                                <TextBlock Foreground="Black" Text="Выход" FontFamily="{StaticResource GothamProFamily}"/>
-                            </StackPanel>
-                        </Button.Content>
+                    <Button x:Name="OrdersBtn" Grid.Row="11" Height="60" Background="White" Click="OrdersBtn_Click">
+                        <Image Source="/Resources/check_1742953.png" Height="30"/>
                     </Button>
-                    <Button Name="EmployeesBtn" Grid.Row="13" Height="60" Background="White" Click="EmployeesBtn_Click">
-                        <Button.Content>
-                            <StackPanel>
-                                <Image Source="/Resources/teamwork.png" Height="30"/>
-                                <TextBlock Foreground="Black" Text="Сотрудники" FontFamily="{StaticResource GothamProFamily}"/>
-                            </StackPanel>
-                        </Button.Content>
+                    <Button x:Name="EmployeesBtn" Grid.Row="13" Height="60" Background="White" Click="EmployeesBtn_Click">
+                        <Image Source="/Resources/teamwork.png" Height="30"/>
                     </Button>
-                    <Button Name="OrdersBtn" Grid.Row="11" Height="60" Background="White" Click="OrdersBtn_Click">
-                        <Button.Content>
-                            <StackPanel>
-                                <Image Source="/Resources/check_1742953.png" Height="30"/>
-                                <TextBlock Foreground="Black" Text="Заказы" FontFamily="{StaticResource GothamProFamily}"/>
-                            </StackPanel>
-                        </Button.Content>
+                    <Button x:Name="ExitBtn" Grid.Row="15" Height="60" Background="White" Click="ExitBtn_Click">
+                        <Image Source="/Resources/logout.png" Height="30"/>
                     </Button>
                 </Grid>
-            
+
+                <!-- Разделители и кнопка сворачивания -->
                 <Grid Grid.Column="2">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="1*" />
-                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="7*" />
                     </Grid.RowDefinitions>
                     <Separator Height="Auto" Background="#FF673AB7">
@@ -355,19 +373,22 @@
                         </Separator.LayoutTransform>
                     </Separator>
                     <Button Name="MinimizeOrMaximizeBtn" Grid.Row="1" Background="White" Width="20" Height="20" Padding="2" Click="MinimizeOrMaximizeBtn_Click">
-                        <Button.Content>
-                            <Image Source="/Resources/left-arrow.png" Name="ArrowIcon"/>
-                        </Button.Content>
+                        <Image Source="/Resources/left-arrow.png" Name="ArrowIcon"/>
                     </Button>
-
                 </Grid>
-                <Frame Grid.Column="4" Name="MainFrame" NavigationUIVisibility="Hidden"/>
-            </Grid>
 
+                <!-- Frame для навигации -->
+                <Frame Grid.Column="4" Name="MainFrame" NavigationUIVisibility="Hidden" />
+            </Grid>
         </Grid>
-        <Grid Name="BlurGrid" Background="White" Opacity="0.4" Visibility="Collapsed" MouseDown="BlurGrid_MouseDown"/>
-        <Grid Name="NotificationGrid" Visibility="Collapsed" HorizontalAlignment="Right" Grid.Column="1" Background="White">
-        
+
+        <!-- Затемнение и уведомления -->
+        <Grid Name="BlurGrid" Background="White" Opacity="0.4" Visibility="Collapsed" MouseDown="BlurGrid_MouseDown" />
+        <Grid Name="NotificationGrid" Visibility="Collapsed" HorizontalAlignment="Right" Grid.Column="1" Background="White"
+              Width="300" RenderTransformOrigin="0.5,0.5">
+            <Grid.RenderTransform>
+                <TranslateTransform X="300"/>
+            </Grid.RenderTransform>
             <Grid.RowDefinitions>
                 <RowDefinition Height="50" />
                 <RowDefinition Height="10" />
@@ -375,21 +396,19 @@
                 <RowDefinition Height="10" />
                 <RowDefinition Height="50" />
             </Grid.RowDefinitions>
-            <Grid Width="300">
-                <TextBlock Foreground="Black" Text="Уведомления" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Margin="10 0 0 0"/>
-            </Grid>
+            <TextBlock Text="Уведомления" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Margin="10 0 0 0"/>
             <ListBox Name="NotificationListBox" Grid.Row="2">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Grid Width="300" Margin="10">
+                        <Grid Margin="10">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="Auto" />
                                 <RowDefinition Height="10" />
-                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <Ellipse HorizontalAlignment="Right" VerticalAlignment="Top" Fill="Blue" Height="10" Width="10" Visibility="{Binding Visibility}"/>
-                            <TextBlock Foreground="Black" Grid.Row="0" Text="Заголовок" FontFamily="{StaticResource GothamProFamily}" FontSize="20" FontWeight="Bold" TextWrapping="Wrap"/>
-                            <TextBlock Foreground="Black" Grid.Row="2" Text="10 минут назад" FontFamily="{StaticResource GothamProFamily}" FontSize="15" FontWeight="Light" TextWrapping="Wrap"/>
+                            <TextBlock Grid.Row="0" Text="Заголовок" FontFamily="{StaticResource GothamProFamily}" FontSize="20" FontWeight="Bold" TextWrapping="Wrap"/>
+                            <TextBlock Grid.Row="2" Text="10 минут назад" FontFamily="{StaticResource GothamProFamily}" FontSize="15" FontWeight="Light" TextWrapping="Wrap"/>
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
@@ -397,30 +416,25 @@
             <Grid Grid.Row="4">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="10" />
-                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
                 <Button Name="PreviousNotificationPageBtn" Grid.Column="1" Click="PreviousNotificationPageBtn_Click">
-                    <Button.Content>
-                        <Image Source="/Resources/left-arrow.png" />
-                    </Button.Content>
+                    <Image Source="/Resources/left-arrow.png" />
                 </Button>
-                <TextBox Grid.Column="3" Width="70" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Text="11" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
+                <TextBox Grid.Column="3" Width="70" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Text="1" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
                 <Button Name="NextNotificationPageBtn" Grid.Column="5" Click="NextNotificationPageBtn_Click">
-                    <Button.Content>
-                        <Image Source="/Resources/left-arrow.png" RenderTransformOrigin="0.5,0.5">
-                            <Image.RenderTransform>
-                                <ScaleTransform ScaleX="-1" />
-                            </Image.RenderTransform>
-                        </Image>
-                    </Button.Content>
+                    <Image Source="/Resources/left-arrow.png" RenderTransformOrigin="0.5,0.5">
+                        <Image.RenderTransform>
+                            <ScaleTransform ScaleX="-1" />
+                        </Image.RenderTransform>
+                    </Image>
                 </Button>
             </Grid>
         </Grid>
     </Grid>
-
 </Window>
