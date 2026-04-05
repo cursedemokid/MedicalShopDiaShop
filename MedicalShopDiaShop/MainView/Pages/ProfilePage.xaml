@@ -70,7 +70,7 @@
             </Grid>
         </Border>
 
-        <Grid Name="ClientProfileGrid" Grid.Column="2" Grid.RowSpan="2" Visibility="Collapsed">
+        <Grid Name="ClientProfileGrid" Grid.Column="2" Grid.RowSpan="2" Visibility="Visible">
             <Border CornerRadius="30" 
                 Background="White" 
                 ClipToBounds="False" 
@@ -123,15 +123,33 @@
                         </GroupBox>
 
                         <GroupBox Grid.Column="4" Header="Дата" Style="{x:Null}" BorderThickness="2" BorderBrush="Black" FontSize="20" FontFamily="{StaticResource GothamProFamily}">
-                            <DatePicker Grid.Column="2" FontSize="20" Width="150"/>
+                            <DatePicker Grid.Column="2" FontSize="20" Width="150" Language="Ru"/>
                         </GroupBox>
                     </Grid>
                     <ListBox Name="HistoryListBox" Grid.Row="4">
+                        <!-- Отключаем выделение элементов -->
                         <ListBox.ItemContainerStyle>
                             <Style TargetType="ListBoxItem">
+                                <!-- Отключаем выделение и фокус -->
+                                <Setter Property="Focusable" Value="False"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="BorderBrush" Value="Transparent"/>
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Setter Property="Padding" Value="0"/>
+                                <Setter Property="Margin" Value="0"/>
+                                <!-- Растягиваем содержимое по ширине -->
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ListBoxItem">
+                                            <ContentPresenter/>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
                             </Style>
                         </ListBox.ItemContainerStyle>
+
+
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <Border CornerRadius="30" 
@@ -149,7 +167,7 @@
                                     <Grid Margin="20">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto"/>
-                                            <!-- Шапка с заголовками -->
+                                            <!-- Заголовки -->
                                             <RowDefinition Height="5"/>
                                             <!-- Отступ -->
                                             <RowDefinition Height="Auto"/>
@@ -164,7 +182,7 @@
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto"/>
-                                                <!-- Иконка + xN -->
+                                                <!-- Иконка + xN + название -->
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="Auto"/>
                                                 <!-- Цена за 1 -->
@@ -201,8 +219,9 @@
                                                             <ColumnDefinition Width="10"/>
                                                             <ColumnDefinition Width="Auto"/>
                                                             <!-- xN -->
+                                                            <ColumnDefinition Width="10"/>
                                                             <ColumnDefinition Width="*"/>
-                                                            <!-- Растяжка -->
+                                                            <!-- Название (растягивается) -->
                                                             <ColumnDefinition Width="Auto"/>
                                                             <!-- Цена за 1 -->
                                                             <ColumnDefinition Width="Auto"/>
@@ -219,7 +238,16 @@
                                                FontSize="16" 
                                                VerticalAlignment="Center"/>
 
-                                                        <TextBlock Grid.Column="4" 
+                                                        <!-- Название товара с переносом -->
+                                                        <TextBlock Text="{Binding Name}" 
+                                               Grid.Column="4"
+                                               FontFamily="{StaticResource GothamProLight}" 
+                                               FontSize="16" 
+                                               VerticalAlignment="Center"
+                                               TextWrapping="Wrap"
+                                               Margin="5,0"/>
+
+                                                        <TextBlock Grid.Column="5" 
                                                FontFamily="{StaticResource GothamProLight}" 
                                                FontSize="16" 
                                                VerticalAlignment="Center"
@@ -231,7 +259,7 @@
                                                             </TextBlock.Text>
                                                         </TextBlock>
 
-                                                        <TextBlock Grid.Column="5" 
+                                                        <TextBlock Grid.Column="6" 
                                                FontFamily="{StaticResource GothamProLight}" 
                                                FontSize="16" 
                                                VerticalAlignment="Center"
@@ -253,17 +281,13 @@
                                             </ItemsControl.ItemContainerStyle>
                                         </ItemsControl>
 
-                                        <!-- Нижняя панель с подписями -->
+                                        <!-- Нижняя панель с кнопкой и итогами -->
                                         <Grid Grid.Row="4">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto"/>
-                                                <!-- Кнопка -->
                                                 <ColumnDefinition Width="*"/>
-                                                <!-- Растяжка -->
                                                 <ColumnDefinition Width="Auto"/>
-                                                <!-- Дата -->
                                                 <ColumnDefinition Width="Auto"/>
-                                                <!-- Итого -->
                                             </Grid.ColumnDefinitions>
 
                                             <Button Content="Подробно" 
@@ -307,7 +331,7 @@
             </Border>
         </Grid>
 
-        <Grid Grid.Column="2" Name="EmployeeProfileGrid" Visibility="Visible" Grid.RowSpan="2">
+        <Grid Grid.Column="2" Name="EmployeeProfileGrid" Visibility="Collapsed" Grid.RowSpan="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="0" />

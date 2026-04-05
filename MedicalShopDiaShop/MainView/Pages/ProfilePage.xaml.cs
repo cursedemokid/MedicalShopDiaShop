@@ -44,6 +44,7 @@ namespace MedicalShopDiaShop.MainView.Pages
         public class OrderItem
         {
             public string ImageSource { get; set; }
+            public string Name { get; set; }
             public int Quantity { get; set; }
             public decimal PricePerUnit { get; set; }
             public decimal TotalPrice => PricePerUnit * Quantity;
@@ -52,31 +53,61 @@ namespace MedicalShopDiaShop.MainView.Pages
         private void LoadHistory()
         {
             var history = new ObservableCollection<OrderHistoryItem>
+    {
+        new OrderHistoryItem
         {
-            new OrderHistoryItem
+            OrderDate = DateTime.Today.AddDays(-2),
+            Items = new ObservableCollection<OrderItem>
             {
-                OrderDate = DateTime.Today.AddDays(-2),
-                Items = new ObservableCollection<OrderItem>
+                new OrderItem
                 {
-                    new OrderItem { ImageSource = "/Resources/medicine1.png", Quantity = 2, PricePerUnit = 150.50m },
-                    new OrderItem { ImageSource = "/Resources/medicine2.png", Quantity = 1, PricePerUnit = 320.00m },
-                    new OrderItem { ImageSource = "/Resources/bandage.png", Quantity = 5, PricePerUnit = 45.00m }
+                    ImageSource = "/Resources/ProductsImages/ChicoryDrink.jpg",
+                    Name = "Напиток цикорий",
+                    Quantity = 2,
+                    PricePerUnit = 150.50m
                 },
-                TotalOrderPrice = 2*150.50m + 1*320.00m + 5*45.00m,
-                ViewDetailsCommand = new RelayCommand(() => ShowDetails("Заказ #1"))
+                new OrderItem
+                {
+                    ImageSource = "/Resources/ProductsImages/BodyLotion.jpg",
+                    Name = "Лосьон для тела",
+                    Quantity = 1,
+                    PricePerUnit = 320.00m
+                },
+                new OrderItem
+                {
+                    ImageSource = "/Resources/ProductsImages/ContourPlus.jpg",
+                    Name = "Контур Плюс",
+                    Quantity = 5,
+                    PricePerUnit = 45.00m
+                }
             },
-            new OrderHistoryItem
+            TotalOrderPrice = 2*150.50m + 1*320.00m + 5*45.00m,
+            ViewDetailsCommand = new RelayCommand(() => ShowDetails("Заказ #1"))
+        },
+        new OrderHistoryItem
+        {
+            OrderDate = DateTime.Today.AddDays(-7),
+            Items = new ObservableCollection<OrderItem>
             {
-                OrderDate = DateTime.Today.AddDays(-7),
-                Items = new ObservableCollection<OrderItem>
+                new OrderItem
                 {
-                    new OrderItem { ImageSource = "/Resources/vitamins.png", Quantity = 1, PricePerUnit = 890.00m },
-                    new OrderItem { ImageSource = "/Resources/thermometer.png", Quantity = 1, PricePerUnit = 250.00m }
+                    ImageSource = "/Resources/vitamins.png",
+                    Name = "Витамины",
+                    Quantity = 1,
+                    PricePerUnit = 890.00m
                 },
-                TotalOrderPrice = 890.00m + 250.00m,
-                ViewDetailsCommand = new RelayCommand(() => ShowDetails("Заказ #2"))
-            }
-        };
+                new OrderItem
+                {
+                    ImageSource = "/Resources/thermometer.png",
+                    Name = "Термометр",
+                    Quantity = 1,
+                    PricePerUnit = 250.00m
+                }
+            },
+            TotalOrderPrice = 890.00m + 250.00m,
+            ViewDetailsCommand = new RelayCommand(() => ShowDetails("Заказ #2"))
+        }
+    };
             HistoryListBox.ItemsSource = history;
         }
 
