@@ -9,6 +9,10 @@
       Title="ProfilePage">
 
     <Grid Background="White" Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="29*"/>
+            <RowDefinition Height="7*"/>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
             <ColumnDefinition Width="10" />
@@ -19,7 +23,7 @@
         Background="White" 
         ClipToBounds="False" 
         UseLayoutRounding="True"
-                Margin="10">
+                Margin="10,10,10,10" Grid.RowSpan="2">
             <Border.Effect>
                 <DropShadowEffect BlurRadius="20" 
                           ShadowDepth="0" 
@@ -28,45 +32,282 @@
             </Border.Effect>
 
             <Grid Margin="10">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="10" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="10" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="5" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="10" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="5" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="10" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="5" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="1*" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="30" />
-            </Grid.RowDefinitions>
-            <Image Source="/Resources/avatarka.png" Height="200" Width="200">
-                <Image.Clip>
-                    <EllipseGeometry Center="100,100" RadiusX="100" RadiusY="100"/>
-                </Image.Clip>
-            </Image>
-            <TextBlock Grid.Row="2" Text="salchichon" FontSize="20" FontFamily="{StaticResource GothamProFamily}" HorizontalAlignment="Center"/>
-            <Separator Grid.Row="3"/>
-            <TextBlock Grid.Row="4" Text="ФИО" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
-            <TextBlock Grid.Row="6" Text="Фамилия Имя Отчество" FontSize="20" FontFamily="{StaticResource GothamProLight}" TextWrapping="Wrap"/>
-            <TextBlock Grid.Row="8" Text="Роль" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="5" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="5" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="5" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="30" />
+                </Grid.RowDefinitions>
+                <Image Source="/Resources/avatarka.png" Height="200" Width="200">
+                    <Image.Clip>
+                        <EllipseGeometry Center="100,100" RadiusX="100" RadiusY="100"/>
+                    </Image.Clip>
+                </Image>
+                <TextBlock Grid.Row="2" Text="salchichon" FontSize="20" FontFamily="{StaticResource GothamProFamily}" HorizontalAlignment="Center"/>
+                <Separator Grid.Row="3"/>
+                <TextBlock Grid.Row="4" Text="ФИО" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
+                <TextBlock Grid.Row="6" Text="Фамилия Имя Отчество" FontSize="20" FontFamily="{StaticResource GothamProLight}" TextWrapping="Wrap"/>
+                <TextBlock Grid.Row="8" Text="Роль" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
                 <TextBlock Grid.Row="10" Text="Администратор" FontSize="20" FontFamily="{StaticResource GothamProLight}" FontWeight="Light" TextWrapping="Wrap"/>
-            <TextBlock Grid.Row="12" Text="Магазин" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
-            <TextBlock Grid.Row="14" Text="ул. Бэмбикс, Мамиксовый переулок" FontSize="20" FontFamily="{StaticResource GothamProLight}" FontWeight="Light" TextWrapping="Wrap"/>
+                <TextBlock Grid.Row="12" Text="Магазин" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
+                <TextBlock Grid.Row="14" Text="ул. Бэмбикс, Мамиксовый переулок" FontSize="20" FontFamily="{StaticResource GothamProLight}" FontWeight="Light" TextWrapping="Wrap"/>
 
                 <Button Grid.Row="16" Content="Сменить пароль" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
             </Grid>
         </Border>
 
-        <Grid Grid.Column="2">
+        <Grid Name="ClientProfileGrid" Grid.Column="2" Grid.RowSpan="2" Visibility="Collapsed">
+            <Border CornerRadius="30" 
+                Background="White" 
+                ClipToBounds="False" 
+                UseLayoutRounding="True"
+                Margin="10">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="20" 
+                  ShadowDepth="0" 
+                  Opacity="0.25" 
+                  Color="Gray"/>
+                </Border.Effect>
+
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="1*" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="История покупок" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
+                    <Grid Grid.Row="2" Margin="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="1*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox Width="150" Height="50" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
+                            <Button Grid.Column="2" Padding="2" Height="50" Background="White" BorderBrush="White">
+                                <Button.Content>
+                                    <Image Source="/Resources/search.png"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+
+                        <GroupBox Grid.Column="2" Header="Сортировать по" Style="{x:Null}" BorderThickness="2" BorderBrush="Black" FontSize="20" FontFamily="{StaticResource GothamProFamily}">
+                            <ComboBox Name="OrderByCmb">
+                                <ComboBoxItem Content="Дате" Name="Date"/>
+                                <ComboBoxItem Content="Цене" Name="Cost"/>
+                                <ComboBoxItem Content="Нет" Name="Nothing"/>
+                            </ComboBox>
+                        </GroupBox>
+
+                        <GroupBox Grid.Column="4" Header="Дата" Style="{x:Null}" BorderThickness="2" BorderBrush="Black" FontSize="20" FontFamily="{StaticResource GothamProFamily}">
+                            <DatePicker Grid.Column="2" FontSize="20" Width="150"/>
+                        </GroupBox>
+                    </Grid>
+                    <ListBox Name="HistoryListBox" Grid.Row="4">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border CornerRadius="30" 
+                    Background="White" 
+                    ClipToBounds="False" 
+                    UseLayoutRounding="True"
+                    Margin="10">
+                                    <Border.Effect>
+                                        <DropShadowEffect BlurRadius="20" 
+                                      ShadowDepth="0" 
+                                      Opacity="0.25" 
+                                      Color="Gray"/>
+                                    </Border.Effect>
+
+                                    <Grid Margin="20">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <!-- Шапка с заголовками -->
+                                            <RowDefinition Height="5"/>
+                                            <!-- Отступ -->
+                                            <RowDefinition Height="Auto"/>
+                                            <!-- Список товаров -->
+                                            <RowDefinition Height="10"/>
+                                            <!-- Отступ -->
+                                            <RowDefinition Height="Auto"/>
+                                            <!-- Нижняя панель -->
+                                        </Grid.RowDefinitions>
+
+                                        <!-- Заголовки колонок -->
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <!-- Иконка + xN -->
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <!-- Цена за 1 -->
+                                                <ColumnDefinition Width="Auto"/>
+                                                <!-- Цена всего -->
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0" 
+                                   Text="Товар" 
+                                   FontFamily="{StaticResource GothamProFamily}" 
+                                   FontSize="14" 
+                                   FontWeight="Bold"/>
+                                            <TextBlock Grid.Column="2" 
+                                   Text="Цена за 1" 
+                                   FontFamily="{StaticResource GothamProFamily}" 
+                                   FontSize="14" 
+                                   FontWeight="Bold"
+                                   Margin="0,0,20,0"/>
+                                            <TextBlock Grid.Column="3" 
+                                   Text="Цена всего" 
+                                   FontFamily="{StaticResource GothamProFamily}" 
+                                   FontSize="14" 
+                                   FontWeight="Bold"
+                                   Margin="20,0,0,0"/>
+                                        </Grid>
+
+                                        <!-- Список товаров -->
+                                        <ItemsControl Grid.Row="2" ItemsSource="{Binding Items}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid Margin="0,5">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <!-- Иконка -->
+                                                            <ColumnDefinition Width="10"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <!-- xN -->
+                                                            <ColumnDefinition Width="*"/>
+                                                            <!-- Растяжка -->
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <!-- Цена за 1 -->
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <!-- Цена всего -->
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <Image Source="{Binding ImageSource}" 
+                                           Width="40" Height="40" 
+                                           Grid.Column="0"/>
+
+                                                        <TextBlock Text="{Binding Quantity, StringFormat='x{}{0}'}" 
+                                               Grid.Column="2" 
+                                               FontFamily="{StaticResource GothamProLight}" 
+                                               FontSize="16" 
+                                               VerticalAlignment="Center"/>
+
+                                                        <TextBlock Grid.Column="4" 
+                                               FontFamily="{StaticResource GothamProLight}" 
+                                               FontSize="16" 
+                                               VerticalAlignment="Center"
+                                               Margin="0,0,20,0">
+                                                            <TextBlock.Text>
+                                                                <MultiBinding StringFormat="{}{0:N2} ₽">
+                                                                    <Binding Path="PricePerUnit"/>
+                                                                </MultiBinding>
+                                                            </TextBlock.Text>
+                                                        </TextBlock>
+
+                                                        <TextBlock Grid.Column="5" 
+                                               FontFamily="{StaticResource GothamProLight}" 
+                                               FontSize="16" 
+                                               VerticalAlignment="Center"
+                                               Margin="20,0,0,0">
+                                                            <TextBlock.Text>
+                                                                <MultiBinding StringFormat="{}{0:N2} ₽">
+                                                                    <Binding Path="TotalPrice"/>
+                                                                </MultiBinding>
+                                                            </TextBlock.Text>
+                                                        </TextBlock>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+
+                                            <ItemsControl.ItemContainerStyle>
+                                                <Style TargetType="ContentPresenter">
+                                                    <Setter Property="Margin" Value="0,0,0,10"/>
+                                                </Style>
+                                            </ItemsControl.ItemContainerStyle>
+                                        </ItemsControl>
+
+                                        <!-- Нижняя панель с подписями -->
+                                        <Grid Grid.Row="4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <!-- Кнопка -->
+                                                <ColumnDefinition Width="*"/>
+                                                <!-- Растяжка -->
+                                                <ColumnDefinition Width="Auto"/>
+                                                <!-- Дата -->
+                                                <ColumnDefinition Width="Auto"/>
+                                                <!-- Итого -->
+                                            </Grid.ColumnDefinitions>
+
+                                            <Button Content="Подробно" 
+                                FontFamily="{StaticResource GothamProFamily}" 
+                                FontSize="16" 
+                                Padding="10,5" 
+                                Command="{Binding ViewDetailsCommand}"/>
+
+                                            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,20,0">
+                                                <TextBlock Text="Дата:" 
+                                       FontFamily="{StaticResource GothamProFamily}" 
+                                       FontSize="14" 
+                                       FontWeight="Bold"
+                                       Margin="0,0,5,0"/>
+                                                <TextBlock Text="{Binding OrderDate, StringFormat='{}{0:dd.MM.yyyy}'}" 
+                                       FontFamily="{StaticResource GothamProLight}" 
+                                       FontSize="14"/>
+                                            </StackPanel>
+
+                                            <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
+                                                <TextBlock Text="Итого:" 
+                                       FontFamily="{StaticResource GothamProFamily}" 
+                                       FontSize="14" 
+                                       FontWeight="Bold"
+                                       Margin="0,0,5,0"/>
+                                                <TextBlock FontFamily="{StaticResource GothamProLight}" FontSize="14">
+                                                    <TextBlock.Text>
+                                                        <MultiBinding StringFormat="{}{0:N2} ₽">
+                                                            <Binding Path="TotalOrderPrice"/>
+                                                        </MultiBinding>
+                                                    </TextBlock.Text>
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <Grid Grid.Column="2" Name="EmployeeProfileGrid" Visibility="Visible" Grid.RowSpan="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="0" />
@@ -118,42 +359,116 @@
                     </Grid.RowDefinitions>
                     <TextBlock Text="Задачи" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
                     <ListBox Name="TasksListBox" Grid.Row="2">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Grid Margin="10">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="10" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                    <StackPanel Orientation="Horizontal">
-                                        <ComboBox/>
-                                        <TextBlock Grid.Row="0" Text="Заголовок" FontFamily="{StaticResource GothamProFamily}" FontSize="20" FontWeight="Bold" TextWrapping="Wrap"/>
-                                    </StackPanel>
-                                    <Grid Grid.Row="2">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="auto" />
-                                            <RowDefinition Height="5" />
-                                            <RowDefinition Height="auto" />
-                                        </Grid.RowDefinitions>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="auto" />
-                                            <ColumnDefinition Width="5" />
-                                            <ColumnDefinition Width="auto" />
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="Начало" FontFamily="{StaticResource GothamPro}" FontSize="15" FontWeight="Light" TextWrapping="Wrap"/>
-                                        <TextBlock Grid.Column="2" Text="Дедлайн" FontFamily="{StaticResource GothamPro}" FontSize="15" FontWeight="Light" TextWrapping="Wrap"/>
-                                        <TextBlock Grid.Column="0" Grid.Row="2" Text="16:00 2025.04.03" FontFamily="{StaticResource GothamProLight}" FontSize="15" FontWeight="Light" TextWrapping="Wrap"/>
-                                        <TextBlock Grid.Column="2" Grid.Row="2" Text="16:00 2025.04.31" FontFamily="{StaticResource GothamProLight}" FontSize="15" FontWeight="Light" TextWrapping="Wrap"/>
-                                    </Grid>
-                                 </Grid>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+    <!-- Отключаем выделение элементов -->
+    <ListBox.ItemContainerStyle>
+        <Style TargetType="ListBoxItem">
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <ContentPresenter/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </ListBox.ItemContainerStyle>
+
+    <!-- Горизонтальная упаковка с переносом -->
+    <ListBox.ItemsPanel>
+        <ItemsPanelTemplate>
+            <WrapPanel Orientation="Horizontal" 
+                       IsItemsHost="True"
+                       Margin="0"/>
+        </ItemsPanelTemplate>
+    </ListBox.ItemsPanel>
+
+    <ListBox.ItemTemplate>
+        <DataTemplate>
+            <!-- Карточка задачи – без фиксированной ширины -->
+            <Border CornerRadius="20" 
+                    Background="White" 
+                    Margin="10" 
+                    MinWidth="240"
+                    MaxWidth="320"
+                    BorderBrush="LightGray"
+                    BorderThickness="1">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="15" ShadowDepth="0" Opacity="0.2" Color="Gray"/>
+                </Border.Effect>
+                <Grid Margin="15">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="10"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="10"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Чекбокс + название задачи (с переносом) -->
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox IsChecked="{Binding IsCompleted}" 
+                                  VerticalAlignment="Top"
+                                  Margin="0,0,10,0"/>
+                        <TextBlock Text="{Binding Title}" 
+                                   FontFamily="{StaticResource GothamProFamily}" 
+                                   FontSize="18" 
+                                   TextWrapping="Wrap"
+                                   MaxWidth="250"/>
+                    </StackPanel>
+
+                    <!-- Начало -->
+                    <StackPanel Grid.Row="2" Orientation="Horizontal">
+                        <TextBlock Text="Начало: " 
+                                   FontFamily="{StaticResource GothamProFamily}"
+                                   FontSize="14"/>
+                        <TextBlock Text="{Binding StartDate, StringFormat='{}{0:dd.MM.yyyy HH:mm}'}" 
+                                   FontFamily="{StaticResource GothamProLight}"
+                                   FontSize="14"
+                                   TextWrapping="Wrap"/>
+                    </StackPanel>
+
+                    <!-- Дедлайн -->
+                    <StackPanel Grid.Row="4" Orientation="Horizontal">
+                        <TextBlock Text="Дедлайн: " 
+                                   FontFamily="{StaticResource GothamProFamily}"
+                                   FontSize="14"/>
+                        <TextBlock Text="{Binding Deadline, StringFormat='{}{0:dd.MM.yyyy HH:mm}'}" 
+                                   FontFamily="{StaticResource GothamProLight}"
+                                   FontSize="14"
+                                   TextWrapping="Wrap"/>
+                    </StackPanel>
+
+                    <!-- Статус выполнения -->
+                    <TextBlock Grid.Row="5" Margin="0,10,0,0"
+                               FontFamily="{StaticResource GothamProLight}"
+                               FontSize="12"
+                               Foreground="Gray">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Text" Value="✓ Выполнено"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsCompleted}" Value="False">
+                                        <Setter Property="Text" Value="○ Не выполнено"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </Grid>
+            </Border>
+        </DataTemplate>
+    </ListBox.ItemTemplate>
+</ListBox>
                 </Grid>
             </Border>
         </Grid>
-        
+
 
     </Grid>
 </Page>
