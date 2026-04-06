@@ -6,7 +6,10 @@
       xmlns:local="clr-namespace:MedicalShopDiaShop.MainView.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="694" d:DesignWidth="1033" d:MaxWidth="1125"
-        Title="EmployeesPage">
+      Title="EmployeesPage">
+
+    <Page.Resources>
+    </Page.Resources>
 
     <Grid Background="White">
         <Grid.RowDefinitions>
@@ -16,6 +19,8 @@
             <RowDefinition Height="10" />
             <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
+
+        <!-- Верхняя панель: поиск + кнопки действий -->
         <Grid Margin="10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />
@@ -27,7 +32,7 @@
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
-            
+
             <Grid Grid.Column="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*" />
@@ -47,6 +52,7 @@
             <Button Name="DeleteBtn" Grid.Column="7" Content="Удалить" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Click="DeleteBtn_Click" Height="50"/>
         </Grid>
 
+        <!-- Панель фильтрации и переключения вида -->
         <Grid Grid.Row="2" Margin="10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0" />
@@ -58,18 +64,19 @@
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
+
             <Grid Grid.Column="7">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*" />
                     <ColumnDefinition Width="10" />
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="2" Background="White" Padding="1" BorderThickness="0" Height="50">
+                <Button Name="ListBoxOnBtn" Grid.Column="2" Background="White" Padding="1" BorderThickness="0" Height="50" Click="ListBoxOnBtn_Click">
                     <Button.Content>
                         <Image Source="/Resources/dots.png" Width="70"/>
                     </Button.Content>
                 </Button>
-                <Button Background="White" Padding="1" BorderThickness="0" Height="50">
+                <Button Name="ListViewOnBtn" Background="White" Padding="1" BorderThickness="0" Height="50" Click="ListViewOnBtn_Click">
                     <Button.Content>
                         <Image Source="/Resources/menu.png" Width="70"/>
                     </Button.Content>
@@ -82,33 +89,157 @@
                 </GroupBox.Header>
                 <ComboBox/>
             </GroupBox>
-
-            <GroupBox Grid.Column="3" Style="{x:Null}" BorderBrush="Black" BorderThickness="2">
-                <GroupBox.Header>
-                    <TextBlock Text="Должность" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
-                </GroupBox.Header>
-                <ComboBox/>
-            </GroupBox>
         </Grid>
 
+        <!-- Область отображения сотрудников (ListView и ListBox) -->
         <Grid Grid.Row="4" Margin="10">
-            <ListView Name="EmployeesListView" Visibility="Hidden">
+            <!-- ListView с чередованием цветов, чекбоксами и кнопкой "Подробнее" -->
+            <ListView Name="EmployeesListView" 
+                      Visibility="Visible" 
+                      FontSize="20" 
+                      FontFamily="{StaticResource GothamProFamily}"
+                      AlternationCount="2"
+                      SelectionMode="Single">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn/>
+                        <!-- Колонка с чекбоксом для выделения -->
+                        <GridViewColumn Width="40">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                              VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <!-- Колонка ФИО -->
+                        <GridViewColumn Header="ФИО" DisplayMemberBinding="{Binding FullName}" Width="auto"/>
+                        <!-- Колонка Юзернейм -->
+                        <GridViewColumn Header="Юзернейм" DisplayMemberBinding="{Binding UserName}" Width="auto"/>
+                        <!-- Колонка Должность -->
+                        <GridViewColumn Header="Должность" DisplayMemberBinding="{Binding RoleName}" Width="auto"/>
+                        <!-- Колонка Телефон -->
+                        <GridViewColumn Header="Номер телефона" DisplayMemberBinding="{Binding PhoneNumber}" Width="auto"/>
+                        <!-- Колонка Почта -->
+                        <GridViewColumn Header="Почта" DisplayMemberBinding="{Binding Email}" Width="200"/>
+                        <!-- Колонка с кнопкой "Подробнее" -->
+                        <GridViewColumn Width="auto">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="Подробнее" 
+                                            FontSize="16" 
+                                            FontFamily="{StaticResource GothamProFamily}"
+                                            Click="Details_Click" 
+                                            Tag="{Binding}"
+                                            Margin="5,2"
+                                            Width="150"
+                                            HorizontalContentAlignment="Center"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
                     </GridView>
                 </ListView.View>
             </ListView>
-            <ListBox Name="EmployeesListBox" Visibility="Hidden">
+
+            <!-- ListBox с карточками и чекбоксом в левом верхнем углу -->
+            <ListBox Name="EmployeesListBox" 
+                     Visibility="Collapsed" 
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="Padding" Value="0"/>
+                        <Setter Property="Margin" Value="0"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListBoxItem">
+                                    <ContentPresenter/>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="Transparent"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="Transparent"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal" IsItemsHost="True" Margin="0"/>
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Grid>
-                            
-                        </Grid>
+                        <Border CornerRadius="30" 
+                                Background="White" 
+                                ClipToBounds="False" 
+                                UseLayoutRounding="True"
+                                Margin="10" 
+                                Width="300"
+                                Height="450"
+                                BorderBrush="LightGray"
+                                BorderThickness="1">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="20" 
+                                                  ShadowDepth="0" 
+                                                  Opacity="0.25" 
+                                                  Color="Gray"/>
+                            </Border.Effect>
+                            <Grid Margin="10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="10"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="10"/>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <!-- Верхняя строка: чекбокс слева и содержимое -->
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <!-- Чекбокс в левом верхнем углу -->
+                                    <CheckBox Grid.Column="0" 
+                                              IsChecked="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                              VerticalAlignment="Top" 
+                                              HorizontalAlignment="Left"
+                                              Margin="0,5,10,0"/>
+                                    <!-- Существующее содержимое (аватар, имя, разделитель) -->
+                                    <StackPanel Grid.ColumnSpan="2">
+                                        <Image Source="{Binding AvatarKey}" Height="100" Width="100" />
+                                        <TextBlock Text="{Binding UserName}" FontSize="20" FontFamily="{StaticResource GothamProFamily}" TextAlignment="Center"/>
+                                        <Separator/>
+                                    </StackPanel>
+                                </Grid>
+
+                                <!-- Остальные данные -->
+                                <Grid Grid.Row="2">
+                                    <StackPanel>
+                                        <TextBlock Text="ФИО" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
+                                        <TextBlock Text="{Binding FullName}" FontSize="20" FontFamily="{StaticResource GothamProLight}" TextWrapping="Wrap"/>
+                                        <TextBlock Text="Роль" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
+                                        <TextBlock Text="{Binding RoleName}" FontSize="20" FontFamily="{StaticResource GothamProLight}" TextWrapping="Wrap"/>
+                                        <TextBlock Text="Почта" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
+                                        <TextBlock Text="{Binding Email}" FontSize="20" FontFamily="{StaticResource GothamProLight}" TextWrapping="Wrap"/>
+                                        <TextBlock Text="Номер телефона" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
+                                        <TextBlock Text="{Binding PhoneNumber}" FontSize="20" FontFamily="{StaticResource GothamProLight}" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                </Grid>
+
+                                <Button Grid.Row="4" Content="Подробнее" FontSize="16" FontFamily="{StaticResource GothamProFamily}"
+                                        Click="Details_Click" Tag="{Binding}" Margin="0,0,0,20" VerticalAlignment="Bottom"/>
+                            </Grid>
+                        </Border>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
         </Grid>
-        
     </Grid>
 </Page>

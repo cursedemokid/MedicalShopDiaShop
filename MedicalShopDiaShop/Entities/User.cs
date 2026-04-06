@@ -17,6 +17,11 @@ namespace MedicalShopDiaShop.Entities
         public string Password { get; set; }
         public string UserName { get; set; }
         public Role Role { get; set; }
+        public string AvatarKey { get; set; }
+        public string FullName
+        {
+            get => $"{LastName} {FirstName} {MiddleName}";
+        }
     }
 
     public enum Role
