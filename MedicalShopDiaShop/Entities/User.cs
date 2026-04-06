@@ -22,6 +22,9 @@ namespace MedicalShopDiaShop.Entities
         {
             get => $"{LastName} {FirstName} {MiddleName}";
         }
+        public long StoreId { get; set; }
+
+        public virtual Store Store { get; set; }
     }
 
     public enum Role

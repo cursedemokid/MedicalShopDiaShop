@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MedicalShopDiaShop.Entities
 {
-    internal class Order
+    public class Order
     {
         public long Id { get; set; }
         public DateTime DateTime { get; set; }

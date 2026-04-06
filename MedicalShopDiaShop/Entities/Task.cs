@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MedicalShopDiaShop.Entities
 {
-    internal class Task
+    public class Task
     {
         public long Id { get; set; }
         public string Description { get; set; }
