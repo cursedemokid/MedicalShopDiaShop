@@ -1,22 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MedicalShopDiaShop.Entities
 {
     public class Order
     {
-        public long Id { get; set; }
+        public int Id { get; set; }
         public DateTime DateTime { get; set; }
-        public long ClientId { get; set; }
+        public int ClientId { get; set; }
         public decimal TotalCost { get; set; }
-        public DeliveryType DeliveryType { get; set; }
-        public long WorkerId { get; set; }
+        public int DeliveryType { get; set; }
+        public int WorkerId { get; set; }
 
-        public virtual User Client {  get; set; }
-        public virtual User Worker {  get; set; }
+        public User Client { get; set; }
+        public User Worker { get; set; }
+        public ICollection<ProductOrder> ProductOrders { get; set; }
     }
 
     public enum DeliveryType

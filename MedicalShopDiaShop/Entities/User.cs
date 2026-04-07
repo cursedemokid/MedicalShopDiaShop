@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace MedicalShopDiaShop.Entities
 {
     public class User
     {
-        public long Id { get; set; }
+        public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string MiddleName { get; set; }
@@ -16,15 +12,20 @@ namespace MedicalShopDiaShop.Entities
         public string Email { get; set; }
         public string Password { get; set; }
         public string UserName { get; set; }
-        public Role Role { get; set; }
+        public int Role { get; set; }
         public string AvatarKey { get; set; }
-        public string FullName
-        {
-            get => $"{LastName} {FirstName} {MiddleName}";
-        }
-        public long StoreId { get; set; }
+        public int StoreId { get; set; }
+        public decimal? Salary { get; set; }
 
-        public virtual Store Store { get; set; }
+        // Навигационные свойства
+        public Store Store { get; set; }
+        public ICollection<Order> OrdersAsClient { get; set; }
+        public ICollection<Order> OrdersAsWorker { get; set; }
+        public ICollection<Delivery> Deliveries { get; set; }
+        public ICollection<Favorite> Favorites { get; set; }
+        public ICollection<Schedule> Schedules { get; set; }
+        public ICollection<EmployeeTask> AssignedTasks { get; set; }   // задачи, назначенные пользователю
+        public ICollection<EmployeeTask> CreatedTasks { get; set; }    // задачи, созданные пользователем
     }
 
     public enum Role

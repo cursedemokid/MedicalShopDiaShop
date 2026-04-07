@@ -1,21 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MedicalShopDiaShop.Entities
 {
-    internal class Schedule
+    public class Schedule
     {
-        public long Id { get; set; }
+        public int Id { get; set; }
         public DateTime DateStart { get; set; }
-        public long UserId { get; set; }
-        public double Hours { get; set; }
+        public int UserId { get; set; }
+        public int Hours { get; set; }
         public DateTime FactStartAt { get; set; }
         public DateTime FactExitAt { get; set; }
-        public double FactHours { get; set; }
+        public int FactHours { get; set; }
 
-        public virtual User User { get; set; }
+        public User User { get; set; }
     }
 }
