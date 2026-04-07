@@ -11,6 +11,7 @@ namespace MedicalShopDiaShop.Entities
         public decimal TotalCost { get; set; }
         public int DeliveryType { get; set; }
         public int WorkerId { get; set; }
+        public int Status { get; set; }
 
         public User Client { get; set; }
         public User Worker { get; set; }
@@ -21,5 +22,13 @@ namespace MedicalShopDiaShop.Entities
     {
         Courier = 1,
         Self = 2
+    }
+    public enum OrderStatus
+    {
+        InProcess = 1,
+        WaitCourier = 2,
+        Delivered = 3,
+        WaitPayment = 4,
+        InHistory = 5,
     }
 }

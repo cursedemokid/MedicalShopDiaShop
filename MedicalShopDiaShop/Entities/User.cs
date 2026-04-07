@@ -17,6 +17,11 @@ namespace MedicalShopDiaShop.Entities
         public int StoreId { get; set; }
         public decimal? Salary { get; set; }
 
+        public string FullName
+        {
+            get { return LastName + FirstName + MiddleName; }
+        }
+
         // Навигационные свойства
         public Store Store { get; set; }
         public ICollection<Order> OrdersAsClient { get; set; }

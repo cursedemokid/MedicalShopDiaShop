@@ -92,11 +92,23 @@
     <Compile Include="AppData\CustomMessageBox.xaml.cs">
       <DependentUpon>CustomMessageBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MainView\Dto\OrderDto.cs" />
+    <Compile Include="MainView\Dto\ProductDto.cs" />
+    <Compile Include="MainView\Dto\UserDto.cs" />
     <Compile Include="MainView\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MainView\Pages\ClientsPage.xaml.cs">
+      <DependentUpon>ClientsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MainView\Pages\EmployeesPage.xaml.cs">
       <DependentUpon>EmployeesPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainView\Pages\OrderPage.xaml.cs">
+      <DependentUpon>OrderPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainView\Pages\ProductsPage.xaml.cs">
+      <DependentUpon>ProductsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainView\Pages\ProfilePage.xaml.cs">
       <DependentUpon>ProfilePage.xaml</DependentUpon>
@@ -176,7 +188,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="MainView\Pages\ClientsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainView\Pages\EmployeesPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainView\Pages\OrderPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainView\Pages\ProductsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

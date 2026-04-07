@@ -17,7 +17,11 @@ namespace MedicalShopDiaShop.Entities
 
     public enum Category
     {
-
+        Glucometers = 1,
+        TestStrips = 2,
+        Syringes = 3,
+        Creams = 4,
+        Vitamins = 5
     }
 
 }
