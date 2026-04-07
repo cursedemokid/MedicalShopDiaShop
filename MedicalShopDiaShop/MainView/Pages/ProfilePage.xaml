@@ -70,7 +70,7 @@
             </Grid>
         </Border>
 
-        <Grid Name="ClientProfileGrid" Grid.Column="2" Grid.RowSpan="2" Visibility="Visible">
+        <Grid Name="ClientProfileGrid" Grid.Column="2" Grid.RowSpan="2" Visibility="Hidden">
             <Border CornerRadius="30" 
                 Background="White" 
                 ClipToBounds="False" 
@@ -331,7 +331,7 @@
             </Border>
         </Grid>
 
-        <Grid Grid.Column="2" Name="EmployeeProfileGrid" Visibility="Collapsed" Grid.RowSpan="2">
+        <Grid Grid.Column="2" Name="EmployeeProfileGrid" Visibility="Visible" Grid.RowSpan="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="0" />
@@ -411,84 +411,97 @@
         </ItemsPanelTemplate>
     </ListBox.ItemsPanel>
 
-    <ListBox.ItemTemplate>
-        <DataTemplate>
-            <!-- Карточка задачи – без фиксированной ширины -->
-            <Border CornerRadius="20" 
-                    Background="White" 
-                    Margin="10" 
-                    MinWidth="240"
-                    MaxWidth="320"
-                    BorderBrush="LightGray"
-                    BorderThickness="1">
-                <Border.Effect>
-                    <DropShadowEffect BlurRadius="15" ShadowDepth="0" Opacity="0.2" Color="Gray"/>
-                </Border.Effect>
-                <Grid Margin="15">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="10"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="10"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <!-- Карточка задачи -->
+                                <Border CornerRadius="20" 
+                Background="White" 
+                Margin="10" 
+                MinWidth="240"
+                MaxWidth="320"
+                BorderBrush="LightGray"
+                BorderThickness="1">
+                                    <Border.Effect>
+                                        <DropShadowEffect BlurRadius="15" ShadowDepth="0" Opacity="0.2" Color="Gray"/>
+                                    </Border.Effect>
+                                    <Grid Margin="15">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="10"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="10"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="10"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
 
-                    <!-- Чекбокс + название задачи (с переносом) -->
-                    <StackPanel Orientation="Horizontal">
-                        <CheckBox IsChecked="{Binding IsCompleted}" 
-                                  VerticalAlignment="Top"
-                                  Margin="0,0,10,0"/>
-                        <TextBlock Text="{Binding Title}" 
-                                   FontFamily="{StaticResource GothamProFamily}" 
-                                   FontSize="18" 
-                                   TextWrapping="Wrap"
-                                   MaxWidth="250"/>
-                    </StackPanel>
+                                        <!-- Чекбокс + название задачи (с переносом) -->
+                                        <StackPanel Orientation="Horizontal">
+                                            <CheckBox IsChecked="{Binding IsCompleted}" 
+                              VerticalAlignment="Top"
+                              Margin="0,0,10,0"/>
+                                            <TextBlock Text="{Binding Title}" 
+                               FontFamily="{StaticResource GothamProFamily}" 
+                               FontSize="18" 
+                               TextWrapping="Wrap"
+                               MaxWidth="250"/>
+                                        </StackPanel>
 
-                    <!-- Начало -->
-                    <StackPanel Grid.Row="2" Orientation="Horizontal">
-                        <TextBlock Text="Начало: " 
-                                   FontFamily="{StaticResource GothamProFamily}"
-                                   FontSize="14"/>
-                        <TextBlock Text="{Binding StartDate, StringFormat='{}{0:dd.MM.yyyy HH:mm}'}" 
-                                   FontFamily="{StaticResource GothamProLight}"
-                                   FontSize="14"
-                                   TextWrapping="Wrap"/>
-                    </StackPanel>
-
-                    <!-- Дедлайн -->
-                    <StackPanel Grid.Row="4" Orientation="Horizontal">
-                        <TextBlock Text="Дедлайн: " 
-                                   FontFamily="{StaticResource GothamProFamily}"
-                                   FontSize="14"/>
-                        <TextBlock Text="{Binding Deadline, StringFormat='{}{0:dd.MM.yyyy HH:mm}'}" 
-                                   FontFamily="{StaticResource GothamProLight}"
-                                   FontSize="14"
-                                   TextWrapping="Wrap"/>
-                    </StackPanel>
-
-                    <!-- Статус выполнения -->
-                    <TextBlock Grid.Row="5" Margin="0,10,0,0"
+                                        <!-- Начало -->
+                                        <StackPanel Grid.Row="2" Orientation="Horizontal">
+                                            <TextBlock Text="Начало: " 
+                               FontFamily="{StaticResource GothamProFamily}"
+                               FontSize="14"/>
+                                            <TextBlock Text="{Binding StartDate, StringFormat='{}{0:dd.MM.yyyy HH:mm}'}" 
                                FontFamily="{StaticResource GothamProLight}"
-                               FontSize="12"
-                               Foreground="Gray">
-                        <TextBlock.Style>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="Text" Value="✓ Выполнено"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsCompleted}" Value="False">
-                                        <Setter Property="Text" Value="○ Не выполнено"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBlock.Style>
-                    </TextBlock>
-                </Grid>
-            </Border>
-        </DataTemplate>
-    </ListBox.ItemTemplate>
-</ListBox>
+                               FontSize="14"
+                               TextWrapping="Wrap"/>
+                                        </StackPanel>
+
+                                        <!-- Дедлайн -->
+                                        <StackPanel Grid.Row="4" Orientation="Horizontal">
+                                            <TextBlock Text="Дедлайн: " 
+                               FontFamily="{StaticResource GothamProFamily}"
+                               FontSize="14"/>
+                                            <TextBlock Text="{Binding Deadline, StringFormat='{}{0:dd.MM.yyyy HH:mm}'}" 
+                               FontFamily="{StaticResource GothamProLight}"
+                               FontSize="14"
+                               TextWrapping="Wrap"/>
+                                        </StackPanel>
+
+                                        <!-- Автор (новая строка) -->
+                                        <StackPanel Grid.Row="5" Orientation="Horizontal" Margin="0,12,0,0">
+                                            <TextBlock Text="Автор: " 
+                               FontFamily="{StaticResource GothamProFamily}"
+                               FontSize="14"/>
+                                            <TextBlock Text="{Binding AuthorName}" 
+                               FontFamily="{StaticResource GothamProLight}"
+                               FontSize="14"
+                               TextWrapping="Wrap"/>
+                                        </StackPanel>
+
+                                        <!-- Статус выполнения -->
+                                        <TextBlock Grid.Row="7" Margin="0,10,0,0"
+                           FontFamily="{StaticResource GothamProLight}"
+                           FontSize="12"
+                           Foreground="Gray">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Text" Value="✓ Выполнено"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsCompleted}" Value="False">
+                                                            <Setter Property="Text" Value="○ Не выполнено"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
                 </Grid>
             </Border>
         </Grid>

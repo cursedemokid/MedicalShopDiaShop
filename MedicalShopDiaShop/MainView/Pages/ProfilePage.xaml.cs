@@ -134,35 +134,40 @@ namespace MedicalShopDiaShop.MainView.Pages
             Title = "Проверить остатки лекарств",
             StartDate = DateTime.Now.AddHours(2),
             Deadline = DateTime.Now.AddDays(1),
-            IsCompleted = false
+            IsCompleted = false,
+            AuthorName = "BO$$"
         },
         new TaskItem
         {
             Title = "Создать отчёт по продажам",
             StartDate = DateTime.Now.AddDays(1).AddHours(9),
             Deadline = DateTime.Now.AddDays(2).AddHours(18),
-            IsCompleted = false
+            IsCompleted = false,
+            AuthorName = "BO$$"
         },
         new TaskItem
         {
             Title = "Заказать партию витаминов",
             StartDate = DateTime.Now.AddDays(1).AddHours(10),
             Deadline = DateTime.Now.AddDays(3),
-            IsCompleted = true
+            IsCompleted = true,
+            AuthorName = "BO$$"
         },
         new TaskItem
         {
             Title = "Обновить прайс-лист",
             StartDate = DateTime.Now.AddDays(2).AddHours(14),
             Deadline = DateTime.Now.AddDays(2).AddHours(17),
-            IsCompleted = false
+            IsCompleted = false,
+            AuthorName = "BO$$"
         },
         new TaskItem
         {
             Title = "Провести инвентаризацию",
             StartDate = DateTime.Now.AddDays(3).AddHours(9),
             Deadline = DateTime.Now.AddDays(4).AddHours(18),
-            IsCompleted = false
+            IsCompleted = false,
+            AuthorName = "BO$$"
         }
     };
             TasksListBox.ItemsSource = tasks;
@@ -174,6 +179,7 @@ namespace MedicalShopDiaShop.MainView.Pages
             public DateTime StartDate { get; set; }
             public DateTime Deadline { get; set; }
             public bool IsCompleted { get; set; }
+            public string AuthorName { get; set; }
         }
     }
 }
