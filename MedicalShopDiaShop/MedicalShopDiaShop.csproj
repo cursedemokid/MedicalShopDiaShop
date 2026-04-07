@@ -78,13 +78,13 @@
     <Compile Include="AppData\ProductWithFavorite.cs" />
     <Compile Include="AppData\Status.cs" />
     <Compile Include="Entities\Delivery.cs" />
+    <Compile Include="Entities\EmployeeTask.cs" />
     <Compile Include="Entities\Favorite.cs" />
     <Compile Include="Entities\Order.cs" />
     <Compile Include="Entities\Product.cs" />
     <Compile Include="Entities\ProductOrder.cs" />
     <Compile Include="Entities\Schedule.cs" />
     <Compile Include="Entities\Store.cs" />
-    <Compile Include="Entities\Task.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="MainView\AuthorizationWindow.xaml.cs">
       <DependentUpon>AuthorizationWindow.xaml</DependentUpon>
