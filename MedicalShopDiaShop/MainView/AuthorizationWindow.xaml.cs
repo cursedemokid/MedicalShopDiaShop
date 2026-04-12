@@ -1,31 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using MedicalShopDiaShop.Database;
+using MedicalShopDiaShop.Model;
+using MedicalShopDiaShop.Properties;
+using MedicalShopDiaShop.View.Windows;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace MedicalShopDiaShop.MainView
 {
-    /// <summary>
-    /// Логика взаимодействия для AuthorizationWindow.xaml
-    /// </summary>
     public partial class AuthorizationWindow : Window
     {
         public AuthorizationWindow()
         {
             InitializeComponent();
+            LoadSavedCredentials();
+        }
+
+        private void LoadSavedCredentials()
+        {
+            if (!string.IsNullOrEmpty(Settings.Default.SavedLogin))
+            {
+                LoginTextBox.Text = Settings.Default.SavedLogin;
+                if (!string.IsNullOrEmpty(Settings.Default.SavedPassword))
+                {
+                    PasswordBox.Password = Settings.Default.SavedPassword;
+                }
+                RememberMeCheckBox.IsChecked = true;
+            }
         }
 
         private void RegistrationBtn_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            RegistrationWindow registrationWindow = new RegistrationWindow();
+            registrationWindow.Show();
             Close();
         }
 
@@ -33,9 +42,41 @@ namespace MedicalShopDiaShop.MainView
         {
             if (ValidateFields())
             {
-                MainWindow mainWindow = new MainWindow();
-                mainWindow.Show();
-                Close();
+                string login = LoginTextBox.Text.Trim();
+                string password = PasswordBox.Password;
+
+                // Поиск пользователя по Email или UserName
+                var user = App.context.User.FirstOrDefault(u => u.Email == login || u.UserName == login);
+                if (user != null && user.Password == password)
+                {
+                    App.currentUser = user;
+
+                    // Сохраняем или очищаем настройки
+                    if (RememberMeCheckBox.IsChecked == true)
+                    {
+                        Settings.Default.SavedLogin = login;
+                        Settings.Default.SavedPassword = password;
+                    }
+                    else
+                    {
+                        Settings.Default.SavedLogin = string.Empty;
+                        Settings.Default.SavedPassword = string.Empty;
+                    }
+                    Settings.Default.Save();
+
+                    // Открываем главное окно (например, StoreWindow)
+                    MainWindow mainWindow = new MainWindow();
+                    mainWindow.Show();
+                    Close();
+                }
+                else
+                {
+                    MessageBox.Show("Неверный логин или пароль. Попробуйте снова.",
+                                    "Ошибка авторизации",
+                                    MessageBoxButton.OK,
+                                    MessageBoxImage.Error);
+                    PasswordBox.Password = "";
+                }
             }
         }
 
@@ -53,8 +94,9 @@ namespace MedicalShopDiaShop.MainView
 
         private void ClearPasswordError()
         {
-            PasswordGroupBox.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF673AB7"));
-            PasswordHeader.Foreground = Brushes.Black;
+            PasswordGroupBox.BorderBrush = new SolidColorBrush(
+                (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#FF673AB7"));
+            PasswordHeader.Foreground = System.Windows.Media.Brushes.Black;
             PasswordErrorText.Visibility = Visibility.Collapsed;
         }
 
@@ -64,8 +106,8 @@ namespace MedicalShopDiaShop.MainView
 
             if (string.IsNullOrWhiteSpace(LoginTextBox.Text))
             {
-                LoginGroupBox.BorderBrush = Brushes.Red;
-                LoginHeader.Foreground = Brushes.Red;
+                LoginGroupBox.BorderBrush = System.Windows.Media.Brushes.Red;
+                LoginHeader.Foreground = System.Windows.Media.Brushes.Red;
                 LoginErrorText.Visibility = Visibility.Visible;
                 isValid = false;
             }
@@ -76,8 +118,8 @@ namespace MedicalShopDiaShop.MainView
 
             if (string.IsNullOrWhiteSpace(PasswordBox.Password))
             {
-                PasswordGroupBox.BorderBrush = Brushes.Red;
-                PasswordHeader.Foreground = Brushes.Red;
+                PasswordGroupBox.BorderBrush = System.Windows.Media.Brushes.Red;
+                PasswordHeader.Foreground = System.Windows.Media.Brushes.Red;
                 PasswordErrorText.Visibility = Visibility.Visible;
                 isValid = false;
             }
@@ -91,8 +133,9 @@ namespace MedicalShopDiaShop.MainView
 
         private void ClearLoginError()
         {
-            LoginGroupBox.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF673AB7"));
-            LoginHeader.Foreground = Brushes.Black;
+            LoginGroupBox.BorderBrush = new SolidColorBrush(
+                (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#FF673AB7"));
+            LoginHeader.Foreground = System.Windows.Media.Brushes.Black;
             LoginErrorText.Visibility = Visibility.Collapsed;
         }
     }

@@ -1,4 +1,5 @@
-﻿using MedicalShopDiaShop.Model;
+﻿using MedicalShopDiaShop.Database;
+using MedicalShopDiaShop.Model;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -15,7 +16,8 @@ namespace MedicalShopDiaShop
     /// </summary>
     public partial class App : Application
     {
-        public static User currentUser = new User();
+        public static DiaShopEntities context = new DiaShopEntities();
+        public static Database.User currentUser = new Database.User();
         //public static MedicalShopDiaShopEntities1 context = new MedicalShopDiaShopEntities1();
         public static Button currentButton = new Button();
     }

@@ -8,12 +8,25 @@ namespace MedicalShopDiaShop.AppData
 {
     public class Status
     {
+        public enum DeliveryType
+        {
+            Courier = 1,
+            Self = 2
+        }
         public enum OrderStatus
         {
-            Path = 0, //В  пути
-            History = 1, //В истории
-            Wait = 2, //В ожидании
-            MakingOrder = 3 //Оформление
+            InProcess = 1,
+            WaitCourier = 2,
+            Delivered = 3,
+            WaitPayment = 4,
+            InHistory = 5,
+        }
+        public enum Role
+        {
+            Admin = 1,
+            Client = 2,
+            Worker = 3,
+            Courier = 4
         }
     }
 }
