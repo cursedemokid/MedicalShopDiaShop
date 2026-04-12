@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="4be07c1b85c94fd6a2ef50549f777f6f" Name="Diagram1">
+        <EntityTypeShape EntityType="DiaShopModel.Delivery" Width="1.5" PointX="5.25" PointY="5" IsExpanded="true" />
+        <EntityTypeShape EntityType="DiaShopModel.Favorite" Width="1.5" PointX="5.25" PointY="8.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="DiaShopModel.Order" Width="1.5" PointX="7.5" PointY="4.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="DiaShopModel.OrderHistory" Width="1.5" PointX="9.75" PointY="7.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="DiaShopModel.Product" Width="1.5" PointX="7.5" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DiaShopModel.ProductOrder" Width="1.5" PointX="9.75" PointY="4" IsExpanded="true" />
+        <EntityTypeShape EntityType="DiaShopModel.Schedule" Width="1.5" PointX="5.25" PointY="11.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="DiaShopModel.Store" Width="1.5" PointX="0.75" PointY="10.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="DiaShopModel.Supply" Width="1.5" PointX="5.25" PointY="14.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="DiaShopModel.SupplyProduct" Width="1.5" PointX="7.5" PointY="14.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="DiaShopModel.Task" Width="1.5" PointX="5.25" PointY="18.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="DiaShopModel.User" Width="1.5" PointX="3" PointY="8.75" IsExpanded="true" />
+        <AssociationConnector Association="DiaShopModel.FK_Delivery_User1" ManuallyRouted="false" />
+        <AssociationConnector Association="DiaShopModel.FK_Order_Delivery1" ManuallyRouted="false" />
+        <AssociationConnector Association="DiaShopModel.FK_Favorite_Product1" ManuallyRouted="false" />
+        <AssociationConnector Association="DiaShopModel.FK_Favorite_User1" ManuallyRouted="false" />
+        <AssociationConnector Association="DiaShopModel.FK_OrderHistory_Order1" ManuallyRouted="false" />
+        <AssociationConnector Association="DiaShopModel.FK_ProductOrder_Order1" ManuallyRouted="false" />
+        <AssociationConnector Association="DiaShopModel.FK_OrderHistory_User" ManuallyRouted="false" />
+        <AssociationConnector Association="DiaShopModel.FK_OrderHistory_User1" ManuallyRouted="false" />
+        <AssociationConnector Association="DiaShopModel.FK_ProductOrder_Product1" ManuallyRouted="false" />
+        <AssociationConnector Association="DiaShopModel.FK_SupplyProduct_Product" ManuallyRouted="false" />
+        <AssociationConnector Association="DiaShopModel.FK_Schedule_User1" ManuallyRouted="false" />
+        <AssociationConnector Association="DiaShopModel.FK_User_Store1" ManuallyRouted="false" />
+        <AssociationConnector Association="DiaShopModel.FK_Supply_User" ManuallyRouted="false" />
+        <AssociationConnector Association="DiaShopModel.FK_Supply_User1" ManuallyRouted="false" />
+        <AssociationConnector Association="DiaShopModel.FK_SupplyProduct_Supply" ManuallyRouted="false" />
+        <AssociationConnector Association="DiaShopModel.FK_Task_User1" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
