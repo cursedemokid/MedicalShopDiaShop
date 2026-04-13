@@ -1,0 +1,71 @@
+﻿<Page x:Class="MedicalShopDiaShop.MainView.Pages.ChooseSupplierPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:MedicalShopDiaShop.MainView.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="ChooseSupplierPage">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <ListBox x:Name="SuppliersListBox" Grid.Row="0" 
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                 SelectionMode="Single">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="Padding" Value="0"/>
+                    <Setter Property="Margin" Value="0"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListBoxItem">
+                                <ContentPresenter/>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" IsItemsHost="True"/>
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Border CornerRadius="20" Background="White" Margin="10" Width="300"
+                            BorderBrush="LightGray" BorderThickness="1">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="15" ShadowDepth="0" Opacity="0.2" Color="Gray"/>
+                        </Border.Effect>
+                        <Grid Margin="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay}" 
+                                      Content="{Binding Name}" FontSize="18" FontWeight="Bold"
+                                      FontFamily="{StaticResource GothamProFamily}"/>
+                            <TextBlock Grid.Row="1" Text="{Binding CityName}" FontSize="14" 
+                                       FontFamily="{StaticResource GothamProLight}" Margin="20,5,0,0"/>
+                            <TextBlock Grid.Row="2" Text="{Binding Address}" FontSize="14" 
+                                       FontFamily="{StaticResource GothamProLight}" Margin="20,5,0,0"
+                                       TextWrapping="Wrap"/>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <Button x:Name="ContinueButton" Grid.Row="1" Content="Продолжить" 
+                Width="200" Height="40" Margin="20" HorizontalAlignment="Right"
+                Style="{StaticResource MaterialDesignFlatButton}" 
+                Click="ContinueButton_Click" IsEnabled="False"/>
+    </Grid>
+</Page>

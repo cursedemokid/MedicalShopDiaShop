@@ -1,0 +1,21 @@
+﻿<Page x:Class="MedicalShopDiaShop.MainView.Pages.ChooseDeliveryDatePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:MedicalShopDiaShop.MainView.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="ChooseDeliveryDatePage">
+    <Grid>
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+            <TextBlock Text="Выберите ожидаемую дату доставки:" FontSize="18" 
+                       FontFamily="{StaticResource GothamProFamily}" Margin="0,0,0,20"/>
+            <DatePicker x:Name="DeliveryDatePicker" Width="200" Height="40" 
+                        FontSize="16" SelectedDateFormat="Long"/>
+            <Button x:Name="CreateSupplyButton" Content="Создать поставку" 
+                    Width="200" Height="40" Margin="0,30,0,0"
+                    Style="{StaticResource MaterialDesignFlatButton}" Click="CreateSupplyButton_Click"/>
+        </StackPanel>
+    </Grid>
+</Page>
