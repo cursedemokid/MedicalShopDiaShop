@@ -33,5 +33,10 @@ namespace MedicalShopDiaShop.AppData
         {
 
         }
+        public enum StoreType
+        {
+            DiaShop = 1,
+            SupplierStore = 2,
+        }
     }
 }

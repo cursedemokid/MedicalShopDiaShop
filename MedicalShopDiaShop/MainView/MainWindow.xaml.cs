@@ -14,7 +14,6 @@ namespace MedicalShopDiaShop.MainView
     {
         private Dictionary<string, (Button Maximized, Button Minimized, Button Visual)> _buttonPairs;
         private string _currentActiveKey;
-
         public MainWindow()
         {
             InitializeComponent();

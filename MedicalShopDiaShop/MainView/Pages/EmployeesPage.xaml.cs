@@ -38,7 +38,8 @@ namespace MedicalShopDiaShop.MainView.Pages
             var dbEmployees = App.context.User
                 .Where(u => u.Role == (int)Role.Admin ||
                             u.Role == (int)Role.Worker ||
-                            u.Role == (int)Role.Courier)
+                            u.Role == (int)Role.Courier &&
+                            u.IsDeleted != true)
                 .ToList();
 
             var items = dbEmployees.Select(u => new EmployeeItem
@@ -159,9 +160,14 @@ namespace MedicalShopDiaShop.MainView.Pages
             var employee = button?.Tag as EmployeeItem;
             if (employee != null)
             {
-                FeedbackService.Information(
-                    $"ФИО: {employee.FullName}\nРоль: {employee.RoleName}\nТелефон: {employee.PhoneNumber}\nEmail: {employee.Email}",
-                    "Подробнее о сотруднике");
+                if (Application.Current.MainWindow is MainWindow mainWindow)
+                {
+                    mainWindow.MainFrame.Navigate(new ProfilePage(employee.Id));
+                }
+                else
+                {
+                    FeedbackService.Error("Не удалось получить главное окно.");
+                }
             }
         }
 
