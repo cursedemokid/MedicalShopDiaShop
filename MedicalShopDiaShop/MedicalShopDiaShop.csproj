@@ -149,57 +149,6 @@
     <Compile Include="AppData\FeedbackService.cs" />
     <Compile Include="AppData\ProductWithFavorite.cs" />
     <Compile Include="AppData\Status.cs" />
-    <Compile Include="Database\Delivery.cs">
-      <DependentUpon>ProdModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Database\Favorite.cs">
-      <DependentUpon>ProdModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Database\Order.cs">
-      <DependentUpon>ProdModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Database\OrderHistory.cs">
-      <DependentUpon>ProdModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Database\ProdModel.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ProdModel.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Database\ProdModel.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ProdModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Database\ProdModel.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ProdModel.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="Database\Product.cs">
-      <DependentUpon>ProdModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Database\ProductOrder.cs">
-      <DependentUpon>ProdModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Database\Schedule.cs">
-      <DependentUpon>ProdModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Database\Store.cs">
-      <DependentUpon>ProdModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Database\Supply.cs">
-      <DependentUpon>ProdModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Database\SupplyProduct.cs">
-      <DependentUpon>ProdModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Database\Task.cs">
-      <DependentUpon>ProdModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Database\User.cs">
-      <DependentUpon>ProdModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="MainView\AddEditSupplierWindow.xaml.cs">
       <DependentUpon>AddEditSupplierWindow.xaml</DependentUpon>
     </Compile>
@@ -320,13 +269,6 @@
     <Resource Include="Fonts\gothampro_lightitalic.ttf" />
     <Resource Include="Fonts\gothampro_medium.ttf" />
     <Resource Include="Fonts\gothampro_mediumitalic.ttf" />
-    <EntityDeploy Include="Database\ProdModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>ProdModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <None Include="Database\ProdModel.edmx.diagram">
-      <DependentUpon>ProdModel.edmx</DependentUpon>
-    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -359,16 +301,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Database\ProdModel.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>ProdModel.edmx</DependentUpon>
-      <LastGenOutput>ProdModel.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="Database\ProdModel.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>ProdModel.edmx</DependentUpon>
-      <LastGenOutput>ProdModel.cs</LastGenOutput>
-    </Content>
     <Resource Include="Resources\dots.png" />
     <Resource Include="Resources\menu.png" />
     <Resource Include="Resources\avatarka.png" />
@@ -463,6 +395,7 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Database\" />
     <Folder Include="Model\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
