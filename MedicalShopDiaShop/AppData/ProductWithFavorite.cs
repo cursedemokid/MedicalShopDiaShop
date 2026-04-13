@@ -1,4 +1,4 @@
-﻿using MedicalShopDiaShop.Model;
+﻿using MedicalShopDiaShop.Database;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,7 @@ namespace MedicalShopDiaShop.AppData
         public bool IsFavorite { get; set; }
 
         public string Name => Product.Name;
-        public decimal Cost => Product.Cost;
+        public decimal Cost => Product.Price;
         public string Image => Product.Image;
         public int Id => Product.Id;
     }

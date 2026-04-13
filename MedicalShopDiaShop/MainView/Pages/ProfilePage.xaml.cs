@@ -6,7 +6,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using MedicalShopDiaShop.Database;
-using MedicalShopDiaShop.Model;
 using static MedicalShopDiaShop.AppData.Status;
 
 namespace MedicalShopDiaShop.MainView.Pages

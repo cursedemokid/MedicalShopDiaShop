@@ -1,5 +1,4 @@
 ﻿using MedicalShopDiaShop.Database;
-using MedicalShopDiaShop.Model;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -19,15 +18,5 @@ namespace MedicalShopDiaShop
         public static DiaShopEntities context = DiaShopEntities();
         public static Database.User currentUser = new Database.User();
         public static Button currentButton = new Button();
-    }
-
-    public enum PageType
-    {
-        Popular,
-        New,
-        LowCarbohydrates,
-        WithoutGluten,
-        Favorite,
-        History
     }
 }

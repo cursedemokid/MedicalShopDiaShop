@@ -1,8 +1,6 @@
 ﻿using MedicalShopDiaShop.AppData;
 using MedicalShopDiaShop.Database;
-using MedicalShopDiaShop.Model;
 using MedicalShopDiaShop.Properties;
-using MedicalShopDiaShop.View.Windows;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
