@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="Хранилище DiaShopModel" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="Хранилище DiaShopModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Delivery">
           <Key>
             <PropertyRef Name="Id" />
@@ -89,6 +89,7 @@
           <Property Name="Name" Type="nvarchar" MaxLength="150" Nullable="false" />
           <Property Name="Address" Type="nvarchar" MaxLength="150" Nullable="false" />
           <Property Name="City" Type="int" Nullable="false" />
+          <Property Name="Type" Type="int" />
         </EntityType>
         <EntityType Name="Supply">
           <Key>
@@ -142,6 +143,7 @@
           <Property Name="StoreId" Type="int" Nullable="false" />
           <Property Name="Salary" Type="decimal" Precision="10" Scale="2" />
           <Property Name="Address" Type="nvarchar" MaxLength="200" />
+          <Property Name="IsDeleted" Type="bit" />
         </EntityType>
         <Association Name="FK_Delivery_User1">
           <End Role="User" Type="Self.User" Multiplicity="1" />
@@ -518,6 +520,7 @@
           <Property Name="Name" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Address" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="City" Type="Int32" Nullable="false" />
+          <Property Name="Type" Type="Int32" />
           <NavigationProperty Name="User" Relationship="Self.FK_User_Store1" FromRole="Store" ToRole="User" />
         </EntityType>
         <EntityType Name="Supply">
@@ -578,6 +581,7 @@
           <Property Name="StoreId" Type="Int32" Nullable="false" />
           <Property Name="Salary" Type="Decimal" Precision="10" Scale="2" />
           <Property Name="Address" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="IsDeleted" Type="Boolean" />
           <NavigationProperty Name="Delivery" Relationship="Self.FK_Delivery_User1" FromRole="User" ToRole="Delivery" />
           <NavigationProperty Name="Favorite" Relationship="Self.FK_Favorite_User1" FromRole="User" ToRole="Favorite" />
           <NavigationProperty Name="OrderHistory" Relationship="Self.FK_OrderHistory_User" FromRole="User" ToRole="OrderHistory" />
@@ -780,7 +784,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="DiaShopEntities" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="DiaShopEntities1" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Delivery" EntityType="Self.Delivery" />
           <EntitySet Name="Favorite" EntityType="Self.Favorite" />
           <EntitySet Name="Order" EntityType="Self.Order" />
@@ -863,7 +867,7 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="Хранилище DiaShopModelContainer" CdmEntityContainer="DiaShopEntities">
+        <EntityContainerMapping StorageEntityContainer="Хранилище DiaShopModelContainer" CdmEntityContainer="DiaShopEntities1">
           <EntitySetMapping Name="Delivery">
             <EntityTypeMapping TypeName="DiaShopModel.Delivery">
               <MappingFragment StoreEntitySet="Delivery">
@@ -954,6 +958,7 @@
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Address" ColumnName="Address" />
                 <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1011,6 +1016,7 @@
                 <ScalarProperty Name="StoreId" ColumnName="StoreId" />
                 <ScalarProperty Name="Salary" ColumnName="Salary" />
                 <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1030,7 +1036,7 @@
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
         <DesignerProperty Name="EnablePluralization" Value="false" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
-        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
       </DesignerInfoPropertySet>
     </Options>
