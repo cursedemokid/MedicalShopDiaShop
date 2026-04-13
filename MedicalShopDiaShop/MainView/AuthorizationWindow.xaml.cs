@@ -1,4 +1,5 @@
-﻿using MedicalShopDiaShop.Database;
+﻿using MedicalShopDiaShop.AppData;
+using MedicalShopDiaShop.Database;
 using MedicalShopDiaShop.Model;
 using MedicalShopDiaShop.Properties;
 using MedicalShopDiaShop.View.Windows;
@@ -45,8 +46,11 @@ namespace MedicalShopDiaShop.MainView
                 string login = LoginTextBox.Text.Trim();
                 string password = PasswordBox.Password;
 
-                // Поиск пользователя по Email или UserName
-                var user = App.context.User.FirstOrDefault(u => u.Email == login || u.UserName == login);
+                Database.User user = new Database.User();
+
+                if (App.context.User.FirstOrDefault(u => u.Email == login || u.UserName == login) != null)
+                    user = App.context.User.FirstOrDefault(u => u.Email == login || u.UserName == login);
+
                 if (user != null && user.Password == password)
                 {
                     App.currentUser = user;
@@ -71,10 +75,7 @@ namespace MedicalShopDiaShop.MainView
                 }
                 else
                 {
-                    MessageBox.Show("Неверный логин или пароль. Попробуйте снова.",
-                                    "Ошибка авторизации",
-                                    MessageBoxButton.OK,
-                                    MessageBoxImage.Error);
+                    FeedbackService.Error("Неверный логин или пароль. Попробуйте снова.", "Ошибка авторизации");
                     PasswordBox.Password = "";
                 }
             }

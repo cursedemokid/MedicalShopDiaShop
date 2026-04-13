@@ -15,14 +15,16 @@ namespace MedicalShopDiaShop.MainView.Pages
     {
         private Database.User _displayedUser;
 
-        // Конструктор для текущего пользователя
+        // Свойства для привязки расписания
+        public IEnumerable<DateTime> ScheduledDates { get; set; }
+        public Func<DateTime, object> ScheduleToolTipSelector { get; set; }
+
         public ProfilePage()
         {
             InitializeComponent();
             LoadUserData(App.currentUser.Id);
         }
 
-        // Конструктор для другого пользователя по ID
         public ProfilePage(int userId)
         {
             InitializeComponent();
@@ -40,21 +42,23 @@ namespace MedicalShopDiaShop.MainView.Pages
 
             LoadPersonalInfo();
 
-            // В зависимости от роли показываем соответствующий блок
             if (_displayedUser.Role == (int)Role.Client)
             {
                 ClientProfileGrid.Visibility = Visibility.Visible;
                 EmployeeProfileGrid.Visibility = Visibility.Collapsed;
+                ClientTextBlock.Visibility = Visibility.Visible;
+                AddressTextBlock.Visibility = Visibility.Visible;
                 LoadClientHistory();
             }
             else
             {
                 ClientProfileGrid.Visibility = Visibility.Collapsed;
                 EmployeeProfileGrid.Visibility = Visibility.Visible;
+                ClientTextBlock.Visibility = Visibility.Collapsed;
+                AddressTextBlock.Visibility = Visibility.Collapsed;
                 LoadEmployeeScheduleAndTasks();
             }
 
-            // Кнопка смены пароля доступна только для своего профиля или администратора
             ChangePasswordButton.Visibility = (App.currentUser.Id == userId || App.currentUser.Role == (int)Role.Admin)
                 ? Visibility.Visible : Visibility.Collapsed;
         }
@@ -129,19 +133,17 @@ namespace MedicalShopDiaShop.MainView.Pages
 
         private void LoadEmployeeScheduleAndTasks()
         {
+            // --- Задачи (без изменений) ---
             var tasks = App.context.Task
                 .Where(t => t.UserId == _displayedUser.Id)
                 .OrderBy(t => t.StartAt)
                 .ToList();
 
             var taskItems = new ObservableCollection<TaskItem>();
-
             foreach (var task in tasks)
             {
                 var author = App.context.User.FirstOrDefault(u => u.Id == task.AuthorId);
-                string authorName = author != null
-                    ? $"{author.LastName} {author.FirstName} {author.MiddleName}".Trim()
-                    : "Неизвестно";
+                string authorName = author != null ? author.UserName : "Неизвестно";
 
                 taskItems.Add(new TaskItem
                 {
@@ -152,15 +154,58 @@ namespace MedicalShopDiaShop.MainView.Pages
                     AuthorName = authorName
                 });
             }
-
             TasksListBox.ItemsSource = taskItems;
+
+            // --- Загрузка расписания ---
+            var schedules = App.context.Schedule
+                .Where(s => s.UserId == _displayedUser.Id)
+                .ToList();
+
+            // Уникальные даты
+            ScheduledDates = schedules.Select(s => s.DateStart.Date).Distinct().ToList();
+
+            // Функция создания ToolTip для конкретной даты
+            ScheduleToolTipSelector = date =>
+            {
+                var daySchedules = schedules
+                    .Where(s => s.DateStart.Date == date)
+                    .OrderBy(s => s.DateStart)
+                    .ToList();
+
+                if (!daySchedules.Any())
+                    return null;
+
+                var panel = new StackPanel();
+                panel.Children.Add(new TextBlock
+                {
+                    Text = date.ToString("dd MMMM yyyy"),
+                    FontWeight = FontWeights.Bold,
+                    Margin = new Thickness(0, 0, 0, 5)
+                });
+
+                foreach (var s in daySchedules)
+                {
+                    string startTime = s.DateStart.ToString("HH:mm");
+                    string endTime = s.DateStart.AddHours(s.Hours).ToString("HH:mm");
+                    panel.Children.Add(new TextBlock
+                    {
+                        Text = $"• {startTime} – {endTime}",
+                        Margin = new Thickness(0, 2, 0, 0)
+                    });
+                }
+
+                return panel;
+            };
+
+            // Устанавливаем DataContext для привязок (сама страница)
+            DataContext = this;
         }
 
         private string GetImagePath(string imageName)
         {
             if (string.IsNullOrEmpty(imageName))
                 return "/Resources/placeholder.png";
-            return $"/Resources/ProductsImages/{imageName}";
+            return imageName;
         }
 
         private void ShowDetails(string orderId)
@@ -182,10 +227,9 @@ namespace MedicalShopDiaShop.MainView.Pages
             public void Execute(object parameter) => _execute();
         }
     }
-}
 
-// Модели (оставляем как есть)
-public class OrderHistoryItem
+    // Классы моделей (оставьте как есть)
+    public class OrderHistoryItem
     {
         public ObservableCollection<OrderItem> Items { get; set; }
         public DateTime OrderDate { get; set; }
@@ -210,3 +254,4 @@ public class OrderHistoryItem
         public bool IsCompleted { get; set; }
         public string AuthorName { get; set; }
     }
+}

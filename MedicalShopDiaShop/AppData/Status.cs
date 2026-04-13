@@ -26,7 +26,12 @@ namespace MedicalShopDiaShop.AppData
             Admin = 1,
             Client = 2,
             Worker = 3,
-            Courier = 4
+            Courier = 4,
+            Supplier = 5
+        }
+        public enum City
+        {
+
         }
     }
 }
