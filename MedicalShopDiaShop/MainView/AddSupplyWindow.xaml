@@ -7,6 +7,28 @@
         mc:Ignorable="d"
         Title="Новая поставка" Height="720" Width="1280"
         WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <!-- Анимация выезда слева (следующий шаг) -->
+        <Storyboard x:Key="SlideInFromLeft">
+            <DoubleAnimation Storyboard.TargetName="AddSupplyFrame"
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                             From="-900" To="0" Duration="0:0:0.25">
+                <DoubleAnimation.EasingFunction>
+                    <QuadraticEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+        <!-- Анимация выезда справа (предыдущий шаг) -->
+        <Storyboard x:Key="SlideInFromRight">
+            <DoubleAnimation Storyboard.TargetName="AddSupplyFrame"
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                             From="900" To="0" Duration="0:0:0.25">
+                <DoubleAnimation.EasingFunction>
+                    <QuadraticEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+    </Window.Resources>
     <Grid>
         <Image Source="/Resources/BackgroundPatternPurple.png" Stretch="Fill"/>
 
@@ -54,12 +76,15 @@
                             <Ellipse x:Name="Step3Ellipse" Width="60" Height="60" Fill="LightGray" Margin="5"/>
                             <Image Source="/Resources/delivery.png" Width="45" Height="45"/>
                         </Grid>
-                        
                     </StackPanel>
                 </Grid>
 
-                <!-- Frame для страниц шагов -->
-                <Frame x:Name="AddSupplyFrame" Grid.Row="2" NavigationUIVisibility="Hidden"/>
+                <!-- Frame для страниц шагов с поддержкой анимации -->
+                <Frame x:Name="AddSupplyFrame" Grid.Row="2" NavigationUIVisibility="Hidden">
+                    <Frame.RenderTransform>
+                        <TranslateTransform X="0"/>
+                    </Frame.RenderTransform>
+                </Frame>
             </Grid>
         </Border>
     </Grid>

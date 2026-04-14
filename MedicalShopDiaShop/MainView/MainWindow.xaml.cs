@@ -193,6 +193,7 @@ namespace MedicalShopDiaShop.MainView
         private void StatsBtn_Click(object sender, RoutedEventArgs e)
         {
             SetActiveButton("Stats");
+            MainFrame.Navigate(new StatisticsPage());
         }
 
         private void ProductsBtn_Click(object sender, RoutedEventArgs e)

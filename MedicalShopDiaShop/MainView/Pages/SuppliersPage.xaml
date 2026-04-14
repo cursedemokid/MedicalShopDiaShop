@@ -36,7 +36,8 @@
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
                 <TextBox x:Name="SearchBox" Width="400" Height="50" FontSize="20" 
-                         FontFamily="{StaticResource GothamProFamily}" />
+                         FontFamily="{StaticResource GothamProFamily}" 
+                         TextChanged="SearchBox_TextChanged"/>
                 <Button Grid.Column="2" Padding="2" Height="50" Background="White" 
                         BorderBrush="White" Click="SearchBtn_Click">
                     <Button.Content>
@@ -53,21 +54,29 @@
                     FontFamily="{StaticResource GothamProFamily}" Click="DeleteBtn_Click" Height="50"/>
         </Grid>
 
-        <!-- Панель фильтрации (пока только заглушка) -->
+        <!-- Панель фильтрации и переключения режимов -->
         <Grid Grid.Row="2" Margin="10">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0" />
-                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />
-                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <!-- Можно добавить фильтр по городу, но пока оставим пустым -->
-            <GroupBox Grid.Column="1" Style="{x:Null}" BorderBrush="Black" BorderThickness="2">
+            <!-- Кнопки переключения режима -->
+            <Button x:Name="SuppliersModeBtn" Grid.Column="0" Content="Поставщики" 
+                    FontSize="20" FontFamily="{StaticResource GothamProFamily}" Height="50"
+                    Click="SuppliersModeBtn_Click" Style="{StaticResource MaterialDesignFlatButton}"/>
+            <Button x:Name="SuppliesModeBtn" Grid.Column="2" Content="Поставки" 
+                    FontSize="20" FontFamily="{StaticResource GothamProFamily}" Height="50"
+                    Click="SuppliesModeBtn_Click" Style="{StaticResource MaterialDesignFlatButton}"/>
+
+            <!-- Фильтр по городу (только для режима поставщиков) -->
+            <GroupBox x:Name="CityFilterGroup" Grid.Column="5" Style="{x:Null}" BorderBrush="Black" BorderThickness="2">
                 <GroupBox.Header>
                     <TextBlock Text="Город" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
                 </GroupBox.Header>
@@ -76,53 +85,116 @@
                           SelectionChanged="CityFilterComboBox_SelectionChanged"/>
             </GroupBox>
 
-            <Button Name="AddSupply" Grid.Column="7" Content="Создать поставку" FontSize="20" 
+            <!-- Кнопка создания поставки (только для режима поставщиков) -->
+            <Button x:Name="AddSupplyBtn" Grid.Column="7" Content="Создать поставку" FontSize="20" 
                     FontFamily="{StaticResource GothamProFamily}" Height="50" Click="AddSupply_Click"/>
         </Grid>
 
-        <!-- Область отображения поставщиков (только ListView) -->
-        <Grid Grid.Row="4" Margin="10">
-            <ListView Name="SuppliersListView" 
-                      Visibility="Visible" 
-                      FontSize="20" 
-                      FontFamily="{StaticResource GothamProFamily}"
-                      AlternationCount="2"
-                      SelectionMode="Single">
-                <ListView.View>
-                    <GridView>
-                        <!-- Колонка с чекбоксом для выделения -->
-                        <GridViewColumn Width="40">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                              VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                        <!-- Название -->
-                        <GridViewColumn Header="Название" DisplayMemberBinding="{Binding Name}" Width="250"/>
-                        <!-- Адрес -->
-                        <GridViewColumn Header="Адрес" DisplayMemberBinding="{Binding Address}" Width="300"/>
-                        <!-- Город -->
-                        <GridViewColumn Header="Город" DisplayMemberBinding="{Binding CityName}" Width="150"/>
-                        <!-- Кнопка "Подробнее" -->
-                        <GridViewColumn Width="auto">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Button Content="Подробнее" 
-                                            FontSize="16" 
-                                            FontFamily="{StaticResource GothamProFamily}"
-                                            Click="Details_Click" 
-                                            Tag="{Binding}"
-                                            Margin="5,2"
-                                            Width="150"
-                                            HorizontalContentAlignment="Center"/>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                    </GridView>
-                </ListView.View>
-            </ListView>
-        </Grid>
+        <!-- Область отображения поставщиков (ListView) -->
+        <ListView x:Name="SuppliersListView" Grid.Row="4" Margin="10"
+                  Visibility="Visible" FontSize="20" FontFamily="{StaticResource GothamProFamily}"
+                  AlternationCount="2" SelectionMode="Single">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Width="40">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                          VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Название" DisplayMemberBinding="{Binding Name}" Width="250"/>
+                    <GridViewColumn Header="Адрес" DisplayMemberBinding="{Binding Address}" Width="300"/>
+                    <GridViewColumn Header="Город" DisplayMemberBinding="{Binding CityName}" Width="150"/>
+                    <GridViewColumn Width="auto">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="Подробнее" FontSize="16" FontFamily="{StaticResource GothamProFamily}"
+                                        Click="Details_Click" Tag="{Binding}" Margin="5,2" Width="150"
+                                        HorizontalContentAlignment="Center"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <!-- Область отображения поставок (ListBox с карточками) -->
+        <ListBox x:Name="SuppliesListBox" Grid.Row="4" Margin="10"
+                 Visibility="Collapsed" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Focusable" Value="False"/>
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="Padding" Value="0"/>
+                    <Setter Property="Margin" Value="0"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListBoxItem">
+                                <ContentPresenter/>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" IsItemsHost="True" Margin="0"/>
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <!-- Карточка поставки -->
+                    <Border CornerRadius="20" Background="White" Margin="10" Width="350"
+                            BorderBrush="LightGray" BorderThickness="1">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="15" ShadowDepth="0" Opacity="0.2" Color="Gray"/>
+                        </Border.Effect>
+                        <Grid Margin="15">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="10"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="10"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="10"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <CheckBox Grid.Column="0" IsChecked="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                          VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                <TextBlock Grid.Column="1" Text="{Binding DisplayName}" FontSize="18" FontWeight="Bold"
+                                           FontFamily="{StaticResource GothamProFamily}" TextWrapping="Wrap"/>
+                            </Grid>
+                            <Separator Grid.Row="1"/>
+                            <TextBlock Grid.Row="2" Text="{Binding SupplierName}" FontSize="16" 
+                                       FontFamily="{StaticResource GothamProLight}"/>
+                            <TextBlock Grid.Row="4" Text="Дата заказа:" FontSize="14" FontFamily="{StaticResource GothamProFamily}"/>
+                            <TextBlock Grid.Row="5" Text="{Binding OrderDate, StringFormat='dd.MM.yyyy'}" FontSize="14" 
+                                       FontFamily="{StaticResource GothamProLight}"/>
+                            <TextBlock Grid.Row="6" Text="Ожидаемая дата:" FontSize="14" FontFamily="{StaticResource GothamProFamily}"/>
+                            <TextBlock Grid.Row="7" Text="{Binding AroundDate, StringFormat='dd.MM.yyyy'}" FontSize="14" 
+                                       FontFamily="{StaticResource GothamProLight}"/>
+                            <TextBlock Grid.Row="8" Text="Сумма:" FontSize="14" FontFamily="{StaticResource GothamProFamily}"/>
+                            <TextBlock Grid.Row="9" Text="{Binding TotalCost, StringFormat='{}{0:N2} ₽'}" FontSize="14" 
+                                       FontFamily="{StaticResource GothamProLight}"/>
+                            <TextBlock Grid.Row="10" Text="Статус:" FontSize="14" FontFamily="{StaticResource GothamProFamily}"/>
+                            <TextBlock Grid.Row="11" Text="{Binding StatusText}" FontSize="14" 
+                                       FontFamily="{StaticResource GothamProLight}" Foreground="{Binding StatusColor}"/>
+                            <Button Grid.Row="12" Content="Продолжить / Подробнее" Margin="0,15,0,0"
+                                    FontSize="14" FontFamily="{StaticResource GothamProFamily}"
+                                    Click="EditSupply_Click" Tag="{Binding}"/>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
     </Grid>
 </Page>

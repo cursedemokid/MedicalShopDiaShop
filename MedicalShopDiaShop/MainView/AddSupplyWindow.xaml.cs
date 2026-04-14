@@ -1,10 +1,13 @@
-﻿using MedicalShopDiaShop.Database;
+﻿using MedicalShopDiaShop.AppData;
+using MedicalShopDiaShop.Database;
 using MedicalShopDiaShop.MainView.Pages;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
 using static MedicalShopDiaShop.AppData.Status;
 using static MedicalShopDiaShop.MainView.Pages.ChooseProductsPage;
 
@@ -12,7 +15,7 @@ namespace MedicalShopDiaShop.MainView
 {
     public partial class AddSupplyWindow : Window
     {
-        public Supply CurrentSupply { get; private set; } // Черновик поставки
+        public Supply CurrentSupply { get; private set; }
         public Store SelectedSupplier { get; set; }
         public ObservableCollection<CartItem> SelectedProducts { get; set; } = new ObservableCollection<CartItem>();
         public DateTime? DeliveryDate { get; set; }
@@ -20,8 +23,9 @@ namespace MedicalShopDiaShop.MainView
         private int _currentStep = 1;
         private const int TotalSteps = 3;
         private readonly DiaShopEntities2 _context;
+        private int _navigationDirection = 1; // 1 - вперёд, -1 - назад
+        private bool _isFirstLoad = true;
 
-        // Конструктор для создания новой поставки
         public AddSupplyWindow()
         {
             InitializeComponent();
@@ -30,13 +34,11 @@ namespace MedicalShopDiaShop.MainView
             LoadStep(1);
         }
 
-        // Конструктор для продолжения черновика
         public AddSupplyWindow(int supplyId)
         {
             InitializeComponent();
             _context = new DiaShopEntities2();
             LoadDraftSupply(supplyId);
-            //DetermineCurrentStepFromStatus();
             LoadStep(_currentStep);
         }
 
@@ -47,7 +49,6 @@ namespace MedicalShopDiaShop.MainView
                 UserId = App.currentUser.Id,
                 OrderDate = DateTime.Now,
                 TotalCost = 0
-                // SupplierId пока null
             };
             _context.Supply.Add(CurrentSupply);
             _context.SaveChanges();
@@ -64,11 +65,9 @@ namespace MedicalShopDiaShop.MainView
                 return;
             }
 
-            // Загружаем выбранного поставщика
             if (CurrentSupply.SupplierId != 0)
                 SelectedSupplier = _context.Store.Find(CurrentSupply.SupplierId);
 
-            // Загружаем товары
             var products = _context.SupplyProduct
                 .Where(sp => sp.SupplyId == supplyId)
                 .Select(sp => new CartItem
@@ -78,27 +77,14 @@ namespace MedicalShopDiaShop.MainView
                 }).ToList();
             SelectedProducts = new ObservableCollection<CartItem>(products);
 
-            // Дата доставки
             DeliveryDate = CurrentSupply.AroundDate;
         }
-
-        //private void DetermineCurrentStepFromStatus()
-        //{
-        //    var status = GetOrderStatus(CurrentSupply.Status ?? 6); // по умолчанию ChoosingSupplier
-        //    switch (status)
-        //    {
-        //        case OrderStatus.ChoosingSupplier: _currentStep = 1; break;
-        //        case OrderStatus.ChoosingProducts: _currentStep = 2; break;
-        //        case OrderStatus.ChoosingAroundTime: _currentStep = 3; break;
-        //        default: _currentStep = 1; break;
-        //    }
-        //}
 
         private void UpdateSupplyStatus(OrderStatus status)
         {
             if (CurrentSupply != null)
             {
-                //CurrentSupply.Status = GetOrderStatusId(status);
+                // здесь можно сохранять статус, если нужно
                 _context.SaveChanges();
             }
         }
@@ -108,6 +94,10 @@ namespace MedicalShopDiaShop.MainView
             _currentStep = step;
             UpdateStepIndicator();
             UpdateBackButtonVisibility();
+
+            // Сбрасываем позицию Frame перед сменой страницы
+            var transform = AddSupplyFrame.RenderTransform as TranslateTransform;
+            if (transform != null) transform.X = 0;
 
             Page page = null;
             switch (step)
@@ -129,6 +119,22 @@ namespace MedicalShopDiaShop.MainView
                     break;
             }
             AddSupplyFrame.Navigate(page);
+
+            // Анимация только после первого шага
+            if (_isFirstLoad)
+            {
+                _isFirstLoad = false;
+                return;
+            }
+
+            // Запускаем анимацию после того, как страница отрисовалась
+            this.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                var story = _navigationDirection == 1
+                    ? (Storyboard)FindResource("SlideInFromLeft")
+                    : (Storyboard)FindResource("SlideInFromRight");
+                story.Begin(AddSupplyFrame);
+            }), System.Windows.Threading.DispatcherPriority.Loaded);
         }
 
         private void UpdateStepIndicator()
@@ -146,15 +152,21 @@ namespace MedicalShopDiaShop.MainView
         public void GoToNextStep()
         {
             if (_currentStep < TotalSteps)
+            {
+                _navigationDirection = 1;
                 LoadStep(_currentStep + 1);
+            }
             else
-                CreateSupply(); // На последнем шаге кнопка "Продолжить" заменяется на "Создать поставку"
+                CreateSupply();
         }
 
         public void GoToPreviousStep()
         {
             if (_currentStep > 1)
+            {
+                _navigationDirection = -1;
                 LoadStep(_currentStep - 1);
+            }
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
@@ -166,15 +178,14 @@ namespace MedicalShopDiaShop.MainView
         {
             if (SelectedSupplier == null || SelectedProducts.Count == 0 || DeliveryDate == null)
             {
-                MessageBox.Show("Не все данные заполнены.");
+                FeedbackService.Error("Не все данные заполнены.");
                 return;
             }
 
             CurrentSupply.SupplierId = SelectedSupplier.Id;
             CurrentSupply.AroundDate = DeliveryDate.Value;
-            CurrentSupply.ArrivedDate = DeliveryDate.Value; 
+            CurrentSupply.ArrivedDate = DeliveryDate.Value;
             CurrentSupply.TotalCost = SelectedProducts.Sum(p => p.TotalPrice);
-            //CurrentSupply.Status = GetOrderStatusId(OrderStatus.InProcess);
 
             var existingProducts = _context.SupplyProduct.Where(sp => sp.SupplyId == CurrentSupply.Id);
             _context.SupplyProduct.RemoveRange(existingProducts);
@@ -190,13 +201,12 @@ namespace MedicalShopDiaShop.MainView
             }
             _context.SaveChanges();
 
-            MessageBox.Show("Поставка успешно создана.");
+            FeedbackService.Information("Поставка успешно создана.");
             DialogResult = true;
             Close();
         }
     }
 
-    // Вспомогательный класс для товара в корзине
     public class SupplyProductItem
     {
         public Product Product { get; set; }

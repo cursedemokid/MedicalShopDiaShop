@@ -18,7 +18,7 @@ namespace MedicalShopDiaShop.MainView
         {
             InitializeComponent();
             _isEditMode = false;
-            WindowName.Text = "Добавление сотрудника";
+            WindowName.Text = "Добавление пользователя";
             AddBtn.Visibility = Visibility.Visible;
             EditBtn.Visibility = Visibility.Collapsed;
         }
@@ -29,7 +29,7 @@ namespace MedicalShopDiaShop.MainView
             InitializeComponent();
             _employeeId = userId;
             _isEditMode = true;
-            WindowName.Text = "Изменение данных сотрудника";
+            WindowName.Text = "Изменение данных пользователя";
             AddBtn.Visibility = Visibility.Collapsed;
             EditBtn.Visibility = Visibility.Visible;
         }

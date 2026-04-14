@@ -28,6 +28,7 @@ namespace MedicalShopDiaShop.MainView.Dto
                     default: return "Неизвестно";
                 }
             }
+            set { }
         }
 
         public string ShortDescription => Description?.Length > 50

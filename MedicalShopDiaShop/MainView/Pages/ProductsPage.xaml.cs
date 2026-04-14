@@ -1,6 +1,7 @@
-﻿using MedicalShopDiaShop.MainView.Dto;
+﻿using MedicalShopDiaShop.AppData;
+using MedicalShopDiaShop.Database;
+using MedicalShopDiaShop.MainView.Dto;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -22,8 +23,7 @@ namespace MedicalShopDiaShop.MainView.Pages
 
         private void ProductsPage_Loaded(object sender, RoutedEventArgs e)
         {
-            _allProducts = new ObservableCollection<ProductDto>(GetStaticProducts());
-            _filteredProducts = new ObservableCollection<ProductDto>(_allProducts);
+            LoadProductsFromDatabase();
 
             ProductsListView.ItemsSource = _filteredProducts;
             ProductsListBox.ItemsSource = _filteredProducts;
@@ -33,74 +33,34 @@ namespace MedicalShopDiaShop.MainView.Pages
             SetActiveButton(ListViewOnBtn);
         }
 
-        private List<ProductDto> GetStaticProducts()
+        private void LoadProductsFromDatabase()
         {
-            return new List<ProductDto>
+            var products = App.context.Product.ToList();
+            _allProducts = new ObservableCollection<ProductDto>(
+                products.Select(p => new ProductDto
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Description = p.Description,
+                    Category = p.Category,
+                    Price = p.Price,
+                    Image = p.Image,
+                    IsSelected = false
+                }));
+            _filteredProducts = new ObservableCollection<ProductDto>(_allProducts);
+        }
+
+        private string GetCategoryName(int categoryId)
+        {
+            switch (categoryId)
             {
-                new ProductDto
-                {
-                    Id = 1,
-                    Name = "Глюкометр Accu-Chek Active",
-                    Description = "Точный глюкометр с тест-полосками в комплекте",
-                    Category = 1,
-                    Price = 1450,
-                    Image = "/Resources/ProductsImages/Accu-ChekProductImage.jpg"
-                },
-                new ProductDto
-                {
-                    Id = 2,
-                    Name = "Тест-полоски OneTouch Select",
-                    Description = "50 шт., для глюкометров OneTouch",
-                    Category = 2,
-                    Price = 950,
-                    Image = "/Resources/ProductsImages/OneTouchStripes.jpg"
-                },
-                new ProductDto
-                {
-                    Id = 3,
-                    Name = "Шприц-ручка НовоПен 4",
-                    Description = "Для инсулина, шаг дозы 1 ед.",
-                    Category = 3,
-                    Price = 850,
-                    Image = "/Resources/ProductsImages/Novopen.jpg"
-                },
-                new ProductDto
-                {
-                    Id = 4,
-                    Name = "Крем для ног Diaderm",
-                    Description = "Защитный крем для ног при диабете",
-                    Category = 4,
-                    Price = 420,
-                    Image = "/Resources/ProductsImages/FootCream.jpg"
-                },
-                new ProductDto
-                {
-                    Id = 5,
-                    Name = "Глюкометр Contour TS",
-                    Description = "Простой и надежный глюкометр",
-                    Category = 1,
-                    Price = 1250,
-                    Image = "/Resources/ProductsImages/ContourTS.jpg"
-                },
-                new ProductDto
-                {
-                    Id = 6,
-                    Name = "Тест-полоски Accu-Chek Active",
-                    Description = "50 шт., для Accu-Chek Active",
-                    Category = 2,
-                    Price = 890,
-                    Image = "/Resources/ProductsImages/TestStripesRoche.jpg"
-                },
-                new ProductDto
-                {
-                    Id = 7,
-                    Name = "Витамины для диабетиков",
-                    Description = "Комплекс витаминов и минералов",
-                    Category = 5,
-                    Price = 1200,
-                    Image = "/Resources/ProductsImages/DoppelherzVitamins.jpg"
-                }
-            };
+                case 1: return "Глюкометры";
+                case 2: return "Тест-полоски";
+                case 3: return "Шприцы";
+                case 4: return "Кремы";
+                case 5: return "Витамины";
+                default: return "Другое";
+            }
         }
 
         private void CategoryFilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -113,8 +73,7 @@ namespace MedicalShopDiaShop.MainView.Pages
             {
                 _filteredProducts = new ObservableCollection<ProductDto>(_allProducts);
             }
-            ProductsListView.ItemsSource = _filteredProducts;
-            ProductsListBox.ItemsSource = _filteredProducts;
+            RefreshProductsList();
         }
 
         private void SearchBtn_Click(object sender, RoutedEventArgs e)
@@ -123,38 +82,73 @@ namespace MedicalShopDiaShop.MainView.Pages
             if (string.IsNullOrEmpty(searchText))
                 _filteredProducts = new ObservableCollection<ProductDto>(_allProducts);
             else
-                _filteredProducts = new ObservableCollection<ProductDto>(_allProducts.Where(p => p.Name.ToLower().Contains(searchText) || p.Description.ToLower().Contains(searchText)));
+                _filteredProducts = new ObservableCollection<ProductDto>(_allProducts.Where(p =>
+                    p.Name.ToLower().Contains(searchText) ||
+                    (p.Description?.ToLower().Contains(searchText) ?? false)));
 
+            RefreshProductsList();
+        }
+
+        private void RefreshProductsList()
+        {
+            ProductsListView.ItemsSource = null;
             ProductsListView.ItemsSource = _filteredProducts;
+            ProductsListBox.ItemsSource = null;
             ProductsListBox.ItemsSource = _filteredProducts;
         }
 
         private void AddBtn_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Добавление товара (будет реализовано)");
+            var window = new AddEditProductWindow();
+            if (window.ShowDialog() == true)
+            {
+                LoadProductsFromDatabase();
+                RefreshProductsList();
+            }
         }
 
         private void EditBtn_Click(object sender, RoutedEventArgs e)
         {
             var selected = GetSelectedProduct();
-            if (selected == null) MessageBox.Show("Выберите товар.");
-            else MessageBox.Show($"Изменить: {selected.Name}");
+            if (selected == null)
+            {
+                FeedbackService.Warning("Выберите товар для редактирования.");
+                return;
+            }
+            var window = new AddEditProductWindow(selected.Id);
+            if (window.ShowDialog() == true)
+            {
+                LoadProductsFromDatabase();
+                RefreshProductsList();
+            }
         }
 
         private void DeleteBtn_Click(object sender, RoutedEventArgs e)
         {
             var selected = GetSelectedProduct();
-            if (selected == null) MessageBox.Show("Выберите товар.");
-            else if (MessageBox.Show($"Удалить {selected.Name}?", "Подтверждение", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            if (selected == null)
             {
-                _allProducts.Remove(selected);
-                _filteredProducts.Remove(selected);
+                FeedbackService.Warning("Выберите товар для удаления.");
+                return;
+            }
+
+            if (MessageBox.Show($"Удалить {selected.Name}?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                var productFromDb = App.context.Product.FirstOrDefault(p => p.Id == selected.Id);
+                if (productFromDb != null)
+                {
+                    App.context.Product.Remove(productFromDb);
+                    App.context.SaveChanges();
+                    LoadProductsFromDatabase();
+                    RefreshProductsList();
+                    FeedbackService.Information("Товар удалён.");
+                }
             }
         }
 
         private ProductDto GetSelectedProduct()
         {
-            return _filteredProducts.FirstOrDefault(p => p.IsSelected);
+            return _filteredProducts?.FirstOrDefault(p => p.IsSelected);
         }
 
         private void ListViewOnBtn_Click(object sender, RoutedEventArgs e)

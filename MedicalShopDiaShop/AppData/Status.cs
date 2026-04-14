@@ -53,5 +53,13 @@ namespace MedicalShopDiaShop.AppData
             DiaShop = 1,
             SupplierStore = 2,
         }
+        public enum Category
+        {
+            Glucometers = 1,
+            TestStrips = 2,
+            Syringes = 3,
+            Creams = 4,
+            Vitamins = 5
+        }
     }
 }

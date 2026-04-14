@@ -212,6 +212,9 @@
     <Compile Include="Database\User.cs">
       <DependentUpon>ProductionModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="MainView\AddEditProductWindow.xaml.cs">
+      <DependentUpon>AddEditProductWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MainView\AddEditSupplierWindow.xaml.cs">
       <DependentUpon>AddEditSupplierWindow.xaml</DependentUpon>
     </Compile>
@@ -267,6 +270,10 @@
       <DependentUpon>RegistrationWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\StatisticsViewModel.cs" />
+    <Page Include="MainView\AddEditProductWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainView\AddEditSupplierWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -521,6 +528,8 @@
       <DependentUpon>ProductionModel.edmx</DependentUpon>
       <LastGenOutput>ProductionModel.cs</LastGenOutput>
     </Content>
+    <Resource Include="Resources\avatarPlaceholder.png" />
+    <Resource Include="Resources\productPlaceholder.png" />
     <Resource Include="Resources\bin.png" />
     <Resource Include="Resources\more.png" />
     <Resource Include="Resources\minus.png" />
