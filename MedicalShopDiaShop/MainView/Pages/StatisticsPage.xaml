@@ -1,0 +1,184 @@
+﻿<Page x:Class="MedicalShopDiaShop.MainView.Pages.StatisticsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      Title="Статистика"
+      Background="#F5F5F5" d:DesignHeight="694" d:DesignWidth="1033">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <WrapPanel Margin="20" Orientation="Horizontal"  ItemWidth="480" ItemHeight="300">
+
+            <!-- 1. Выручка по месяцам (гистограмма) -->
+            <Border CornerRadius="20" Background="White" Margin="10" 
+                    BorderBrush="LightGray" BorderThickness="1">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="15" ShadowDepth="0" Opacity="0.15" Color="Gray"/>
+                </Border.Effect>
+                <Grid Margin="15">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Выручка по месяцам" FontSize="20" FontWeight="Bold" 
+                               FontFamily="{StaticResource GothamProFamily}" Margin="0,0,0,10"/>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <lvc:CartesianChart Grid.Column="0" Series="{Binding MonthlyRevenueSeries}" LegendLocation="None">
+                            <lvc:CartesianChart.AxisX>
+                                <lvc:Axis Labels="{Binding MonthlyRevenueLabels}" />
+                            </lvc:CartesianChart.AxisX>
+                            <lvc:CartesianChart.AxisY>
+                                <lvc:Axis LabelFormatter="{Binding Value, StringFormat='{}{0:N0} ₽'}" />
+                            </lvc:CartesianChart.AxisY>
+                        </lvc:CartesianChart>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="20,0,0,0" MinWidth="120">
+                            <TextBlock Text="Общая выручка:" FontSize="14" FontFamily="{StaticResource GothamProLight}"/>
+                            <TextBlock Text="{Binding TotalRevenueAllTime, StringFormat='{}{0:N0} ₽'}" 
+                                       FontSize="22" FontFamily="{StaticResource GothamProFamily}" Foreground="#4CAF50"/>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </Border>
+
+            <!-- 2. Популярность поставщиков (кольцевая) -->
+            <Border CornerRadius="20" Background="White" Margin="10" 
+                    BorderBrush="LightGray" BorderThickness="1">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="15" ShadowDepth="0" Opacity="0.15" Color="Gray"/>
+                </Border.Effect>
+                <Grid Margin="15">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Популярность поставщиков" FontSize="20" FontWeight="Bold" 
+                               FontFamily="{StaticResource GothamProFamily}" Margin="0,0,0,10"/>
+                    <lvc:PieChart Grid.Row="1" Series="{Binding SupplierPieSeries}" InnerRadius="40" 
+                                  LegendLocation="Bottom"/>
+                </Grid>
+            </Border>
+
+            <!-- 3. Топ-10 товаров (гистограмма) -->
+            <Border CornerRadius="20" Background="White" Margin="10" 
+                    BorderBrush="LightGray" BorderThickness="1">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="15" ShadowDepth="0" Opacity="0.15" Color="Gray"/>
+                </Border.Effect>
+                <Grid Margin="15">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Топ-10 продаваемых товаров" FontSize="20" FontWeight="Bold" 
+                               FontFamily="{StaticResource GothamProFamily}" Margin="0,0,0,10"/>
+                    <lvc:CartesianChart Grid.Row="1" Series="{Binding TopProductsSeries}" LegendLocation="None">
+                        <lvc:CartesianChart.AxisX>
+                            <lvc:Axis Labels="{Binding TopProductsLabels}" />
+                        </lvc:CartesianChart.AxisX>
+                        <lvc:CartesianChart.AxisY>
+                            <lvc:Axis LabelFormatter="{Binding Value, StringFormat='{}{0:N0} шт.'}" />
+                        </lvc:CartesianChart.AxisY>
+                    </lvc:CartesianChart>
+                </Grid>
+            </Border>
+
+            <!-- 4. Количество заказов по месяцам (гистограмма) -->
+            <Border CornerRadius="20" Background="White" Margin="10" 
+                    BorderBrush="LightGray" BorderThickness="1">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="15" ShadowDepth="0" Opacity="0.15" Color="Gray"/>
+                </Border.Effect>
+                <Grid Margin="15">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Количество заказов по месяцам" FontSize="20" FontWeight="Bold" 
+                               FontFamily="{StaticResource GothamProFamily}" Margin="0,0,0,10"/>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <lvc:CartesianChart Grid.Column="0" Series="{Binding OrderCountMonthlySeries}" LegendLocation="None">
+                            <lvc:CartesianChart.AxisX>
+                                <lvc:Axis Labels="{Binding MonthlyRevenueLabels}" />
+                            </lvc:CartesianChart.AxisX>
+                            <lvc:CartesianChart.AxisY>
+                                <lvc:Axis LabelFormatter="{Binding Value, StringFormat='{}{0:N0}'}" />
+                            </lvc:CartesianChart.AxisY>
+                        </lvc:CartesianChart>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="20,0,0,0" MinWidth="120">
+                            <TextBlock Text="Всего заказов:" FontSize="14" FontFamily="{StaticResource GothamProLight}"/>
+                            <TextBlock Text="{Binding TotalOrdersAllTime, StringFormat='{}{0:N0}'}" 
+                                       FontSize="22" FontFamily="{StaticResource GothamProFamily}" Foreground="#2196F3"/>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </Border>
+
+            <!-- 5. Способы получения заказов (круговая) -->
+            <Border CornerRadius="20" Background="White" Margin="10" 
+                    BorderBrush="LightGray" BorderThickness="1">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="15" ShadowDepth="0" Opacity="0.15" Color="Gray"/>
+                </Border.Effect>
+                <Grid Margin="15">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Способы получения заказов" FontSize="20" FontWeight="Bold" 
+                               FontFamily="{StaticResource GothamProFamily}" Margin="0,0,0,10"/>
+                    <lvc:PieChart Grid.Row="1" Series="{Binding DeliveryTypePieSeries}" LegendLocation="Bottom"/>
+                </Grid>
+            </Border>
+
+            <!-- 6. Окупаемость товаров (гистограмма) -->
+            <Border CornerRadius="20" Background="White" Margin="10" 
+                    BorderBrush="LightGray" BorderThickness="1">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="15" ShadowDepth="0" Opacity="0.15" Color="Gray"/>
+                </Border.Effect>
+                <Grid Margin="15">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Окупаемость товаров (прибыль / убыток)" FontSize="20" FontWeight="Bold" 
+                               FontFamily="{StaticResource GothamProFamily}" Margin="0,0,0,10"/>
+                    <lvc:CartesianChart Grid.Row="1" Series="{Binding ProfitabilitySeries}" LegendLocation="None">
+                        <lvc:CartesianChart.AxisX>
+                            <lvc:Axis Labels="{Binding ProfitabilityLabels}" />
+                        </lvc:CartesianChart.AxisX>
+                        <lvc:CartesianChart.AxisY>
+                            <lvc:Axis LabelFormatter="{Binding Value, StringFormat='{}{0:N0} ₽'}" />
+                        </lvc:CartesianChart.AxisY>
+                    </lvc:CartesianChart>
+                </Grid>
+            </Border>
+
+            <!-- 7. Выполнение задач в срок (круговая) -->
+            <Border CornerRadius="20" Background="White" Margin="10" 
+                    BorderBrush="LightGray" BorderThickness="1">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="15" ShadowDepth="0" Opacity="0.15" Color="Gray"/>
+                </Border.Effect>
+                <Grid Margin="15">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Процент задач, выполненных в срок" FontSize="20" FontWeight="Bold" 
+                               FontFamily="{StaticResource GothamProFamily}" Margin="0,0,0,10"/>
+                    <lvc:PieChart Grid.Row="1" Series="{Binding TaskPerformancePieSeries}" LegendLocation="Bottom"/>
+                </Grid>
+            </Border>
+
+        </WrapPanel>
+    </ScrollViewer>
+</Page>
