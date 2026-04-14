@@ -319,8 +319,15 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="MainView\TestElementWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MainView\TestElementWindow.xaml.cs">
+      <DependentUpon>TestElementWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -494,6 +501,9 @@
       <DependentUpon>ProductionModel.edmx</DependentUpon>
       <LastGenOutput>ProductionModel.cs</LastGenOutput>
     </Content>
+    <Resource Include="Resources\bin.png" />
+    <Resource Include="Resources\more.png" />
+    <Resource Include="Resources\minus.png" />
     <Resource Include="Resources\basket.png" />
     <Resource Include="Resources\choice.png" />
     <Resource Include="Resources\clipboard.png" />

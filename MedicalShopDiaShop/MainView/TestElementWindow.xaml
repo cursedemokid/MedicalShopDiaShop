@@ -1,0 +1,68 @@
+﻿<Window x:Class="MedicalShopDiaShop.MainView.TestElementWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MedicalShopDiaShop.MainView"
+        mc:Ignorable="d"
+        Title="TestElementWindow" Height="720" Width="1280">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+        <Border CornerRadius="20" 
+    Background="White" 
+    Margin="10" 
+    BorderBrush="LightGray"
+    BorderThickness="1"
+                Grid.Column="1" Grid.Row="1">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="15" ShadowDepth="0" Opacity="0.2" Color="Gray"/>
+            </Border.Effect>
+            <Grid Margin="10" Width="898" Height="150">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="10"/>
+                </Grid.ColumnDefinitions>
+                <Image Source="{Binding Image}"  Width="150" Height="150"/>
+                <TextBlock Grid.Column="2" FontSize="18" Text="{Binding Name}" 
+            FontFamily="{StaticResource GothamProFamily}" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <TextBlock Grid.Column="4" FontSize="18" Text="{Binding CostForTen}" VerticalAlignment="Center" HorizontalAlignment="Center"
+            FontFamily="{StaticResource GothamProFamily}"/>
+                <TextBlock Grid.Column="6" FontSize="18" Text="{Binding Quantity}" VerticalAlignment="Center" HorizontalAlignment="Center"
+            FontFamily="{StaticResource GothamProFamily}"/>
+                <Button Grid.Column="8" Padding="2" HorizontalAlignment="Center" VerticalAlignment="Center" Height="auto">
+                    <Button.Content>
+                        <Image Source="/Resources/minus.png" Width="45" Height="45"/>
+                    </Button.Content>
+                </Button>
+                <TextBlock Grid.Column="10" FontSize="18" Text="{Binding TotalCost}" VerticalAlignment="Center" HorizontalAlignment="Center"
+            FontFamily="{StaticResource GothamProFamily}"/>
+                <Button Grid.Column="12" Padding="2" HorizontalAlignment="Center" VerticalAlignment="Center" Height="auto">
+                    <Button.Content>
+                        <Image Source="/Resources/more.png" Width="45" Height="45"/>
+                    </Button.Content>
+                </Button>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

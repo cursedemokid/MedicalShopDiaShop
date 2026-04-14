@@ -20,6 +20,21 @@ namespace MedicalShopDiaShop.AppData
             Delivered = 3,
             WaitPayment = 4,
             InHistory = 5,
+            ChoosingSupplier = 6,   // Шаг 1
+            ChoosingProducts = 7,   // Шаг 2
+            ChoosingAroundTime = 8  // Шаг 3
+        }
+
+        public static OrderStatus GetOrderStatus(int statusId)
+        {
+            return Enum.IsDefined(typeof(OrderStatus), statusId)
+                ? (OrderStatus)statusId
+                : OrderStatus.InProcess;
+        }
+
+        public static int GetOrderStatusId(OrderStatus status)
+        {
+            return (int)status;
         }
         public enum Role
         {

@@ -77,7 +77,7 @@
             </GroupBox>
 
             <Button Name="AddSupply" Grid.Column="7" Content="Создать поставку" FontSize="20" 
-                    FontFamily="{StaticResource GothamProFamily}" Height="50"/>
+                    FontFamily="{StaticResource GothamProFamily}" Height="50" Click="AddSupply_Click"/>
         </Grid>
 
         <!-- Область отображения поставщиков (только ListView) -->

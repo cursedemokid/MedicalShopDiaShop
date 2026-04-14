@@ -215,6 +215,12 @@ namespace MedicalShopDiaShop.MainView.Pages
                 }
             }
         }
+
+        private void AddSupply_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new AddSupplyWindow();
+            window.ShowDialog();
+        }
     }
 
     // Модель поставщика

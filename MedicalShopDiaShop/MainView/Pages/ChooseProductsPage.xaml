@@ -27,7 +27,58 @@
                 <ListBox x:Name="AvailableProductsListBox" Grid.Row="1"
                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                          SelectionMode="Single">
-                    <!-- Шаблон карточки товара с кнопкой Добавить -->
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter Property="Padding" Value="0"/>
+                            <Setter Property="Margin" Value="0"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListBoxItem">
+                                        <ContentPresenter/>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical" IsItemsHost="True"/>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <!-- Карточка доступного товара -->
+                            <Border CornerRadius="20" Background="White" Margin="10" 
+                                    BorderBrush="LightGray" BorderThickness="1"
+                                    MouseLeftButtonDown="AvailableProduct_MouseLeftButtonDown" Cursor="Hand">
+                                <Border.Effect>
+                                    <DropShadowEffect BlurRadius="15" ShadowDepth="0" Opacity="0.2" Color="Gray"/>
+                                </Border.Effect>
+                                <Grid Margin="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="10"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Image Source="{Binding Image}" Width="100" Height="100"/>
+                                    <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                                        <TextBlock FontSize="18" Text="{Binding Name}" 
+                                                   FontFamily="{StaticResource GothamProFamily}" 
+                                                   TextWrapping="Wrap" Margin="0,0,0,5"/>
+                                        <TextBlock FontSize="14" Text="{Binding Description}" 
+                                                   FontFamily="{StaticResource GothamProLight}" 
+                                                   TextWrapping="Wrap" Foreground="Gray"/>
+                                    </StackPanel>
+                                    <TextBlock Grid.Column="3" FontSize="18" 
+                                               Text="{Binding PricePerTen, StringFormat='{}{0:N2} ₽ за 10'}" 
+                                               VerticalAlignment="Center" HorizontalAlignment="Right"
+                                               FontFamily="{StaticResource GothamProFamily}" Margin="10,0"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
                 </ListBox>
             </Grid>
         </Border>
@@ -40,7 +91,7 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <TextBlock Text="Корзина поставки" FontSize="18" FontWeight="Bold" 
+                <TextBlock Text="Корзина" FontSize="18" FontWeight="Bold" 
                            FontFamily="{StaticResource GothamProFamily}" Margin="15,10"/>
 
                 <!-- Если корзина пуста, показываем картинку -->
@@ -48,8 +99,75 @@
                        Width="150" Height="150" Visibility="Visible"/>
 
                 <ListBox x:Name="CartListBox" Grid.Row="1" Visibility="Collapsed"
-                         ItemsSource="{Binding SelectedProducts}">
-                    <!-- Шаблон элемента корзины с количеством и ценой -->
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter Property="Padding" Value="0"/>
+                            <Setter Property="Margin" Value="0"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListBoxItem">
+                                        <ContentPresenter/>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical" IsItemsHost="True"/>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <!-- Карточка товара в корзине -->
+                            <Border CornerRadius="20" Background="White" Margin="10" 
+                                    BorderBrush="LightGray" BorderThickness="1">
+                                <Border.Effect>
+                                    <DropShadowEffect BlurRadius="15" ShadowDepth="0" Opacity="0.2" Color="Gray"/>
+                                </Border.Effect>
+                                <Grid Margin="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="10"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="10"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="10"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="10"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Image Source="{Binding Product.Image}" Width="100" Height="100"/>
+                                    <TextBlock Grid.Column="2" FontSize="18" Text="{Binding Product.Name}" 
+                                               FontFamily="{StaticResource GothamProFamily}" 
+                                               TextWrapping="Wrap" VerticalAlignment="Center"
+                                               ToolTip="{Binding Product.Description}"/>
+                                    <TextBlock Grid.Column="3" FontSize="18" 
+                                               Text="{Binding Product.Price, StringFormat='{}{0:N2} ₽ за 10'}" 
+                                               VerticalAlignment="Center" HorizontalAlignment="Center"
+                                               FontFamily="{StaticResource GothamProFamily}" Margin="10,0"/>
+                                    <TextBlock Grid.Column="5" FontSize="18" Text="{Binding Quantity}" 
+                                               VerticalAlignment="Center" HorizontalAlignment="Center"
+                                               FontFamily="{StaticResource GothamProFamily}"/>
+                                    <Button Grid.Column="7" Padding="2" HorizontalAlignment="Center" 
+                                            VerticalAlignment="Center" Click="DecreaseQuantity_Click" Tag="{Binding}">
+                                        <Image x:Name="MinusIcon" Source="/Resources/minus.png" Width="45" Height="45"/>
+                                    </Button>
+                                    <TextBlock Grid.Column="9" FontSize="18" 
+                                               Text="{Binding TotalPrice, StringFormat='{}{0:N2} ₽'}" 
+                                               VerticalAlignment="Center" HorizontalAlignment="Center"
+                                               FontFamily="{StaticResource GothamProFamily}" Margin="10,0"/>
+                                    <Button Grid.Column="11" Padding="2" HorizontalAlignment="Center" 
+                                            VerticalAlignment="Center" Click="IncreaseQuantity_Click" Tag="{Binding}">
+                                        <Image Source="/Resources/more.png" Width="45" Height="45"/>
+                                    </Button>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
                 </ListBox>
 
                 <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">

@@ -181,6 +181,7 @@ namespace MedicalShopDiaShop.MainView
         private void SuppliesBtn_Click(object sender, RoutedEventArgs e)
         {
             SetActiveButton("Supplies");
+            MainFrame.Navigate(new SuppliersPage());
         }
 
         private void ClientsBtn_Click(object sender, RoutedEventArgs e)
@@ -202,8 +203,8 @@ namespace MedicalShopDiaShop.MainView
 
         private void ProfileBtn_Click(object sender, RoutedEventArgs e)
         {
-            MainFrame.Navigate(new ProfilePage());
             SetActiveButton("Profile");
+            MainFrame.Navigate(new ProfilePage());
         }
 
         private void OrdersBtn_Click(object sender, RoutedEventArgs e)

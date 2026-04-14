@@ -1,28 +1,106 @@
 ﻿using MedicalShopDiaShop.Database;
+using MedicalShopDiaShop.MainView.Pages;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using MedicalShopDiaShop.MainView.Pages;
+using static MedicalShopDiaShop.AppData.Status;
+using static MedicalShopDiaShop.MainView.Pages.ChooseProductsPage;
 
 namespace MedicalShopDiaShop.MainView
 {
     public partial class AddSupplyWindow : Window
     {
-        // Данные, собираемые на шагах
+        public Supply CurrentSupply { get; private set; } // Черновик поставки
         public Store SelectedSupplier { get; set; }
-        public ObservableCollection<SupplyProductItem> SelectedProducts { get; set; } = new ObservableCollection<SupplyProductItem>();
+        public ObservableCollection<CartItem> SelectedProducts { get; set; } = new ObservableCollection<CartItem>();
         public DateTime? DeliveryDate { get; set; }
 
         private int _currentStep = 1;
         private const int TotalSteps = 3;
+        private readonly DiaShopEntities2 _context;
 
+        // Конструктор для создания новой поставки
         public AddSupplyWindow()
         {
             InitializeComponent();
+            _context = new DiaShopEntities2();
+            CreateDraftSupply();
             LoadStep(1);
+        }
+
+        // Конструктор для продолжения черновика
+        public AddSupplyWindow(int supplyId)
+        {
+            InitializeComponent();
+            _context = new DiaShopEntities2();
+            LoadDraftSupply(supplyId);
+            //DetermineCurrentStepFromStatus();
+            LoadStep(_currentStep);
+        }
+
+        private void CreateDraftSupply()
+        {
+            CurrentSupply = new Supply
+            {
+                UserId = App.currentUser.Id,
+                OrderDate = DateTime.Now,
+                TotalCost = 0
+                // SupplierId пока null
+            };
+            _context.Supply.Add(CurrentSupply);
+            _context.SaveChanges();
+            UpdateSupplyStatus(OrderStatus.ChoosingSupplier);
+        }
+
+        private void LoadDraftSupply(int supplyId)
+        {
+            CurrentSupply = _context.Supply.Find(supplyId);
+            if (CurrentSupply == null)
+            {
+                MessageBox.Show("Черновик не найден.");
+                Close();
+                return;
+            }
+
+            // Загружаем выбранного поставщика
+            if (CurrentSupply.SupplierId != 0)
+                SelectedSupplier = _context.Store.Find(CurrentSupply.SupplierId);
+
+            // Загружаем товары
+            var products = _context.SupplyProduct
+                .Where(sp => sp.SupplyId == supplyId)
+                .Select(sp => new CartItem
+                {
+                    Product = sp.Product,
+                    Quantity = sp.Quantity
+                }).ToList();
+            SelectedProducts = new ObservableCollection<CartItem>(products);
+
+            // Дата доставки
+            DeliveryDate = CurrentSupply.AroundDate;
+        }
+
+        //private void DetermineCurrentStepFromStatus()
+        //{
+        //    var status = GetOrderStatus(CurrentSupply.Status ?? 6); // по умолчанию ChoosingSupplier
+        //    switch (status)
+        //    {
+        //        case OrderStatus.ChoosingSupplier: _currentStep = 1; break;
+        //        case OrderStatus.ChoosingProducts: _currentStep = 2; break;
+        //        case OrderStatus.ChoosingAroundTime: _currentStep = 3; break;
+        //        default: _currentStep = 1; break;
+        //    }
+        //}
+
+        private void UpdateSupplyStatus(OrderStatus status)
+        {
+            if (CurrentSupply != null)
+            {
+                //CurrentSupply.Status = GetOrderStatusId(status);
+                _context.SaveChanges();
+            }
         }
 
         private void LoadStep(int step)
@@ -37,19 +115,19 @@ namespace MedicalShopDiaShop.MainView
                 case 1:
                     StepTitleText.Text = "Шаг 1: Выбор поставщика";
                     page = new ChooseSupplierPage(this);
+                    UpdateSupplyStatus(OrderStatus.ChoosingSupplier);
                     break;
                 case 2:
                     StepTitleText.Text = "Шаг 2: Выбор товаров";
                     page = new ChooseProductsPage(this);
+                    UpdateSupplyStatus(OrderStatus.ChoosingProducts);
                     break;
                 case 3:
                     StepTitleText.Text = "Шаг 3: Дата доставки";
                     page = new ChooseDeliveryDatePage(this);
+                    UpdateSupplyStatus(OrderStatus.ChoosingAroundTime);
                     break;
-                default:
-                    return;
             }
-
             AddSupplyFrame.Navigate(page);
         }
 
@@ -92,32 +170,25 @@ namespace MedicalShopDiaShop.MainView
                 return;
             }
 
-            using (var context = new DiaShopEntities1())
-            {
-                var supply = new Supply
-                {
-                    SupplierId = SelectedSupplier.Id,
-                    UserId = App.currentUser.Id,
-                    OrderDate = DateTime.Now,
-                    ArrivedDate = DeliveryDate.Value, // или другая логика
-                    AroundDate = DeliveryDate.Value,
-                    TotalCost = SelectedProducts.Sum(p => p.TotalPrice)
-                };
-                context.Supply.Add(supply);
-                context.SaveChanges();
+            CurrentSupply.SupplierId = SelectedSupplier.Id;
+            CurrentSupply.AroundDate = DeliveryDate.Value;
+            CurrentSupply.ArrivedDate = DeliveryDate.Value; 
+            CurrentSupply.TotalCost = SelectedProducts.Sum(p => p.TotalPrice);
+            //CurrentSupply.Status = GetOrderStatusId(OrderStatus.InProcess);
 
-                foreach (var item in SelectedProducts)
+            var existingProducts = _context.SupplyProduct.Where(sp => sp.SupplyId == CurrentSupply.Id);
+            _context.SupplyProduct.RemoveRange(existingProducts);
+            foreach (var item in SelectedProducts)
+            {
+                _context.SupplyProduct.Add(new SupplyProduct
                 {
-                    context.SupplyProduct.Add(new SupplyProduct
-                    {
-                        SupplyId = supply.Id,
-                        ProductId = item.Product.Id,
-                        Quantity = item.Quantity,
-                        TotalPrice = item.TotalPrice
-                    });
-                }
-                context.SaveChanges();
+                    SupplyId = CurrentSupply.Id,
+                    ProductId = item.Product.Id,
+                    Quantity = item.Quantity,
+                    TotalPrice = item.TotalPrice
+                });
             }
+            _context.SaveChanges();
 
             MessageBox.Show("Поставка успешно создана.");
             DialogResult = true;
