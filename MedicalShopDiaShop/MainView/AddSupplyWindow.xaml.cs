@@ -22,14 +22,14 @@ namespace MedicalShopDiaShop.MainView
 
         private int _currentStep = 1;
         private const int TotalSteps = 3;
-        private readonly DiaShopEntities2 _context;
+        private readonly DiaShopEntities3 _context;
         private int _navigationDirection = 1; // 1 - вперёд, -1 - назад
         private bool _isFirstLoad = true;
 
         public AddSupplyWindow()
         {
             InitializeComponent();
-            _context = new DiaShopEntities2();
+            _context = new DiaShopEntities3();
             CreateDraftSupply();
             LoadStep(1);
         }
@@ -37,7 +37,7 @@ namespace MedicalShopDiaShop.MainView
         public AddSupplyWindow(int supplyId)
         {
             InitializeComponent();
-            _context = new DiaShopEntities2();
+            _context = new DiaShopEntities3();
             LoadDraftSupply(supplyId);
             LoadStep(_currentStep);
         }
@@ -47,8 +47,11 @@ namespace MedicalShopDiaShop.MainView
             CurrentSupply = new Supply
             {
                 UserId = App.currentUser.Id,
+                SupplierId = 8,
                 OrderDate = DateTime.Now,
-                TotalCost = 0
+                TotalCost = 0,
+                AroundDate = DateTime.Now, 
+                ArrivedDate = DateTime.Now
             };
             _context.Supply.Add(CurrentSupply);
             _context.SaveChanges();
@@ -139,9 +142,19 @@ namespace MedicalShopDiaShop.MainView
 
         private void UpdateStepIndicator()
         {
-            Step1Ellipse.Fill = _currentStep >= 1 ? FindResource("PrimaryHueLightBrush") as System.Windows.Media.Brush : System.Windows.Media.Brushes.LightGray;
-            Step2Ellipse.Fill = _currentStep >= 2 ? FindResource("PrimaryHueLightBrush") as System.Windows.Media.Brush : System.Windows.Media.Brushes.LightGray;
-            Step3Ellipse.Fill = _currentStep >= 3 ? FindResource("PrimaryHueLightBrush") as System.Windows.Media.Brush : System.Windows.Media.Brushes.LightGray;
+            // Пытаемся найти новую кисть по правильному ключу
+            // Используем TryFindResource, чтобы избежать исключения, если ресурс не найден
+            var activeBrush = this.TryFindResource("MaterialDesign.Brush.Primary.Light") as Brush;
+
+            // Если по какой-то причине ресурс не найден, используем цвет по умолчанию
+            if (activeBrush == null)
+            {
+                activeBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#6200EE"));
+            }
+
+            Step1Ellipse.Fill = _currentStep >= 1 ? activeBrush : Brushes.LightGray;
+            Step2Ellipse.Fill = _currentStep >= 2 ? activeBrush : Brushes.LightGray;
+            Step3Ellipse.Fill = _currentStep >= 3 ? activeBrush : Brushes.LightGray;
         }
 
         private void UpdateBackButtonVisibility()
@@ -183,8 +196,8 @@ namespace MedicalShopDiaShop.MainView
             }
 
             CurrentSupply.SupplierId = SelectedSupplier.Id;
-            CurrentSupply.AroundDate = DeliveryDate.Value;
-            CurrentSupply.ArrivedDate = DeliveryDate.Value;
+            CurrentSupply.AroundDate = ToSqlDateTimeRange(DeliveryDate.Value);
+            CurrentSupply.ArrivedDate = ToSqlDateTimeRange(DeliveryDate.Value);
             CurrentSupply.TotalCost = SelectedProducts.Sum(p => p.TotalPrice);
 
             var existingProducts = _context.SupplyProduct.Where(sp => sp.SupplyId == CurrentSupply.Id);
@@ -204,6 +217,15 @@ namespace MedicalShopDiaShop.MainView
             FeedbackService.Information("Поставка успешно создана.");
             DialogResult = true;
             Close();
+        }
+
+        private DateTime ToSqlDateTimeRange(DateTime date)
+        {
+            if (date < new DateTime(1753, 1, 1))
+                return new DateTime(1753, 1, 1);
+            if (date > new DateTime(9999, 12, 31))
+                return new DateTime(9999, 12, 31);
+            return date;
         }
     }
 

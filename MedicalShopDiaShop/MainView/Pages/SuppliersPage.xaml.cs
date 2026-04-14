@@ -83,11 +83,11 @@ namespace MedicalShopDiaShop.MainView.Pages
             var items = dbSupplies.Select(s => new SupplyItem
             {
                 Id = s.Id,
-                SupplierId = s.SupplierId,
+                SupplierId = (int)s.SupplierId,
                 SupplierName = s.SupplierId != 0 ? (App.context.Store.Find(s.SupplierId)?.Name ?? "Неизвестно") : "Не выбран",
-                OrderDate = s.OrderDate,
-                AroundDate = s.AroundDate,
-                TotalCost = s.TotalCost,
+                OrderDate = (DateTime)s.OrderDate,
+                AroundDate = (DateTime)s.AroundDate,
+                TotalCost = (decimal)s.TotalCost,
                 IsCompleted = s.ArrivedDate != default && s.ArrivedDate <= DateTime.Now,
                 IsSelected = false
             }).ToList();
@@ -186,7 +186,7 @@ namespace MedicalShopDiaShop.MainView.Pages
                 EditBtn.Content = "Изменить поставщика";
                 DeleteBtn.Content = "Удалить поставщика";
                 // Подсветка кнопок
-                SuppliersModeBtn.Background = (Brush)FindResource("PrimaryHueLightBrush");
+                SuppliersModeBtn.Background = Brushes.DeepPink;
                 SuppliesModeBtn.Background = Brushes.Transparent;
                 // Обновляем список
                 ApplyFilterAndSearch();
@@ -202,7 +202,7 @@ namespace MedicalShopDiaShop.MainView.Pages
                 EditBtn.Content = "Изменить поставку";
                 DeleteBtn.Content = "Удалить поставку";
                 SuppliersModeBtn.Background = Brushes.Transparent;
-                SuppliesModeBtn.Background = (Brush)FindResource("PrimaryHueLightBrush");
+                SuppliesModeBtn.Background = Brushes.DeepPink;
                 // Обновляем список поставок
                 ApplySupplyFilterAndSearch();
                 SuppliesListBox.ItemsSource = _filteredSupplies;

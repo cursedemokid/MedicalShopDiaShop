@@ -127,11 +127,13 @@
                                 <Border.Effect>
                                     <DropShadowEffect BlurRadius="15" ShadowDepth="0" Opacity="0.2" Color="Gray"/>
                                 </Border.Effect>
-                                <Grid Margin="10">
+                                <Grid Margin="10" >
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="10"/>
                                         <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="10"/>
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="10"/>
                                         <ColumnDefinition Width="Auto"/>
@@ -153,7 +155,8 @@
                                                VerticalAlignment="Center" HorizontalAlignment="Center"
                                                FontFamily="{StaticResource GothamProFamily}"/>
                                     <Button Grid.Column="7" Padding="2" HorizontalAlignment="Center" 
-                                            VerticalAlignment="Center" Click="DecreaseQuantity_Click" Tag="{Binding}">
+                                            VerticalAlignment="Center" Click="DecreaseQuantity_Click" Tag="{Binding}"
+                                            Height="50">
                                         <Image x:Name="MinusIcon" Source="/Resources/minus.png" Width="45" Height="45"/>
                                     </Button>
                                     <TextBlock Grid.Column="9" FontSize="18" 
@@ -161,7 +164,8 @@
                                                VerticalAlignment="Center" HorizontalAlignment="Center"
                                                FontFamily="{StaticResource GothamProFamily}" Margin="10,0"/>
                                     <Button Grid.Column="11" Padding="2" HorizontalAlignment="Center" 
-                                            VerticalAlignment="Center" Click="IncreaseQuantity_Click" Tag="{Binding}">
+                                            VerticalAlignment="Center" Click="IncreaseQuantity_Click" Tag="{Binding}"
+                                            Height="50">
                                         <Image Source="/Resources/more.png" Width="45" Height="45"/>
                                     </Button>
                                 </Grid>

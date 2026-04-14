@@ -26,7 +26,7 @@ namespace MedicalShopDiaShop.MainView.Pages
 
         private void LoadAllData()
         {
-            using (var context = new DiaShopEntities2())
+            using (var context = new DiaShopEntities3())
             {
                 LoadMonthlyRevenue(context);
                 LoadSupplierPie(context);
@@ -38,7 +38,7 @@ namespace MedicalShopDiaShop.MainView.Pages
             }
         }
 
-        private void LoadMonthlyRevenue(DiaShopEntities2 context)
+        private void LoadMonthlyRevenue(DiaShopEntities3 context)
         {
             var orders = context.Order
                 .Where(o => o.User.StoreId == _currentStoreId)
@@ -66,7 +66,7 @@ namespace MedicalShopDiaShop.MainView.Pages
             _viewModel.TotalRevenueAllTime = monthlyData.Sum(d => d.Revenue);
         }
 
-        private void LoadSupplierPie(DiaShopEntities2 context)
+        private void LoadSupplierPie(DiaShopEntities3 context)
         {
             var supplies = context.Supply
                 .Where(s => s.User.StoreId == _currentStoreId)
@@ -88,7 +88,7 @@ namespace MedicalShopDiaShop.MainView.Pages
             _viewModel.SupplierPieSeries = series;
         }
 
-        private void LoadTopProducts(DiaShopEntities2 context)
+        private void LoadTopProducts(DiaShopEntities3 context)
         {
             var topProducts = context.ProductOrder
                 .Where(po => po.Order.User.StoreId == _currentStoreId)
@@ -121,7 +121,7 @@ namespace MedicalShopDiaShop.MainView.Pages
             };
         }
 
-        private void LoadOrderCount(DiaShopEntities2 context)
+        private void LoadOrderCount(DiaShopEntities3 context)
         {
             var orders = context.Order
                 .Where(o => o.User.StoreId == _currentStoreId)
@@ -147,7 +147,7 @@ namespace MedicalShopDiaShop.MainView.Pages
             _viewModel.TotalOrdersAllTime = monthlyCount.Sum();
         }
 
-        private void LoadDeliveryTypePie(DiaShopEntities2 context)
+        private void LoadDeliveryTypePie(DiaShopEntities3 context)
         {
             var deliveryGroups = context.Order
                 .Where(o => o.User.StoreId == _currentStoreId)
@@ -169,7 +169,7 @@ namespace MedicalShopDiaShop.MainView.Pages
             _viewModel.DeliveryTypePieSeries = series;
         }
 
-        private void LoadProfitability(DiaShopEntities2 context)
+        private void LoadProfitability(DiaShopEntities3 context)
         {
             var products = context.Product.ToList();
             var profitabilityData = new List<decimal>();
@@ -177,15 +177,16 @@ namespace MedicalShopDiaShop.MainView.Pages
 
             foreach (var product in products)
             {
-                var sold = context.ProductOrder
+                // Приводим к nullable decimal, чтобы обработать null от SUM
+                decimal? sold = context.ProductOrder
                     .Where(po => po.ProductId == product.Id && po.Order.User.StoreId == _currentStoreId)
-                    .Sum(po => po.Quantity * po.Price);
+                    .Sum(po => (decimal?)po.Quantity * po.Price); // явное приведение к nullable
 
-                var bought = context.SupplyProduct
+                decimal? bought = context.SupplyProduct
                     .Where(sp => sp.ProductId == product.Id && sp.Supply.User.StoreId == _currentStoreId)
-                    .Sum(sp => sp.TotalPrice);
+                    .Sum(sp => (decimal?)sp.TotalPrice); // явное приведение к nullable
 
-                decimal profit = sold - bought;
+                decimal profit = (sold ?? 0) - (bought ?? 0);
                 profitabilityData.Add(profit);
                 labels.Add(product.Name);
             }
@@ -198,19 +199,19 @@ namespace MedicalShopDiaShop.MainView.Pages
 
             _viewModel.ProfitabilityLabels = top.Select(x => x.Label).ToArray();
             _viewModel.ProfitabilitySeries = new SeriesCollection
-            {
-                new ColumnSeries
-                {
-                    Title = "Прибыль",
-                    Values = new ChartValues<decimal>(top.Select(x => x.Profit)),
-                    Fill = System.Windows.Media.Brushes.Green,
-                    DataLabels = true,
-                    LabelPoint = point => point.Y.ToString("N0") + " ₽"
-                }
-            };
+    {
+        new ColumnSeries
+        {
+            Title = "Прибыль",
+            Values = new ChartValues<decimal>(top.Select(x => x.Profit)),
+            Fill = System.Windows.Media.Brushes.Green,
+            DataLabels = true,
+            LabelPoint = point => point.Y.ToString("N0") + " ₽"
+        }
+    };
         }
 
-        private void LoadTaskPerformancePie(DiaShopEntities2 context)
+        private void LoadTaskPerformancePie(DiaShopEntities3 context)
         {
             var tasks = context.Task
                 .Where(t => t.User.StoreId == _currentStoreId && t.Deadline.HasValue)

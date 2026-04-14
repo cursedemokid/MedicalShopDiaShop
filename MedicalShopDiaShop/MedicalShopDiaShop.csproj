@@ -161,6 +161,63 @@
     <Compile Include="AppData\FeedbackService.cs" />
     <Compile Include="AppData\ProductWithFavorite.cs" />
     <Compile Include="AppData\Status.cs" />
+    <Compile Include="Database\Delivery.cs">
+      <DependentUpon>DiaShopModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\DiaShopModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DiaShopModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\DiaShopModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DiaShopModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\DiaShopModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DiaShopModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Database\Favorite.cs">
+      <DependentUpon>DiaShopModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\Notification.cs">
+      <DependentUpon>DiaShopModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\Order.cs">
+      <DependentUpon>DiaShopModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\OrderHistory.cs">
+      <DependentUpon>DiaShopModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\Product.cs">
+      <DependentUpon>DiaShopModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\ProductOrder.cs">
+      <DependentUpon>DiaShopModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\Schedule.cs">
+      <DependentUpon>DiaShopModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\Store.cs">
+      <DependentUpon>DiaShopModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\StoreProduct.cs">
+      <DependentUpon>DiaShopModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\Supply.cs">
+      <DependentUpon>DiaShopModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\SupplyProduct.cs">
+      <DependentUpon>DiaShopModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\Task.cs">
+      <DependentUpon>DiaShopModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\User.cs">
+      <DependentUpon>DiaShopModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="MainView\AddEditProductWindow.xaml.cs">
       <DependentUpon>AddEditProductWindow.xaml</DependentUpon>
     </Compile>
@@ -353,6 +410,13 @@
     <Resource Include="Fonts\gothampro_lightitalic.ttf" />
     <Resource Include="Fonts\gothampro_medium.ttf" />
     <Resource Include="Fonts\gothampro_mediumitalic.ttf" />
+    <EntityDeploy Include="Database\DiaShopModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>DiaShopModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="Database\DiaShopModel.edmx.diagram">
+      <DependentUpon>DiaShopModel.edmx</DependentUpon>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -457,7 +521,6 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Database\" />
     <Folder Include="Model\" />
   </ItemGroup>
   <ItemGroup>
@@ -469,6 +532,18 @@
     <Resource Include="Resources\basket.png" />
     <Resource Include="Resources\choice.png" />
     <Resource Include="Resources\clipboard.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Database\DiaShopModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>DiaShopModel.Context.cs</LastGenOutput>
+      <DependentUpon>DiaShopModel.edmx</DependentUpon>
+    </Content>
+    <Content Include="Database\DiaShopModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>DiaShopModel.edmx</DependentUpon>
+      <LastGenOutput>DiaShopModel.cs</LastGenOutput>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

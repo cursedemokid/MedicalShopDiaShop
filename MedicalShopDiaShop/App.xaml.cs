@@ -15,7 +15,7 @@ namespace MedicalShopDiaShop
     /// </summary>
     public partial class App : Application
     {
-        public static DiaShopEntities2 context = new DiaShopEntities2();
+        public static DiaShopEntities3 context = new DiaShopEntities3();
         public static Database.User currentUser = new Database.User();
         public static Button currentButton = new Button();
     }

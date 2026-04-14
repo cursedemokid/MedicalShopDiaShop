@@ -160,7 +160,9 @@ namespace MedicalShopDiaShop.MainView.Pages
             var employee = button?.Tag as EmployeeItem;
             if (employee != null)
             {
-                if (Application.Current.MainWindow is MainWindow mainWindow)
+                // Получаем окно, содержащее текущую страницу
+                var mainWindow = Window.GetWindow(this) as MainWindow;
+                if (mainWindow != null)
                 {
                     mainWindow.MainFrame.Navigate(new ProfilePage(employee.Id));
                 }
