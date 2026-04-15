@@ -26,47 +26,58 @@
                 <DropShadowEffect BlurRadius="20" ShadowDepth="0" Opacity="0.25" Color="Gray"/>
             </Border.Effect>
             <Grid Margin="10">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="10" />
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="10" />
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="5" />
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="10" />
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="5" />
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="10" />
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="5" />
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="1*" />
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="10" />
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="10" />
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="10" />
-                    </Grid.RowDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="5" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="5" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="5" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="10" />
+                </Grid.RowDefinitions>
+
+                <!-- Аватар -->
                 <Image x:Name="AvatarImage" Height="200" Width="200">
                     <Image.Clip>
                         <EllipseGeometry Center="100,100" RadiusX="100" RadiusY="100"/>
                     </Image.Clip>
                 </Image>
+
                 <TextBlock x:Name="UserNameTextBlock" Grid.Row="2" Text="" FontSize="20" FontFamily="{StaticResource GothamProFamily}" HorizontalAlignment="Center"/>
                 <Separator Grid.Row="3"/>
+
                 <TextBlock Grid.Row="4" Text="ФИО" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
                 <TextBlock x:Name="FullNameTextBlock" Grid.Row="6" Text="" FontSize="20" FontFamily="{StaticResource GothamProLight}" TextWrapping="Wrap"/>
+
                 <TextBlock Grid.Row="8" Text="Роль" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
                 <TextBlock x:Name="RoleTextBlock" Grid.Row="10" Text="" FontSize="20" FontFamily="{StaticResource GothamProLight}" FontWeight="Light" TextWrapping="Wrap"/>
-                <TextBlock Name="EmployeeTextBlock" Grid.Row="12" Text="Магазин" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
-                <TextBlock x:Name="StoreTextBlock" Grid.Row="14" Text="" FontSize="20" FontFamily="{StaticResource GothamProLight}" FontWeight="Light" TextWrapping="Wrap"/>
-                <TextBlock Name="ClientTextBlock" Grid.Row="12" Text="Адрес" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Margin="0,10,0,0"/>
-                <TextBlock x:Name="AddressTextBlock" Grid.Row="12" Text="" FontSize="20" FontFamily="{StaticResource GothamProLight}" FontWeight="Light" TextWrapping="Wrap"/>
-                <Button x:Name="ChangePasswordButton" Grid.Row="20" Content="Сменить пароль" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Click="ChangePassword_Click"/>
+
+                <!-- Блок для сотрудника (магазин) -->
+                <TextBlock Grid.Row="12" Name="EmployeeTextBlock" Text="Магазин" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
+                <TextBlock x:Name="StoreTextBlock" Grid.Row="13" Text="" FontSize="20" FontFamily="{StaticResource GothamProLight}" FontWeight="Light" TextWrapping="Wrap"/>
+
+                <!-- Блок для клиента (адрес) -->
+                <TextBlock Grid.Row="15" Name="ClientTextBlock" Text="Адрес" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Margin="0,10,0,0"/>
+                <TextBlock x:Name="AddressTextBlock" Grid.Row="16" Text="" FontSize="20" FontFamily="{StaticResource GothamProLight}" FontWeight="Light" TextWrapping="Wrap"/>
+
+                <!-- Кнопки -->
                 <Button x:Name="ChangeAvatarButton" Grid.Row="18" Content="Сменить аватар" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Click="ChangeAvatar_Click" Margin="0,10,0,0"/>
+                <Button x:Name="ChangePasswordButton" Grid.Row="20" Content="Сменить пароль" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Click="ChangePassword_Click"/>
             </Grid>
         </Border>
 
@@ -259,13 +270,14 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="5"/>
                             <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="10"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="Расписание" FontSize="20" FontFamily="{StaticResource GothamProFamily}" VerticalAlignment="Center"/>
-                        <Button x:Name="AddScheduleBtn" Grid.Column="1" Content="Добавить" Width="80" 
+                        <Button x:Name="AddScheduleBtn" Grid.Column="1" Content="Добавить"
                                 FontSize="14" Click="AddScheduleBtn_Click" Visibility="Collapsed"/>
-                        <Button x:Name="EditScheduleBtn" Grid.Column="3" Content="Изменить" Width="80" 
+                        <Button x:Name="EditScheduleBtn" Grid.Column="3" Content="Изменить"
                                 FontSize="14" Click="EditScheduleBtn_Click" Visibility="Collapsed"/>
-                        <Button x:Name="DeleteScheduleBtn" Grid.Column="5" Content="Удалить" Width="80" 
+                        <Button x:Name="DeleteScheduleBtn" Grid.Column="5" Content="Удалить"
                                 FontSize="14" Click="DeleteScheduleBtn_Click" Visibility="Collapsed"/>
                     </Grid>
 
@@ -306,13 +318,14 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="5"/>
                             <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="10"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="Задачи" FontSize="20" FontFamily="{StaticResource GothamProFamily}" VerticalAlignment="Center"/>
-                        <Button x:Name="AddTaskBtn" Grid.Column="1" Content="Добавить" Width="80" 
+                        <Button x:Name="AddTaskBtn" Grid.Column="1" Content="Добавить"
                                 FontSize="14" Click="AddTaskBtn_Click" Visibility="Collapsed"/>
-                        <Button x:Name="EditTaskBtn" Grid.Column="3" Content="Изменить" Width="80" 
+                        <Button x:Name="EditTaskBtn" Grid.Column="3" Content="Изменить"
                                 FontSize="14" Click="EditTaskBtn_Click" Visibility="Collapsed"/>
-                        <Button x:Name="DeleteTaskBtn" Grid.Column="5" Content="Удалить" Width="80" 
+                        <Button x:Name="DeleteTaskBtn" Grid.Column="5" Content="Удалить"
                                 FontSize="14" Click="DeleteTaskBtn_Click" Visibility="Collapsed"/>
                     </Grid>
 

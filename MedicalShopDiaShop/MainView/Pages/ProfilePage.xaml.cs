@@ -59,13 +59,23 @@ namespace MedicalShopDiaShop.MainView.Pages
             {
                 ClientProfileGrid.Visibility = Visibility.Visible;
                 EmployeeProfileGrid.Visibility = Visibility.Collapsed;
-                LoadClientHistory();
+
+                // Показываем адрес, скрываем магазин
+                EmployeeTextBlock.Visibility = Visibility.Collapsed;
+                StoreTextBlock.Visibility = Visibility.Collapsed;
+                ClientTextBlock.Visibility = Visibility.Visible;
+                AddressTextBlock.Visibility = Visibility.Visible;
             }
             else
             {
                 ClientProfileGrid.Visibility = Visibility.Collapsed;
                 EmployeeProfileGrid.Visibility = Visibility.Visible;
-                LoadEmployeeScheduleAndTasks();
+
+                // Показываем магазин, скрываем адрес
+                EmployeeTextBlock.Visibility = Visibility.Visible;
+                StoreTextBlock.Visibility = Visibility.Visible;
+                ClientTextBlock.Visibility = Visibility.Collapsed;
+                AddressTextBlock.Visibility = Visibility.Collapsed;
             }
 
             // Кнопки смены пароля
