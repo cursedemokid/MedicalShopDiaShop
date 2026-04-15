@@ -84,10 +84,8 @@
 
                 <!-- Кнопки -->
                 <StackPanel Grid.Row="14" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
-                    <Button x:Name="SaveBtn" Content="Сохранить" Width="100" Margin="0,0,10,0"
-                            Style="{StaticResource MaterialDesignFlatButton}" Click="SaveBtn_Click"/>
-                    <Button x:Name="CancelBtn" Content="Отмена" Width="100"
-                            Style="{StaticResource MaterialDesignFlatButton}" Click="CancelBtn_Click"/>
+                    <Button x:Name="SaveBtn" Content="Сохранить" Margin="0,0,10,0" Click="SaveBtn_Click"/>
+                    <Button x:Name="CancelBtn" Content="Отмена" Click="CancelBtn_Click"/>
                 </StackPanel>
             </Grid>
         </Border>

@@ -1,0 +1,195 @@
+﻿<Window x:Class="MedicalShopDiaShop.MainView.AddEditOrderWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Заказ" Height="720" Width="1280" MinHeight="600" MinWidth="900"
+        WindowStartupLocation="CenterOwner" Loaded="Window_Loaded">
+    <Grid>
+        <Image Source="/Resources/BackgroundPatternPurple.png" Stretch="Fill"/>
+
+        <Border CornerRadius="20" BorderThickness="1" BorderBrush="White" Background="White"
+                Margin="20" Padding="20">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="15"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="15"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="15"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Заголовок -->
+                <TextBlock x:Name="TitleText" Text="Новый заказ" FontSize="24" FontWeight="Bold"
+                           FontFamily="{StaticResource GothamProFamily}" HorizontalAlignment="Center"/>
+
+                <!-- Основные поля -->
+                <Border Grid.Row="2" CornerRadius="15" Background="#F5F5F5" Padding="15">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="20"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="20"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="20"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="10"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Клиент -->
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Клиент:" FontWeight="Bold" FontSize="16" 
+                                   FontFamily="{StaticResource GothamProFamily}" VerticalAlignment="Center"/>
+                        <Border Grid.Row="0" Grid.Column="2" BorderThickness="1" BorderBrush="Black" CornerRadius="5">
+                            <ComboBox x:Name="ClientCmb" FontSize="16" FontFamily="{StaticResource GothamProFamily}"
+                                      DisplayMemberPath="FullName" SelectedValuePath="Id" Height="35"/>
+                        </Border>
+
+                        <!-- Тип доставки -->
+                        <TextBlock Grid.Row="0" Grid.Column="4" Text="Тип доставки:" FontWeight="Bold" FontSize="16" 
+                                   FontFamily="{StaticResource GothamProFamily}" VerticalAlignment="Center"/>
+                        <Border Grid.Row="0" Grid.Column="6" BorderThickness="1" BorderBrush="Black" CornerRadius="5">
+                            <ComboBox x:Name="DeliveryTypeCmb" FontSize="16" FontFamily="{StaticResource GothamProFamily}" Height="35">
+                                <ComboBoxItem Content="Курьер" Tag="1"/>
+                                <ComboBoxItem Content="Самовывоз" Tag="2"/>
+                            </ComboBox>
+                        </Border>
+
+                        <!-- Сотрудник (кто оформляет) -->
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Сотрудник:" FontWeight="Bold" FontSize="16" 
+                                   FontFamily="{StaticResource GothamProFamily}" VerticalAlignment="Center"/>
+                        <Border Grid.Row="2" Grid.Column="2" BorderThickness="1" BorderBrush="Black" CornerRadius="5">
+                            <ComboBox x:Name="WorkerCmb" FontSize="16" FontFamily="{StaticResource GothamProFamily}"
+                                      DisplayMemberPath="FullName" SelectedValuePath="Id" Height="35" IsEnabled="False"/>
+                        </Border>
+                    </Grid>
+                </Border>
+
+                <!-- Товары (две колонки: доступные и корзина) -->
+                <Grid Grid.Row="4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Доступные товары -->
+                    <Border CornerRadius="15" Background="#F5F5F5" Padding="15">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="10"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="10"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="Доступные товары" FontSize="18" FontWeight="Bold" 
+                                       FontFamily="{StaticResource GothamProFamily}"/>
+
+                            <TextBox x:Name="SearchBox" Grid.Row="2" FontSize="14" FontFamily="{StaticResource GothamProFamily}"
+                                     Height="30" Margin="0,0,0,10" TextChanged="SearchBox_TextChanged"/>
+
+                            <ListBox x:Name="AvailableProductsListBox" Grid.Row="4" 
+                                     SelectionMode="Single" MouseDoubleClick="AvailableProduct_MouseDoubleClick">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border CornerRadius="10" Background="White" Margin="5" Padding="10">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="10"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Image Source="{Binding ImagePath}" Width="40" Height="40"/>
+                                                <TextBlock Grid.Column="2" Text="{Binding Name}" FontSize="14" 
+                                                           FontFamily="{StaticResource GothamProFamily}" 
+                                                           VerticalAlignment="Center" TextWrapping="Wrap"/>
+                                                <TextBlock Grid.Column="3" Text="{Binding Price, StringFormat='{}{0:N2} ₽'}" 
+                                                           FontSize="14" FontFamily="{StaticResource GothamProFamily}" 
+                                                           VerticalAlignment="Center" Margin="10,0,0,0"/>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </Grid>
+                    </Border>
+
+                    <!-- Корзина -->
+                    <Border Grid.Column="2" CornerRadius="15" Background="#F5F5F5" Padding="15">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="10"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="Корзина" FontSize="18" FontWeight="Bold" 
+                                       FontFamily="{StaticResource GothamProFamily}"/>
+
+                            <ListBox x:Name="CartListBox" Grid.Row="2">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border CornerRadius="10" Background="White" Margin="5" Padding="10">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Text="{Binding Product.Name}" FontSize="14" 
+                                                           FontFamily="{StaticResource GothamProFamily}" 
+                                                           VerticalAlignment="Center" TextWrapping="Wrap"/>
+                                                <TextBlock Grid.Column="1" Text="{Binding Product.Price, StringFormat='{}{0:N2} ₽'}" 
+                                                           FontSize="14" FontFamily="{StaticResource GothamProFamily}" 
+                                                           VerticalAlignment="Center" Margin="10,0"/>
+                                                <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="10,0">
+                                                    <Button Content="-" Width="30" Click="DecreaseQuantity_Click" Tag="{Binding}"/>
+                                                    <TextBlock Text="{Binding Quantity}" Width="40" TextAlignment="Center" 
+                                                               FontSize="14" VerticalAlignment="Center"/>
+                                                    <Button Content="+" Width="30" Click="IncreaseQuantity_Click" Tag="{Binding}"/>
+                                                </StackPanel>
+                                                <TextBlock Grid.Column="3" Text="{Binding TotalPrice, StringFormat='{}{0:N2} ₽'}" 
+                                                           FontSize="14" FontFamily="{StaticResource GothamProFamily}" 
+                                                           VerticalAlignment="Center" Margin="10,0" Foreground="#4CAF50"/>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+
+                            <Border Grid.Row="3" CornerRadius="10" Background="White" Padding="10" Margin="0,10,0,0">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="Итого:" FontSize="16" FontWeight="Bold" 
+                                               FontFamily="{StaticResource GothamProFamily}" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="TotalPriceText" Grid.Column="1" FontSize="18" FontWeight="Bold" 
+                                               FontFamily="{StaticResource GothamProFamily}" VerticalAlignment="Center"/>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </Border>
+                </Grid>
+
+                <!-- Кнопки -->
+                <StackPanel Grid.Row="6" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button x:Name="SaveBtn" Content="Сохранить" Width="120" Height="35" Margin="10"
+                            Click="SaveBtn_Click" FontSize="16" FontFamily="{StaticResource GothamProFamily}"/>
+                    <Button x:Name="CancelBtn" Content="Отмена" Width="120" Height="35" Margin="10"
+                            Click="CancelBtn_Click" FontSize="16" FontFamily="{StaticResource GothamProFamily}"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

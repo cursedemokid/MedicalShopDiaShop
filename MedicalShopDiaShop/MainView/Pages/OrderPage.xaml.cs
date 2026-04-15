@@ -205,10 +205,8 @@ namespace MedicalShopDiaShop.MainView.Pages
             var order = btn?.Tag as OrderDto;
             if (order != null)
             {
-                string itemsList = string.Join("\n", order.Items.Select(i => $"{i.ProductName} x{i.Quantity} = {i.TotalPrice:N2} ₽"));
-                MessageBox.Show($"Заказ №{order.Id}\nДата: {order.OrderDate:dd.MM.yyyy}\nКлиент: {order.ClientFullName}\n" +
-                                $"Собирал: {order.WorkerFullName}\nКурьер: {order.CourierFullName ?? "не назначен"}\n" +
-                                $"Статус: {order.StatusName}\nСумма: {order.TotalCost:N2} ₽\n\nТовары:\n{itemsList}");
+                var window = new OrderDetailsWindow(order.Id);
+                window.ShowDialog();
             }
         }
     }

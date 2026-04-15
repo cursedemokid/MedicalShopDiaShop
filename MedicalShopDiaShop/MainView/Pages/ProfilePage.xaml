@@ -26,26 +26,30 @@
                 <DropShadowEffect BlurRadius="20" ShadowDepth="0" Opacity="0.25" Color="Gray"/>
             </Border.Effect>
             <Grid Margin="10">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="10" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="10" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="5" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="10" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="5" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="10" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="5" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="1*" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="30" />
-                </Grid.RowDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="5" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="5" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="5" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="10" />
+                    </Grid.RowDefinitions>
                 <Image x:Name="AvatarImage" Height="200" Width="200">
                     <Image.Clip>
                         <EllipseGeometry Center="100,100" RadiusX="100" RadiusY="100"/>
@@ -61,7 +65,8 @@
                 <TextBlock x:Name="StoreTextBlock" Grid.Row="14" Text="" FontSize="20" FontFamily="{StaticResource GothamProLight}" FontWeight="Light" TextWrapping="Wrap"/>
                 <TextBlock Name="ClientTextBlock" Grid.Row="12" Text="Адрес" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Margin="0,10,0,0"/>
                 <TextBlock x:Name="AddressTextBlock" Grid.Row="12" Text="" FontSize="20" FontFamily="{StaticResource GothamProLight}" FontWeight="Light" TextWrapping="Wrap"/>
-                <Button x:Name="ChangePasswordButton" Grid.Row="18" Content="Сменить пароль" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Click="ChangePassword_Click"/>
+                <Button x:Name="ChangePasswordButton" Grid.Row="20" Content="Сменить пароль" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Click="ChangePassword_Click"/>
+                <Button x:Name="ChangeAvatarButton" Grid.Row="18" Content="Сменить аватар" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Click="ChangeAvatar_Click" Margin="0,10,0,0"/>
             </Grid>
         </Border>
 
@@ -274,7 +279,7 @@
 
                     <!-- Список смен (для выбора) -->
                     <TextBlock Grid.Row="4" Text="Смены на выбранную дату:" FontSize="16" FontFamily="{StaticResource GothamProFamily}"/>
-                    <ListBox x:Name="SchedulesListBox" Grid.Row="6" Height="120" 
+                    <ListBox x:Name="SchedulesListBox" Grid.Row="6" MaxHeight="120" 
                              SelectionMode="Single" DisplayMemberPath="DisplayText"/>
                 </Grid>
             </Border>

@@ -219,6 +219,9 @@
     <Compile Include="Database\User.cs">
       <DependentUpon>DiaShopModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="MainView\AddEditOrderWindow.xaml.cs">
+      <DependentUpon>AddEditOrderWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MainView\AddEditProductWindow.xaml.cs">
       <DependentUpon>AddEditProductWindow.xaml</DependentUpon>
     </Compile>
@@ -242,6 +245,12 @@
     </Compile>
     <Compile Include="AppData\CustomMessageBox.xaml.cs">
       <DependentUpon>CustomMessageBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainView\ChangePasswordWindow.xaml.cs">
+      <DependentUpon>ChangePasswordWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainView\OrderDetailsWindow.xaml.cs">
+      <DependentUpon>OrderDetailsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainView\Pages\ChooseDeliveryDatePage.xaml.cs">
       <DependentUpon>ChooseDeliveryDatePage.xaml</DependentUpon>
@@ -283,6 +292,10 @@
       <DependentUpon>RegistrationWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\StatisticsViewModel.cs" />
+    <Page Include="MainView\AddEditOrderWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainView\AddEditProductWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -312,6 +325,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="AppData\CustomMessageBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainView\ChangePasswordWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainView\OrderDetailsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

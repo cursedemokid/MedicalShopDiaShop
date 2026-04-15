@@ -391,8 +391,16 @@ namespace MedicalShopDiaShop.MainView.Pages
         #endregion
 
         private string GetImagePath(string imageName) => string.IsNullOrEmpty(imageName) ? "/Resources/placeholder.png" : imageName;
-        private void ShowDetails(string orderId) => MessageBox.Show($"Открыть подробности: {orderId}");
-        private void ChangePassword_Click(object sender, RoutedEventArgs e) => MessageBox.Show("Функция смены пароля будет здесь");
+        private void ShowDetails(string orderId)
+        {
+            // orderId приходит в формате "Заказ №123"
+            string numberStr = orderId.Replace("Заказ №", "");
+            if (int.TryParse(numberStr, out int orderIdInt))
+            {
+                var window = new OrderDetailsWindow(orderIdInt);
+                window.ShowDialog();
+            }
+        }
 
         public class RelayCommand : ICommand
         {
@@ -401,6 +409,56 @@ namespace MedicalShopDiaShop.MainView.Pages
             public event EventHandler CanExecuteChanged;
             public bool CanExecute(object parameter) => true;
             public void Execute(object parameter) => _execute();
+        }
+
+        private void ChangeAvatar_Click(object sender, RoutedEventArgs e)
+        {
+            // Разрешено только если это свой профиль
+            if (App.currentUser.Id != _displayedUser.Id)
+            {
+                FeedbackService.Warning("Вы можете изменить аватар только своего профиля.");
+                return;
+            }
+
+            var dialog = new Microsoft.Win32.OpenFileDialog
+            {
+                Filter = "Изображения|*.jpg;*.png;*.jpeg;*.bmp",
+                Title = "Выберите изображение для аватара"
+            };
+            if (dialog.ShowDialog() == true)
+            {
+                string fileName = Guid.NewGuid().ToString() + System.IO.Path.GetExtension(dialog.FileName);
+                string destFolder = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "Avatars");
+                if (!System.IO.Directory.Exists(destFolder))
+                    System.IO.Directory.CreateDirectory(destFolder);
+                string destPath = System.IO.Path.Combine(destFolder, fileName);
+                try
+                {
+                    System.IO.File.Copy(dialog.FileName, destPath, true);
+                    _displayedUser.AvatarKey = fileName;
+                    App.context.SaveChanges();
+                    // Обновить отображение
+                    AvatarImage.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(destPath, UriKind.Absolute));
+                    FeedbackService.Information("Аватар успешно обновлён.");
+                }
+                catch (Exception ex)
+                {
+                    FeedbackService.Error($"Ошибка при сохранении аватара: {ex.Message}");
+                }
+            }
+        }
+
+        private void ChangePassword_Click(object sender, RoutedEventArgs e)
+        {
+            // Разрешено если свой профиль или админ
+            if (App.currentUser.Id != _displayedUser.Id && App.currentUser.Role != (int)Role.Admin)
+            {
+                FeedbackService.Warning("Вы можете сменить пароль только своего профиля.");
+                return;
+            }
+
+            var window = new ChangePasswordWindow(_displayedUser.Id);
+            window.ShowDialog();
         }
     }
 
