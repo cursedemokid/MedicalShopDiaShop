@@ -70,6 +70,7 @@ namespace MedicalShopDiaShop.MainView
                     Description = DescriptionTb.Text.Trim(),
                     UserId = (int)UserCmb.SelectedValue,
                     StartAt = StartDatePicker.SelectedDate.Value,
+                    EndAt = StartDatePicker.SelectedDate.Value, // Добавлено: устанавливаем начальное значение EndAt
                     Deadline = DeadlinePicker.SelectedDate,
                     AuthorId = App.currentUser.Id,
                     IsCompleted = false
@@ -77,7 +78,6 @@ namespace MedicalShopDiaShop.MainView
                 App.context.Task.Add(task);
                 App.context.SaveChanges();
 
-                // Уведомление сотруднику
                 NotificationHelper.CreateNotification(task.UserId,
                     $"Новая задача: {task.Description}. Дедлайн: {task.Deadline:dd.MM.yyyy}",
                     taskId: task.Id);
