@@ -7,6 +7,7 @@ using System.Windows.Data;
 using System.Windows.Media;
 using MedicalShopDiaShop.AppData;
 using MedicalShopDiaShop.Database;
+using MedicalShopDiaShop.MainView.Dto;
 using static MedicalShopDiaShop.AppData.Status;
 
 namespace MedicalShopDiaShop.MainView.Pages
@@ -34,6 +35,8 @@ namespace MedicalShopDiaShop.MainView.Pages
             SetActiveButton(ListViewOnBtn);
         }
 
+        #region Загрузка данных из БД
+
         private void LoadOrdersFromDatabase()
         {
             using (var context = new DiaShopEntities3())
@@ -52,6 +55,10 @@ namespace MedicalShopDiaShop.MainView.Pages
             var client = context.User.FirstOrDefault(u => u.Id == order.ClientId);
             var worker = context.User.FirstOrDefault(u => u.Id == order.WorkerId);
             string courierName = null;
+            DateTime? deliveryStart = null;
+            DateTime? deliveryEnd = null;
+            string deliveryDescription = null;
+
             if (order.DeliveryId.HasValue)
             {
                 var delivery = context.Delivery.FirstOrDefault(d => d.Id == order.DeliveryId);
@@ -59,6 +66,9 @@ namespace MedicalShopDiaShop.MainView.Pages
                 {
                     var courier = context.User.FirstOrDefault(u => u.Id == delivery.CourierId);
                     courierName = courier != null ? $"{courier.LastName} {courier.FirstName}" : null;
+                    deliveryStart = delivery.StartDate;
+                    deliveryEnd = delivery.EndDate;
+                    deliveryDescription = delivery.Description;
                 }
             }
 
@@ -79,6 +89,9 @@ namespace MedicalShopDiaShop.MainView.Pages
                 ClientFullName = client != null ? $"{client.LastName} {client.FirstName}" : "Неизвестно",
                 WorkerFullName = worker != null ? $"{worker.LastName} {worker.FirstName}" : "Неизвестно",
                 CourierFullName = courierName,
+                DeliveryStartDate = deliveryStart,
+                DeliveryEndDate = deliveryEnd,
+                DeliveryDescription = deliveryDescription,
                 Status = order.Status,
                 TotalCost = order.TotalCost,
                 DeliveryType = order.DeliveryType,
@@ -87,13 +100,78 @@ namespace MedicalShopDiaShop.MainView.Pages
             };
         }
 
-        private void RefreshOrdersList()
+        #endregion
+
+        #region Изменение статуса заказа
+
+        private async void OrderStatus_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            OrdersListView.ItemsSource = null;
-            OrdersListView.ItemsSource = _filteredOrders;
-            OrdersListBox.ItemsSource = null;
-            OrdersListBox.ItemsSource = _filteredOrders;
+            var combo = sender as ComboBox;
+            if (combo == null) return;
+
+            int orderId = (int)combo.Tag;
+            int newStatus = int.Parse(((ComboBoxItem)combo.SelectedItem).Tag.ToString());
+
+            using (var context = new DiaShopEntities3())
+            {
+                var order = context.Order.FirstOrDefault(o => o.Id == orderId);
+                if (order == null) return;
+
+                int oldStatus = order.Status;
+                if (oldStatus == newStatus) return;
+
+                order.Status = newStatus;
+
+                context.OrderHistory.Add(new OrderHistory
+                {
+                    OrderId = order.Id,
+                    OldStatus = oldStatus,
+                    NewStatus = newStatus,
+                    UpdateAt = DateTime.Now,
+                    FromUserId = App.currentUser.Id,
+                    ToUserId = null
+                });
+
+                if (newStatus == (int)OrderStatus.WaitCourier && !order.DeliveryId.HasValue)
+                {
+                    var delivery = new Delivery
+                    {
+                        StartDate = DateTime.Now,
+                        EndDate = DateTime.Now.AddDays(3),
+                        CourierId = 8,
+                        Description = $"Доставка заказа №{order.Id}"
+                    };
+                    context.Delivery.Add(delivery);
+                    await context.SaveChangesAsync();
+                    order.DeliveryId = delivery.Id;
+                }
+
+                await context.SaveChangesAsync();
+            }
+
+            var updatedOrder = _allOrders.FirstOrDefault(o => o.Id == orderId);
+            if (updatedOrder != null) updatedOrder.Status = newStatus;
+            RefreshOrdersList();
+
+            FeedbackService.Information($"Статус заказа №{orderId} изменён на {GetStatusName(newStatus)}");
         }
+
+        private string GetStatusName(int statusId)
+        {
+            switch (statusId)
+            {
+                case (int)OrderStatus.InProcess: return "В обработке";
+                case (int)OrderStatus.WaitCourier: return "Ожидает курьера";
+                case (int)OrderStatus.Delivered: return "Доставлен";
+                case (int)OrderStatus.WaitPayment: return "Ожидает оплаты";
+                case (int)OrderStatus.InHistory: return "В истории";
+                default: return "Неизвестно";
+            }
+        }
+
+        #endregion
+
+        #region Фильтр, поиск, обновление
 
         private void StatusFilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -124,6 +202,18 @@ namespace MedicalShopDiaShop.MainView.Pages
             RefreshOrdersList();
         }
 
+        private void RefreshOrdersList()
+        {
+            OrdersListView.ItemsSource = null;
+            OrdersListView.ItemsSource = _filteredOrders;
+            OrdersListBox.ItemsSource = null;
+            OrdersListBox.ItemsSource = _filteredOrders;
+        }
+
+        #endregion
+
+        #region CRUD операции
+
         private void AddBtn_Click(object sender, RoutedEventArgs e)
         {
             var window = new AddEditOrderWindow();
@@ -152,6 +242,7 @@ namespace MedicalShopDiaShop.MainView.Pages
                 FeedbackService.Warning("Выберите заказ для удаления.");
                 return;
             }
+
             if (FeedbackService.Question($"Удалить заказ №{selected.Id}?") == MessageBoxResult.Yes)
             {
                 using (var context = new DiaShopEntities3())
@@ -163,6 +254,11 @@ namespace MedicalShopDiaShop.MainView.Pages
                         context.ProductOrder.RemoveRange(productOrders);
                         var history = context.OrderHistory.Where(oh => oh.OrderId == order.Id);
                         context.OrderHistory.RemoveRange(history);
+                        if (order.DeliveryId.HasValue)
+                        {
+                            var delivery = context.Delivery.Find(order.DeliveryId);
+                            if (delivery != null) context.Delivery.Remove(delivery);
+                        }
                         context.Order.Remove(order);
                         context.SaveChanges();
                     }
@@ -176,6 +272,10 @@ namespace MedicalShopDiaShop.MainView.Pages
         {
             return _filteredOrders?.FirstOrDefault(o => o.IsSelected);
         }
+
+        #endregion
+
+        #region Переключение вида
 
         private void ListViewOnBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -201,6 +301,10 @@ namespace MedicalShopDiaShop.MainView.Pages
             activeButton.BorderThickness = new Thickness(2);
         }
 
+        #endregion
+
+        #region Детали заказа
+
         private void Details_Click(object sender, RoutedEventArgs e)
         {
             var btn = sender as Button;
@@ -211,5 +315,7 @@ namespace MedicalShopDiaShop.MainView.Pages
                 window.ShowDialog();
             }
         }
+
+        #endregion
     }
 }

@@ -1,4 +1,5 @@
-﻿using MedicalShopDiaShop.Database;
+﻿using MedicalShopDiaShop.AppData;
+using MedicalShopDiaShop.Database;
 using System;
 using System.Linq;
 using System.Windows;
@@ -33,7 +34,7 @@ namespace MedicalShopDiaShop.MainView
                 _editingStore = App.context.Store.FirstOrDefault(s => s.Id == _supplierId.Value);
                 if (_editingStore == null)
                 {
-                    MessageBox.Show("Поставщик не найден.");
+                    FeedbackService.Error("Поставщик не найден.");
                     Close();
                     return;
                 }
@@ -60,7 +61,7 @@ namespace MedicalShopDiaShop.MainView
                 string.IsNullOrWhiteSpace(AddressTb.Text) ||
                 CityComboBox.SelectedValue == null)
             {
-                MessageBox.Show("Заполните все поля.");
+                FeedbackService.Error("Заполните все поля.");
                 return;
             }
 

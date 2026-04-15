@@ -65,7 +65,7 @@
                 <GroupBox.Header>
                     <TextBlock Text="Статус" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
                 </GroupBox.Header>
-                <ComboBox SelectedValue="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                <ComboBox Name="StatusFilterComboBox" SelectedValue="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   SelectedValuePath="Tag" DisplayMemberPath="Content"
                   SelectionChanged="OrderStatus_SelectionChanged"
                   Tag="{Binding Id}" Width="auto" FontSize="18">
