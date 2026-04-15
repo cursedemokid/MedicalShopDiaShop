@@ -98,11 +98,6 @@
                             Content="Войти" Click="EnterBtn_Click" FontFamily="{StaticResource GothamProFamily}" 
                             FontSize="20" Width="280"/>
 
-                    <!-- Регистрация -->
-                    <TextBlock Name="RegistrationBtn" Grid.Row="10" Text="Регистрация" Grid.ColumnSpan="5" 
-                               HorizontalAlignment="Center" Foreground="MediumPurple" 
-                               MouseDown="RegistrationBtn_MouseDown" FontFamily="{StaticResource GothamProFamily}" 
-                               FontSize="20" Cursor="Hand"/>
                 </Grid>
             </Grid>
         </Border>
