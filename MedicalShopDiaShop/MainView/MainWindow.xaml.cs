@@ -50,6 +50,7 @@ namespace MedicalShopDiaShop.MainView
             MainFrame.Navigate(new ProfilePage());
             SetActiveButton("Profile");
             LoadNotifications();
+            LoadUserInfo();
             UpdateNotificationBadge();
         }
 
@@ -348,6 +349,35 @@ namespace MedicalShopDiaShop.MainView
             while (child != null && !(child is T))
                 child = VisualTreeHelper.GetParent(child);
             return child as T;
+        }
+
+        private void LoadUserInfo()
+        {
+            var user = App.currentUser;
+            if (user != null)
+            {
+                // Формируем ФИО
+                string fullName = $"{user.LastName} {user.FirstName}";
+                if (!string.IsNullOrEmpty(user.MiddleName))
+                    fullName += $" {user.MiddleName}";
+                FullNameTbl.Text = fullName;
+
+                // Загружаем аватар (если нет – остаётся иконка по умолчанию)
+                string avatarPath = string.IsNullOrEmpty(user.AvatarKey)
+                    ? "/Resources/ProfileIcon.png"
+                    : $"/Resources/Avatars/{user.AvatarKey}";
+                try
+                {
+                    UserAvatarImg.Source = new System.Windows.Media.Imaging.BitmapImage(
+                        new Uri(avatarPath, UriKind.Relative));
+                }
+                catch
+                {
+                    // Если файл не найден – оставляем иконку по умолчанию
+                    UserAvatarImg.Source = new System.Windows.Media.Imaging.BitmapImage(
+                        new Uri("/Resources/ProfileIcon.png", UriKind.Relative));
+                }
+            }
         }
     }
 
