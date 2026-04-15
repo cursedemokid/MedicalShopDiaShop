@@ -65,12 +65,15 @@
                 <GroupBox.Header>
                     <TextBlock Text="Статус" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
                 </GroupBox.Header>
-                <ComboBox x:Name="StatusFilterComboBox" SelectedIndex="-1" SelectionChanged="StatusFilterComboBox_SelectionChanged">
-                    <ComboBoxItem Tag="1">В обработке</ComboBoxItem>
-                    <ComboBoxItem Tag="2">Ожидает курьера</ComboBoxItem>
-                    <ComboBoxItem Tag="3">Доставлен</ComboBoxItem>
-                    <ComboBoxItem Tag="4">Ожидает оплаты</ComboBoxItem>
-                    <ComboBoxItem Tag="5">В истории</ComboBoxItem>
+                <ComboBox SelectedValue="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                  SelectedValuePath="Tag" DisplayMemberPath="Content"
+                  SelectionChanged="OrderStatus_SelectionChanged"
+                  Tag="{Binding Id}" Width="auto" FontSize="18">
+                    <ComboBoxItem Content="В обработке" Tag="1"/>
+                    <ComboBoxItem Content="Ожидает курьера" Tag="2"/>
+                    <ComboBoxItem Content="Доставлен" Tag="3"/>
+                    <ComboBoxItem Content="Ожидает оплаты" Tag="4"/>
+                    <ComboBoxItem Content="В истории" Tag="5"/>
                 </ComboBox>
             </GroupBox>
 
@@ -118,7 +121,22 @@
                         <GridViewColumn Header="Собирал" DisplayMemberBinding="{Binding WorkerFullName}" Width="auto"/>
                         <GridViewColumn Header="Доставлял" DisplayMemberBinding="{Binding CourierFullName}" Width="auto"/>
                         <GridViewColumn Header="Доставка" DisplayMemberBinding="{Binding DeliveryTypeName}" Width="auto"/>
-                        <GridViewColumn Header="Статус" DisplayMemberBinding="{Binding StatusName}" Width="auto"/>
+                        <GridViewColumn Header="Статус" Width="auto">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ComboBox SelectedValue="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      SelectedValuePath="Tag" DisplayMemberPath="Content"
+                      SelectionChanged="OrderStatus_SelectionChanged"
+                      Tag="{Binding Id}" Width="140">
+                                        <ComboBoxItem Content="В обработке" Tag="1"/>
+                                        <ComboBoxItem Content="Ожидает курьера" Tag="2"/>
+                                        <ComboBoxItem Content="Доставлен" Tag="3"/>
+                                        <ComboBoxItem Content="Ожидает оплаты" Tag="4"/>
+                                        <ComboBoxItem Content="В истории" Tag="5"/>
+                                    </ComboBox>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
                         <GridViewColumn Header="Сумма" DisplayMemberBinding="{Binding TotalCost, StringFormat='{}{0:N2} ₽'}" Width="auto"/>
                         <GridViewColumn Width="auto">
                             <GridViewColumn.CellTemplate>
