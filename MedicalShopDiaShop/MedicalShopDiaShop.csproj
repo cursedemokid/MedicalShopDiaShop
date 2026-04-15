@@ -159,6 +159,7 @@
     </ApplicationDefinition>
     <Compile Include="AppData\CalendarScheduleBehavior.cs" />
     <Compile Include="AppData\FeedbackService.cs" />
+    <Compile Include="AppData\NotificationHelper.cs" />
     <Compile Include="AppData\ProductWithFavorite.cs" />
     <Compile Include="AppData\Status.cs" />
     <Compile Include="Database\Delivery.cs">
@@ -221,8 +222,14 @@
     <Compile Include="MainView\AddEditProductWindow.xaml.cs">
       <DependentUpon>AddEditProductWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MainView\AddEditScheduleWindow.xaml.cs">
+      <DependentUpon>AddEditScheduleWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MainView\AddEditSupplierWindow.xaml.cs">
       <DependentUpon>AddEditSupplierWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainView\AddEditTaskWindow.xaml.cs">
+      <DependentUpon>AddEditTaskWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainView\AddEditUserWindow.xaml.cs">
       <DependentUpon>AddEditUserWindow.xaml</DependentUpon>
@@ -280,7 +287,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="MainView\AddEditScheduleWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainView\AddEditSupplierWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainView\AddEditTaskWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

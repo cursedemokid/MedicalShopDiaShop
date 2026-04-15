@@ -186,7 +186,7 @@ namespace MedicalShopDiaShop.MainView.Pages
                 EditBtn.Content = "Изменить поставщика";
                 DeleteBtn.Content = "Удалить поставщика";
                 // Подсветка кнопок
-                SuppliersModeBtn.Background = Brushes.DeepPink;
+                SuppliersModeBtn.Background = Brushes.Purple;
                 SuppliesModeBtn.Background = Brushes.Transparent;
                 // Обновляем список
                 ApplyFilterAndSearch();
@@ -202,7 +202,7 @@ namespace MedicalShopDiaShop.MainView.Pages
                 EditBtn.Content = "Изменить поставку";
                 DeleteBtn.Content = "Удалить поставку";
                 SuppliersModeBtn.Background = Brushes.Transparent;
-                SuppliesModeBtn.Background = Brushes.DeepPink;
+                SuppliesModeBtn.Background = Brushes.Purple;
                 // Обновляем список поставок
                 ApplySupplyFilterAndSearch();
                 SuppliesListBox.ItemsSource = _filteredSupplies;
@@ -279,8 +279,7 @@ namespace MedicalShopDiaShop.MainView.Pages
                     FeedbackService.Warning("Выберите поставщика для удаления.");
                     return;
                 }
-                if (MessageBox.Show($"Удалить поставщика {selected.Name}?", "Подтверждение",
-                    MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                if (FeedbackService.Question($"Удалить поставщика {selected.Name}?", "Подтверждение") == MessageBoxResult.Yes)
                 {
                     var dbStore = App.context.Store.FirstOrDefault(s => s.Id == selected.Id);
                     if (dbStore != null)
@@ -300,8 +299,7 @@ namespace MedicalShopDiaShop.MainView.Pages
                     FeedbackService.Warning("Выберите поставку для удаления.");
                     return;
                 }
-                if (MessageBox.Show($"Удалить поставку №{selected.Id}?", "Подтверждение",
-                    MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                if (FeedbackService.Question($"Удалить поставку №{selected.Id}?", "Подтверждение") == MessageBoxResult.Yes)
                 {
                     var dbSupply = App.context.Supply.FirstOrDefault(s => s.Id == selected.Id);
                     if (dbSupply != null)

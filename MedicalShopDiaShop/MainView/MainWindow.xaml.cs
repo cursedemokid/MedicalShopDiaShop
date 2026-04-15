@@ -1,7 +1,10 @@
 ﻿using MedicalShopDiaShop.AppData;
+using MedicalShopDiaShop.Database;
 using MedicalShopDiaShop.MainView.Pages;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -14,6 +17,10 @@ namespace MedicalShopDiaShop.MainView
     {
         private Dictionary<string, (Button Maximized, Button Minimized, Button Visual)> _buttonPairs;
         private string _currentActiveKey;
+        private int _currentNotificationPage = 1;
+        private const int NotificationPageSize = 5;
+        private int _totalNotificationsCount = 0;
+        private ObservableCollection<NotificationItem> _notifications;
         public MainWindow()
         {
             InitializeComponent();
@@ -40,7 +47,10 @@ namespace MedicalShopDiaShop.MainView
                     pair.Visual.Visibility = Visibility.Hidden;
             }
 
+            MainFrame.Navigate(new ProfilePage());
             SetActiveButton("Profile");
+            LoadNotifications();
+            UpdateNotificationBadge();
         }
 
         private void SetActiveButton(string key)
@@ -235,12 +245,118 @@ namespace MedicalShopDiaShop.MainView
 
         private void NextNotificationPageBtn_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: реализовать пагинацию уведомлений
+            int maxPage = (int)Math.Ceiling((double)_totalNotificationsCount / NotificationPageSize);
+            if (_currentNotificationPage < maxPage)
+            {
+                _currentNotificationPage++;
+                LoadNotifications(_currentNotificationPage);
+            }
         }
 
         private void PreviousNotificationPageBtn_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: реализовать пагинацию уведомлений
+            if (_currentNotificationPage > 1)
+            {
+                _currentNotificationPage--;
+                LoadNotifications(_currentNotificationPage);
+            }
         }
+
+        private void LoadNotifications(int page = 1)
+        {
+            using (var context = new DiaShopEntities3())
+            {
+                var query = context.Notification
+                    .Where(n => n.UserId == App.currentUser.Id)
+                    .OrderByDescending(n => n.Id); // порядок по убыванию Id (новые сверху)
+
+                _totalNotificationsCount = query.Count();
+                var items = query
+                    .Skip((page - 1) * NotificationPageSize)
+                    .Take(NotificationPageSize)
+                    .Select(n => new NotificationItem
+                    {
+                        Id = n.Id,
+                        Text = n.Text,
+                        IsRead = n.IsRead
+                    })
+                    .ToList();
+
+                _notifications = new ObservableCollection<NotificationItem>(items);
+                NotificationListBox.ItemsSource = _notifications;
+                // обновить номер страницы в TextBox
+                PageNumberTextBox.Text = page.ToString();
+            }
+        }
+
+        public void UpdateNotificationBadge()
+        {
+            using (var context = new DiaShopEntities3())
+            {
+                int unreadCount = context.Notification.Count(n => n.UserId == App.currentUser.Id && !n.IsRead);
+                NotificationCheck.Visibility = unreadCount > 0 ? Visibility.Visible : Visibility.Collapsed;
+            }
+        }
+
+        private void NotificationListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (NotificationListBox.SelectedItem is NotificationItem selected)
+            {
+                // Помечаем как прочитанное
+                using (var context = new DiaShopEntities3())
+                {
+                    var dbNotification = context.Notification.Find(selected.Id);
+                    if (dbNotification != null && !dbNotification.IsRead)
+                    {
+                        dbNotification.IsRead = true;
+                        context.SaveChanges();
+                    }
+                }
+                selected.IsRead = true;
+                // Обновляем отображение (можно перезагрузить страницу или обновить элемент)
+                var listBox = sender as ListBox;
+                listBox.Items.Refresh();
+                UpdateNotificationBadge();
+            }
+        }
+
+        private void Notification_MouseEnter(object sender, MouseEventArgs e)
+        {
+            var grid = sender as Grid;
+            var notification = grid?.DataContext as NotificationItem;
+            if (notification != null && !notification.IsRead)
+            {
+                using (var context = new DiaShopEntities3())
+                {
+                    var dbNotif = context.Notification.Find(notification.Id);
+                    if (dbNotif != null) dbNotif.IsRead = true;
+                    context.SaveChanges();
+                }
+                notification.IsRead = true;
+                var listBoxItem = FindVisualParent<ListBoxItem>(grid);
+                if (listBoxItem != null)
+                {
+                    var listBox = ItemsControl.ItemsControlFromItemContainer(listBoxItem) as ListBox;
+                    listBox?.Items.Refresh();
+                }
+                UpdateNotificationBadge();
+            }
+        }
+
+        private T FindVisualParent<T>(DependencyObject child) where T : DependencyObject
+        {
+            while (child != null && !(child is T))
+                child = VisualTreeHelper.GetParent(child);
+            return child as T;
+        }
+    }
+
+    public class NotificationItem
+    {
+        public int Id { get; set; }
+        public string Text { get; set; }
+        public DateTime CreatedAt { get; set; } // если нет в БД, можно добавить поле CreatedAt, иначе использовать Id как порядок
+        public bool IsRead { get; set; }
+        public Visibility UnreadVisibility => IsRead ? Visibility.Collapsed : Visibility.Visible;
     }
 }

@@ -214,6 +214,10 @@ namespace MedicalShopDiaShop.MainView
             }
             _context.SaveChanges();
 
+            // Уведомление для всех сотрудников магазина
+            string supplyText = $"Создана новая поставка №{CurrentSupply.Id} от поставщика {SelectedSupplier.Name} на сумму {CurrentSupply.TotalCost:N2} ₽";
+            NotificationHelper.NotifyAllStoreEmployees(App.currentUser.StoreId, supplyText, supplyId: CurrentSupply.Id);
+
             FeedbackService.Information("Поставка успешно создана.");
             DialogResult = true;
             Close();

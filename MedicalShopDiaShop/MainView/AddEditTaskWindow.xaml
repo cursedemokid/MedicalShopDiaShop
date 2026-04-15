@@ -1,0 +1,89 @@
+﻿<Window x:Class="MedicalShopDiaShop.MainView.AddEditTaskWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MedicalShopDiaShop.MainView"
+        mc:Ignorable="d"
+        Title="Задача" Height="720" Width="1280" MinHeight="570" MinWidth="770"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
+    <Grid>
+        <Image Source="/Resources/BackgroundPatternPurple.png" Stretch="Fill"/>
+
+        <Border CornerRadius="20" BorderThickness="1" BorderBrush="White" Background="White"
+                HorizontalAlignment="Center" VerticalAlignment="Center" Padding="20">
+            <Grid Width="700" Margin="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Заголовок -->
+                <TextBlock Grid.Row="0" Grid.ColumnSpan="3" x:Name="TitleText" Text="Новая задача"
+                           FontSize="22" FontWeight="Bold" FontFamily="{StaticResource GothamProFamily}"
+                           HorizontalAlignment="Center"/>
+
+                <!-- Описание -->
+                <TextBlock Grid.Row="2" Text="Описание" FontSize="18" FontFamily="{StaticResource GothamProFamily}"
+                           VerticalAlignment="Top"/>
+                <Border Grid.Row="2" Grid.Column="2" BorderThickness="1" BorderBrush="Black" CornerRadius="5">
+                    <TextBox x:Name="DescriptionTb" FontSize="18" FontFamily="{StaticResource GothamProFamily}"
+                             TextWrapping="Wrap" AcceptsReturn="True" Height="100" VerticalScrollBarVisibility="Auto"/>
+                </Border>
+
+                <!-- Сотрудник -->
+                <TextBlock Grid.Row="4" Text="Сотрудник" FontSize="18" FontFamily="{StaticResource GothamProFamily}"
+                           VerticalAlignment="Center"/>
+                <Border Grid.Row="4" Grid.Column="2" BorderThickness="1" BorderBrush="Black" CornerRadius="5">
+                    <ComboBox x:Name="UserCmb" FontSize="18" FontFamily="{StaticResource GothamProFamily}"
+                              DisplayMemberPath="FullName" SelectedValuePath="Id" IsEnabled="False"/>
+                </Border>
+
+                <!-- Начало -->
+                <TextBlock Grid.Row="6" Text="Начало" FontSize="18" FontFamily="{StaticResource GothamProFamily}"
+                           VerticalAlignment="Center"/>
+                <Border Grid.Row="6" Grid.Column="2" BorderThickness="1" BorderBrush="Black" CornerRadius="5">
+                    <DatePicker x:Name="StartDatePicker" FontSize="18" FontFamily="{StaticResource GothamProFamily}"/>
+                </Border>
+
+                <!-- Дедлайн -->
+                <TextBlock Grid.Row="8" Text="Дедлайн" FontSize="18" FontFamily="{StaticResource GothamProFamily}"
+                           VerticalAlignment="Center"/>
+                <Border Grid.Row="8" Grid.Column="2" BorderThickness="1" BorderBrush="Black" CornerRadius="5">
+                    <DatePicker x:Name="DeadlinePicker" FontSize="18" FontFamily="{StaticResource GothamProFamily}"/>
+                </Border>
+
+                <!-- Кнопки -->
+                <Grid Grid.Row="12" Grid.ColumnSpan="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="1" x:Name="SaveBtn" Content="Сохранить" Height="35" Width="120"
+                            Click="SaveBtn_Click" FontSize="18" FontFamily="{StaticResource GothamProFamily}"/>
+                    <Button Grid.Column="3" x:Name="CancelBtn" Content="Отмена" Height="35" Width="120"
+                            Click="CancelBtn_Click" FontSize="18" FontFamily="{StaticResource GothamProFamily}"/>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

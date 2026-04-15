@@ -126,8 +126,8 @@
                         <ColumnDefinition Width="5" />
                         <ColumnDefinition Width="auto" />
                     </Grid.ColumnDefinitions>
-                    <Image Source="/Resources/ProfileIcon.png" Height="50" VerticalAlignment="Center"/>
-                    <TextBlock Foreground="Black" Grid.Column="2" Text="Профиль" FontFamily="{StaticResource GothamProFamily}" VerticalAlignment="Center" FontSize="20"/>
+                    <Image Name="UserAvatarImg" Source="/Resources/ProfileIcon.png" Height="50" VerticalAlignment="Center"/>
+                    <TextBlock Name="FullNameTbl" Foreground="Black" Grid.Column="2" Text="Профиль" FontFamily="{StaticResource GothamProFamily}" VerticalAlignment="Center" FontSize="20"/>
                 </Grid>
             </Grid>
 
@@ -406,16 +406,17 @@
                 <RowDefinition Height="50" />
             </Grid.RowDefinitions>
             <TextBlock Text="Уведомления" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Margin="10 0 0 0"/>
-            <ListBox Name="NotificationListBox" Grid.Row="2">
+            <ListBox Name="NotificationListBox" Grid.Row="2" SelectionChanged="NotificationListBox_SelectionChanged">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Grid Margin="10">
+                        <Grid Margin="10" MouseEnter="Notification_MouseEnter">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="10" />
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
-                            <Ellipse HorizontalAlignment="Right" VerticalAlignment="Top" Fill="Blue" Height="10" Width="10" Visibility="{Binding Visibility}"/>
+                            <Ellipse HorizontalAlignment="Right" VerticalAlignment="Top" Fill="Red" Height="10" Width="10" 
+                                    Visibility="{Binding UnreadVisibility}"/>
                             <TextBlock Grid.Row="0" Text="Заголовок" FontFamily="{StaticResource GothamProFamily}" FontSize="20" FontWeight="Bold" TextWrapping="Wrap"/>
                             <TextBlock Grid.Row="2" Text="10 минут назад" FontFamily="{StaticResource GothamProFamily}" FontSize="15" FontWeight="Light" TextWrapping="Wrap"/>
                         </Grid>
@@ -435,7 +436,7 @@
                 <Button Name="PreviousNotificationPageBtn" Grid.Column="1" Click="PreviousNotificationPageBtn_Click">
                     <Image Source="/Resources/left-arrow.png" />
                 </Button>
-                <TextBox Grid.Column="3" Width="70" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Text="1" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
+                <TextBox Name="PageNumberTextBox" Grid.Column="3" Width="70" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Text="1" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
                 <Button Name="NextNotificationPageBtn" Grid.Column="5" Click="NextNotificationPageBtn_Click">
                     <Image Source="/Resources/left-arrow.png" RenderTransformOrigin="0.5,0.5">
                         <Image.RenderTransform>

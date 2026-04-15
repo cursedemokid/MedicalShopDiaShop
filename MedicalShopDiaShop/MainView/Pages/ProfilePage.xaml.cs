@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using MedicalShopDiaShop.AppData;
 using MedicalShopDiaShop.Database;
 using static MedicalShopDiaShop.AppData.Status;
 
@@ -13,10 +15,22 @@ namespace MedicalShopDiaShop.MainView.Pages
     public partial class ProfilePage : Page
     {
         private Database.User _displayedUser;
+        private bool _isAdmin => App.currentUser.Role == (int)Role.Admin;
 
-        // Свойства для привязки расписания
+        // Для расписания
         public IEnumerable<DateTime> ScheduledDates { get; set; }
         public Func<DateTime, object> ScheduleToolTipSelector { get; set; }
+        private ObservableCollection<ScheduleItem> _schedulesForSelectedDate;
+
+        // Для задач
+        private int _tasksCurrentPage = 1;
+        private int _tasksTotalPages = 1;
+        private const int TasksPageSize = 4;
+        private ObservableCollection<TaskItem> _taskItems;
+
+        // Для истории покупок
+        private List<OrderHistoryItem> _allHistory;
+        private ObservableCollection<OrderHistoryItem> _filteredHistory;
 
         public ProfilePage()
         {
@@ -45,21 +59,25 @@ namespace MedicalShopDiaShop.MainView.Pages
             {
                 ClientProfileGrid.Visibility = Visibility.Visible;
                 EmployeeProfileGrid.Visibility = Visibility.Collapsed;
-                ClientTextBlock.Visibility = Visibility.Visible;
-                AddressTextBlock.Visibility = Visibility.Visible;
                 LoadClientHistory();
             }
             else
             {
                 ClientProfileGrid.Visibility = Visibility.Collapsed;
                 EmployeeProfileGrid.Visibility = Visibility.Visible;
-                ClientTextBlock.Visibility = Visibility.Collapsed;
-                AddressTextBlock.Visibility = Visibility.Collapsed;
                 LoadEmployeeScheduleAndTasks();
             }
 
-            ChangePasswordButton.Visibility = (App.currentUser.Id == userId || App.currentUser.Role == (int)Role.Admin)
-                ? Visibility.Visible : Visibility.Collapsed;
+            // Кнопки смены пароля
+            ChangePasswordButton.Visibility = (App.currentUser.Id == userId || _isAdmin) ? Visibility.Visible : Visibility.Collapsed;
+
+            // Кнопки управления расписанием и задачами видны только админу
+            AddScheduleBtn.Visibility = _isAdmin ? Visibility.Visible : Visibility.Collapsed;
+            EditScheduleBtn.Visibility = _isAdmin ? Visibility.Visible : Visibility.Collapsed;
+            DeleteScheduleBtn.Visibility = _isAdmin ? Visibility.Visible : Visibility.Collapsed;
+            AddTaskBtn.Visibility = _isAdmin ? Visibility.Visible : Visibility.Collapsed;
+            EditTaskBtn.Visibility = _isAdmin ? Visibility.Visible : Visibility.Collapsed;
+            DeleteTaskBtn.Visibility = _isAdmin ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void LoadPersonalInfo()
@@ -68,7 +86,6 @@ namespace MedicalShopDiaShop.MainView.Pages
             if (!string.IsNullOrEmpty(_displayedUser.MiddleName))
                 fullName += $" {_displayedUser.MiddleName}";
             FullNameTextBlock.Text = fullName;
-
             UserNameTextBlock.Text = _displayedUser.UserName;
             RoleTextBlock.Text = GetRoleName(_displayedUser.Role);
 
@@ -94,6 +111,8 @@ namespace MedicalShopDiaShop.MainView.Pages
             }
         }
 
+        #region Клиент: история покупок
+
         private void LoadClientHistory()
         {
             var orders = App.context.Order
@@ -101,8 +120,7 @@ namespace MedicalShopDiaShop.MainView.Pages
                 .OrderByDescending(o => o.DateTime)
                 .ToList();
 
-            var history = new ObservableCollection<OrderHistoryItem>();
-
+            _allHistory = new List<OrderHistoryItem>();
             foreach (var order in orders)
             {
                 var orderItems = App.context.ProductOrder
@@ -113,109 +131,268 @@ namespace MedicalShopDiaShop.MainView.Pages
                         Name = po.Product.Name,
                         Quantity = po.Quantity,
                         PricePerUnit = po.Price
-                    })
-                    .ToList();
+                    }).ToList();
 
-                var total = orderItems.Sum(i => i.TotalPrice);
-
-                history.Add(new OrderHistoryItem
+                _allHistory.Add(new OrderHistoryItem
                 {
                     OrderDate = order.DateTime,
                     Items = new ObservableCollection<OrderItem>(orderItems),
-                    TotalOrderPrice = total,
+                    TotalOrderPrice = orderItems.Sum(i => i.TotalPrice),
                     ViewDetailsCommand = new RelayCommand(() => ShowDetails($"Заказ №{order.Id}"))
                 });
             }
-
-            HistoryListBox.ItemsSource = history;
+            ApplyHistoryFilterAndSort();
         }
+
+        private void ApplyHistoryFilterAndSort()
+        {
+            var query = _allHistory.AsEnumerable();
+
+            // Фильтр по дате
+            if (HistoryDateFilter.SelectedDate.HasValue)
+                query = query.Where(h => h.OrderDate.Date == HistoryDateFilter.SelectedDate.Value.Date);
+
+            // Поиск по тексту (если добавить поле поиска)
+            if (!string.IsNullOrWhiteSpace(HistorySearchBox.Text))
+            {
+                string search = HistorySearchBox.Text.ToLower();
+                query = query.Where(h => h.Items.Any(i => i.Name.ToLower().Contains(search)));
+            }
+
+            // Сортировка
+            if (OrderByCmb.SelectedItem is ComboBoxItem selected && selected.Tag is string sort)
+            {
+                if (sort == "Date")
+                    query = query.OrderByDescending(h => h.OrderDate);
+                else if (sort == "Cost")
+                    query = query.OrderByDescending(h => h.TotalOrderPrice);
+                else
+                    query = query.OrderByDescending(h => h.OrderDate);
+            }
+            else
+                query = query.OrderByDescending(h => h.OrderDate);
+
+            _filteredHistory = new ObservableCollection<OrderHistoryItem>(query);
+            HistoryListBox.ItemsSource = _filteredHistory;
+        }
+
+        private void HistorySearch_Click(object sender, RoutedEventArgs e) => ApplyHistoryFilterAndSort();
+        private void OrderByCmb_SelectionChanged(object sender, SelectionChangedEventArgs e) => ApplyHistoryFilterAndSort();
+        private void HistoryDateFilter_SelectedDateChanged(object sender, SelectionChangedEventArgs e) => ApplyHistoryFilterAndSort();
+
+        #endregion
+
+        #region Сотрудник: расписание
 
         private void LoadEmployeeScheduleAndTasks()
         {
-            // --- Задачи (без изменений) ---
-            var tasks = App.context.Task
-                .Where(t => t.UserId == _displayedUser.Id)
-                .OrderBy(t => t.StartAt)
-                .ToList();
+            LoadSchedules();
+            LoadTasks(1);
+        }
 
-            var taskItems = new ObservableCollection<TaskItem>();
-            foreach (var task in tasks)
-            {
-                var author = App.context.User.FirstOrDefault(u => u.Id == task.AuthorId);
-                string authorName = author != null ? author.UserName : "Неизвестно";
-
-                taskItems.Add(new TaskItem
-                {
-                    Title = task.Description,
-                    StartDate = task.StartAt,
-                    Deadline = task.Deadline ?? task.EndAt,
-                    IsCompleted = task.IsCompleted,
-                    AuthorName = authorName
-                });
-            }
-            TasksListBox.ItemsSource = taskItems;
-
-            // --- Загрузка расписания ---
+        private void LoadSchedules()
+        {
             var schedules = App.context.Schedule
                 .Where(s => s.UserId == _displayedUser.Id)
                 .ToList();
 
-            // Уникальные даты
             ScheduledDates = schedules.Select(s => s.DateStart.Date).Distinct().ToList();
 
-            // Функция создания ToolTip для конкретной даты
             ScheduleToolTipSelector = date =>
             {
-                var daySchedules = schedules
-                    .Where(s => s.DateStart.Date == date)
-                    .OrderBy(s => s.DateStart)
-                    .ToList();
-
-                if (!daySchedules.Any())
-                    return null;
-
+                var daySchedules = schedules.Where(s => s.DateStart.Date == date).OrderBy(s => s.DateStart).ToList();
+                if (!daySchedules.Any()) return null;
                 var panel = new StackPanel();
-                panel.Children.Add(new TextBlock
-                {
-                    Text = date.ToString("dd MMMM yyyy"),
-                    FontWeight = FontWeights.Bold,
-                    Margin = new Thickness(0, 0, 0, 5)
-                });
-
+                panel.Children.Add(new TextBlock { Text = date.ToString("dd MMMM yyyy"), FontWeight = FontWeights.Bold, Margin = new Thickness(0, 0, 0, 5) });
                 foreach (var s in daySchedules)
                 {
-                    string startTime = s.DateStart.ToString("HH:mm");
-                    string endTime = s.DateStart.AddHours(s.Hours).ToString("HH:mm");
-                    panel.Children.Add(new TextBlock
-                    {
-                        Text = $"• {startTime} – {endTime}",
-                        Margin = new Thickness(0, 2, 0, 0)
-                    });
+                    panel.Children.Add(new TextBlock { Text = $"• {s.DateStart:HH:mm} – {s.DateStart.AddHours(s.Hours):HH:mm}", Margin = new Thickness(0, 2, 0, 0) });
                 }
-
                 return panel;
             };
-
-            // Устанавливаем DataContext для привязок (сама страница)
             DataContext = this;
+            ScheduleCalendar.SelectedDate = DateTime.Today;
+            UpdateSchedulesList(DateTime.Today);
         }
 
-        private string GetImagePath(string imageName)
+        private void ScheduleCalendar_SelectedDatesChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (string.IsNullOrEmpty(imageName))
-                return "/Resources/placeholder.png";
-            return imageName;
+            if (ScheduleCalendar.SelectedDate.HasValue)
+                UpdateSchedulesList(ScheduleCalendar.SelectedDate.Value);
         }
 
-        private void ShowDetails(string orderId)
+        private void UpdateSchedulesList(DateTime date)
         {
-            MessageBox.Show($"Открыть подробности: {orderId}");
+            var schedules = App.context.Schedule
+                .Where(s => s.UserId == _displayedUser.Id && s.DateStart.Date == date.Date)
+                .ToList();
+
+            _schedulesForSelectedDate = new ObservableCollection<ScheduleItem>(
+                schedules.Select(s => new ScheduleItem
+                {
+                    Id = s.Id,
+                    DateStart = s.DateStart,
+                    Hours = s.Hours,
+                    DisplayText = $"{s.DateStart:HH:mm} - {s.DateStart.AddHours(s.Hours):HH:mm} ({s.Hours} ч.)"
+                }));
+            SchedulesListBox.ItemsSource = _schedulesForSelectedDate;
         }
 
-        private void ChangePassword_Click(object sender, RoutedEventArgs e)
+        private void AddScheduleBtn_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Функция смены пароля будет здесь");
+            var window = new AddEditScheduleWindow(_displayedUser.Id);
+            if (window.ShowDialog() == true)
+                LoadSchedules();
         }
+
+        private void EditScheduleBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (SchedulesListBox.SelectedItem is ScheduleItem selected)
+            {
+                var window = new AddEditScheduleWindow(_displayedUser.Id, selected.Id);
+                if (window.ShowDialog() == true)
+                    LoadSchedules();
+            }
+            else
+                FeedbackService.Warning("Выберите смену для редактирования.");
+        }
+
+        private void DeleteScheduleBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (SchedulesListBox.SelectedItem is ScheduleItem selected)
+            {
+                if (FeedbackService.Question($"Удалить смену {selected.DisplayText}?") == MessageBoxResult.Yes)
+                {
+                    var dbSchedule = App.context.Schedule.Find(selected.Id);
+                    if (dbSchedule != null)
+                    {
+                        App.context.Schedule.Remove(dbSchedule);
+                        App.context.SaveChanges();
+                        LoadSchedules();
+                    }
+                }
+            }
+            else
+                FeedbackService.Warning("Выберите смену для удаления.");
+        }
+
+        #endregion
+
+        #region Сотрудник: задачи с пагинацией
+
+        private void LoadTasks(int page)
+        {
+            var query = App.context.Task
+                .Where(t => t.UserId == _displayedUser.Id)
+                .OrderByDescending(t => t.StartAt);
+
+            int totalCount = query.Count();
+            _tasksTotalPages = (int)Math.Ceiling((double)totalCount / TasksPageSize);
+            if (page < 1) page = 1;
+            if (page > _tasksTotalPages && _tasksTotalPages > 0) page = _tasksTotalPages;
+            _tasksCurrentPage = page;
+
+            var tasks = query
+                .Skip((page - 1) * TasksPageSize)
+                .Take(TasksPageSize)
+                .ToList();
+
+            _taskItems = new ObservableCollection<TaskItem>();
+            foreach (var task in tasks)
+            {
+                var author = App.context.User.FirstOrDefault(u => u.Id == task.AuthorId);
+                _taskItems.Add(new TaskItem
+                {
+                    Id = task.Id,
+                    Title = task.Description,
+                    StartDate = task.StartAt,
+                    Deadline = task.Deadline ?? task.EndAt,
+                    IsCompleted = task.IsCompleted,
+                    AuthorName = author?.UserName ?? "Неизвестно"
+                });
+            }
+            TasksListBox.ItemsSource = _taskItems;
+
+            TasksPageText.Text = $"{_tasksCurrentPage} / {(_tasksTotalPages == 0 ? 1 : _tasksTotalPages)}";
+            PrevTasksBtn.IsEnabled = _tasksCurrentPage > 1;
+            NextTasksBtn.IsEnabled = _tasksCurrentPage < _tasksTotalPages;
+        }
+
+        private void PrevTasksBtn_Click(object sender, RoutedEventArgs e) => LoadTasks(_tasksCurrentPage - 1);
+        private void NextTasksBtn_Click(object sender, RoutedEventArgs e) => LoadTasks(_tasksCurrentPage + 1);
+
+        private void AddTaskBtn_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new AddEditTaskWindow(_displayedUser.Id);
+            if (window.ShowDialog() == true)
+                LoadTasks(_tasksCurrentPage);
+        }
+
+        private void EditTaskBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (TasksListBox.SelectedItem is TaskItem selected)
+            {
+                var window = new AddEditTaskWindow(_displayedUser.Id, selected.Id);
+                if (window.ShowDialog() == true)
+                    LoadTasks(_tasksCurrentPage);
+            }
+            else
+                FeedbackService.Warning("Выберите задачу для редактирования.");
+        }
+
+        private void DeleteTaskBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (TasksListBox.SelectedItem is TaskItem selected)
+            {
+                if (FeedbackService.Question($"Удалить задачу \"{selected.Title}\"?") == MessageBoxResult.Yes)
+                {
+                    var dbTask = App.context.Task.Find(selected.Id);
+                    if (dbTask != null)
+                    {
+                        App.context.Task.Remove(dbTask);
+                        App.context.SaveChanges();
+                        LoadTasks(_tasksCurrentPage);
+                    }
+                }
+            }
+            else
+                FeedbackService.Warning("Выберите задачу для удаления.");
+        }
+
+        private void TaskCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            var cb = sender as CheckBox;
+            var task = cb?.DataContext as TaskItem;
+            if (task != null)
+                UpdateTaskCompletion(task.Id, true);
+        }
+
+        private void TaskCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            var cb = sender as CheckBox;
+            var task = cb?.DataContext as TaskItem;
+            if (task != null)
+                UpdateTaskCompletion(task.Id, false);
+        }
+
+        private void UpdateTaskCompletion(int taskId, bool isCompleted)
+        {
+            var dbTask = App.context.Task.Find(taskId);
+            if (dbTask != null)
+            {
+                dbTask.IsCompleted = isCompleted;
+                App.context.SaveChanges();
+                // Обновляем кэш
+                var item = _taskItems.FirstOrDefault(t => t.Id == taskId);
+                if (item != null) item.IsCompleted = isCompleted;
+            }
+        }
+
+        #endregion
+
+        private string GetImagePath(string imageName) => string.IsNullOrEmpty(imageName) ? "/Resources/placeholder.png" : imageName;
+        private void ShowDetails(string orderId) => MessageBox.Show($"Открыть подробности: {orderId}");
+        private void ChangePassword_Click(object sender, RoutedEventArgs e) => MessageBox.Show("Функция смены пароля будет здесь");
 
         public class RelayCommand : ICommand
         {
@@ -227,7 +404,7 @@ namespace MedicalShopDiaShop.MainView.Pages
         }
     }
 
-    // Классы моделей (оставьте как есть)
+    // Модели для отображения
     public class OrderHistoryItem
     {
         public ObservableCollection<OrderItem> Items { get; set; }
@@ -245,12 +422,30 @@ namespace MedicalShopDiaShop.MainView.Pages
         public decimal TotalPrice => PricePerUnit * Quantity;
     }
 
-    public class TaskItem
+    public class TaskItem : INotifyPropertyChanged
     {
+        public int Id { get; set; }
         public string Title { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime Deadline { get; set; }
-        public bool IsCompleted { get; set; }
+        private bool _isCompleted;
+        public bool IsCompleted
+        {
+            get => _isCompleted;
+            set { _isCompleted = value; OnPropertyChanged(); }
+        }
         public string AuthorName { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string name = null) =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+    }
+
+    public class ScheduleItem
+    {
+        public int Id { get; set; }
+        public DateTime DateStart { get; set; }
+        public int Hours { get; set; }
+        public string DisplayText { get; set; }
     }
 }
