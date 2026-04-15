@@ -132,5 +132,7 @@ namespace MedicalShopDiaShop.MainView
             LoginHeader.Foreground = System.Windows.Media.Brushes.Black;
             LoginErrorText.Visibility = Visibility.Collapsed;
         }
+
+
     }
 }
