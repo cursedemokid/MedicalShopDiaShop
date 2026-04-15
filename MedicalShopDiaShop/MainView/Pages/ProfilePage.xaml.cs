@@ -223,8 +223,12 @@ namespace MedicalShopDiaShop.MainView.Pages
 
         private void UpdateSchedulesList(DateTime date)
         {
-            var schedules = App.context.Schedule
-                .Where(s => s.UserId == _displayedUser.Id && s.DateStart.Date == date.Date)
+            var allSchedules = App.context.Schedule
+                .Where(s => s.UserId == _displayedUser.Id)
+                .ToList();
+
+            var schedules = allSchedules
+                .Where(s => s.DateStart.Date == date.Date)
                 .ToList();
 
             _schedulesForSelectedDate = new ObservableCollection<ScheduleItem>(
