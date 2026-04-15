@@ -166,11 +166,10 @@ namespace MedicalShopDiaShop.MainView.Pages
         private void Details_Click(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
-            var client = button?.Tag as EmployeeItem;
+            var client = button?.Tag as ClientItem; 
             if (client != null)
             {
-                // Получаем окно, содержащее текущую страницу
-                var mainWindow = Window.GetWindow(this) as MainWindow;
+                var mainWindow = Application.Current.MainWindow as MainWindow;
                 if (mainWindow != null)
                 {
                     mainWindow.MainFrame.Navigate(new ProfilePage(client.Id));
