@@ -48,7 +48,21 @@ namespace MedicalShopDiaShop.AppData
         }
         public enum City
         {
-
+            Moscow = 1,
+            SaintPetersburg = 2,
+            Novosibirsk = 3,
+            Yekaterinburg = 4,
+            Kazan = 5,
+            NizhnyNovgorod = 6,
+            Chelyabinsk = 7,
+            Omsk = 8,
+            RostovOnDon = 9,
+            Ufa = 10,
+            Krasnoyarsk = 11,
+            Perm = 12,
+            Voronezh = 13,
+            Volgograd = 14,
+            Krasnodar = 15
         }
         public enum StoreType
         {

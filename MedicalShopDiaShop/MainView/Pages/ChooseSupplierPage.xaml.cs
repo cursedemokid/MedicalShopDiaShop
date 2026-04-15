@@ -48,7 +48,25 @@ namespace MedicalShopDiaShop.MainView.Pages
 
         private string GetCityName(int cityId)
         {
-            return Enum.IsDefined(typeof(City), cityId) ? ((City)cityId).ToString() : "Неизвестно";
+            switch ((City)cityId)
+            {
+                case City.Moscow: return "Москва";
+                case City.SaintPetersburg: return "Санкт-Петербург";
+                case City.Novosibirsk: return "Новосибирск";
+                case City.Yekaterinburg: return "Екатеринбург";
+                case City.Kazan: return "Казань";
+                case City.NizhnyNovgorod: return "Нижний Новгород";
+                case City.Chelyabinsk: return "Челябинск";
+                case City.Omsk: return "Омск";
+                case City.RostovOnDon: return "Ростов-на-Дону";
+                case City.Ufa: return "Уфа";
+                case City.Krasnoyarsk: return "Красноярск";
+                case City.Perm: return "Пермь";
+                case City.Voronezh: return "Воронеж";
+                case City.Volgograd: return "Волгоград";
+                case City.Krasnodar: return "Краснодар";
+                default: return "Неизвестно";
+            }
         }
 
         private void OnSupplierPropertyChanged(object sender, PropertyChangedEventArgs e)
