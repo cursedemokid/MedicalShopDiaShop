@@ -22,7 +22,9 @@ namespace MedicalShopDiaShop.AppData
             InHistory = 5,
             ChoosingSupplier = 6,   // Шаг 1
             ChoosingProducts = 7,   // Шаг 2
-            ChoosingAroundTime = 8  // Шаг 3
+            ChoosingAroundTime = 8, // Шаг 3
+            InDelive = 9,
+
         }
 
         public static OrderStatus GetOrderStatus(int statusId)

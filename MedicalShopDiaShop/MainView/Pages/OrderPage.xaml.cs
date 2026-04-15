@@ -165,6 +165,7 @@ namespace MedicalShopDiaShop.MainView.Pages
                 case (int)OrderStatus.Delivered: return "Доставлен";
                 case (int)OrderStatus.WaitPayment: return "Ожидает оплаты";
                 case (int)OrderStatus.InHistory: return "В истории";
+                case (int)OrderStatus.InDelive: return "У курьера";
                 default: return "Неизвестно";
             }
         }

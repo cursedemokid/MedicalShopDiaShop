@@ -181,10 +181,6 @@ namespace MedicalShopDiaShop.MainView.Pages
                 SuppliesListBox.Visibility = Visibility.Collapsed;
                 CityFilterGroup.Visibility = Visibility.Visible;
                 AddSupplyBtn.Visibility = Visibility.Visible;
-                // Меняем текст кнопок
-                AddBtn.Content = "Добавить поставщика";
-                EditBtn.Content = "Изменить поставщика";
-                DeleteBtn.Content = "Удалить поставщика";
                 // Подсветка кнопок
                 SuppliersModeBtn.Background = Brushes.Purple;
                 SuppliesModeBtn.Background = Brushes.Transparent;
@@ -198,9 +194,6 @@ namespace MedicalShopDiaShop.MainView.Pages
                 SuppliesListBox.Visibility = Visibility.Visible;
                 CityFilterGroup.Visibility = Visibility.Collapsed;
                 AddSupplyBtn.Visibility = Visibility.Collapsed;
-                AddBtn.Content = "Добавить поставку";
-                EditBtn.Content = "Изменить поставку";
-                DeleteBtn.Content = "Удалить поставку";
                 SuppliersModeBtn.Background = Brushes.Transparent;
                 SuppliesModeBtn.Background = Brushes.Purple;
                 // Обновляем список поставок
