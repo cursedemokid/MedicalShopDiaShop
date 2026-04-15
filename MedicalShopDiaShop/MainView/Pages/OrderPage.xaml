@@ -132,6 +132,7 @@
                                         <ComboBoxItem Content="Доставлен" Tag="3"/>
                                         <ComboBoxItem Content="Ожидает оплаты" Tag="4"/>
                                         <ComboBoxItem Content="В истории" Tag="5"/>
+                                        <ComboBoxItem Content="У курьера" Tag="9"/>
                                     </ComboBox>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
