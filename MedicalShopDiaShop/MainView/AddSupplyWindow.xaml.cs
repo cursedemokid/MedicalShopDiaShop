@@ -9,7 +9,6 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using static MedicalShopDiaShop.AppData.Status;
-using static MedicalShopDiaShop.MainView.Pages.ChooseProductsPage;
 
 namespace MedicalShopDiaShop.MainView
 {
@@ -17,13 +16,13 @@ namespace MedicalShopDiaShop.MainView
     {
         public Supply CurrentSupply { get; private set; }
         public Store SelectedSupplier { get; set; }
-        public ObservableCollection<CartItem> SelectedProducts { get; set; } = new ObservableCollection<CartItem>();
+        public ObservableCollection<ChooseProductsPage.CartItem> SelectedProducts { get; set; } = new ObservableCollection<ChooseProductsPage.CartItem>();
         public DateTime? DeliveryDate { get; set; }
 
         private int _currentStep = 1;
         private const int TotalSteps = 3;
         private readonly DiaShopEntities3 _context;
-        private int _navigationDirection = 1; // 1 - вперёд, -1 - назад
+        private int _navigationDirection = 1;
         private bool _isFirstLoad = true;
 
         public AddSupplyWindow()
@@ -50,7 +49,7 @@ namespace MedicalShopDiaShop.MainView
                 SupplierId = 8,
                 OrderDate = DateTime.Now,
                 TotalCost = 0,
-                AroundDate = DateTime.Now, 
+                AroundDate = DateTime.Now,
                 ArrivedDate = DateTime.Now
             };
             _context.Supply.Add(CurrentSupply);
@@ -73,13 +72,13 @@ namespace MedicalShopDiaShop.MainView
 
             var products = _context.SupplyProduct
                 .Where(sp => sp.SupplyId == supplyId)
-                .Select(sp => new CartItem
+                .Select(sp => new ChooseProductsPage.CartItem
                 {
                     Product = sp.Product,
                     Quantity = sp.Quantity
                 }).ToList();
-            SelectedProducts = new ObservableCollection<CartItem>(products);
 
+            SelectedProducts = new ObservableCollection<ChooseProductsPage.CartItem>(products);
             DeliveryDate = CurrentSupply.AroundDate;
         }
 
@@ -87,7 +86,6 @@ namespace MedicalShopDiaShop.MainView
         {
             if (CurrentSupply != null)
             {
-                // здесь можно сохранять статус, если нужно
                 _context.SaveChanges();
             }
         }
@@ -98,7 +96,6 @@ namespace MedicalShopDiaShop.MainView
             UpdateStepIndicator();
             UpdateBackButtonVisibility();
 
-            // Сбрасываем позицию Frame перед сменой страницы
             var transform = AddSupplyFrame.RenderTransform as TranslateTransform;
             if (transform != null) transform.X = 0;
 
@@ -123,14 +120,12 @@ namespace MedicalShopDiaShop.MainView
             }
             AddSupplyFrame.Navigate(page);
 
-            // Анимация только после первого шага
             if (_isFirstLoad)
             {
                 _isFirstLoad = false;
                 return;
             }
 
-            // Запускаем анимацию после того, как страница отрисовалась
             this.Dispatcher.BeginInvoke(new Action(() =>
             {
                 var story = _navigationDirection == 1
@@ -142,11 +137,7 @@ namespace MedicalShopDiaShop.MainView
 
         private void UpdateStepIndicator()
         {
-            // Пытаемся найти новую кисть по правильному ключу
-            // Используем TryFindResource, чтобы избежать исключения, если ресурс не найден
             var activeBrush = this.TryFindResource("MaterialDesign.Brush.Primary.Light") as Brush;
-
-            // Если по какой-то причине ресурс не найден, используем цвет по умолчанию
             if (activeBrush == null)
             {
                 activeBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#6200EE"));
@@ -214,7 +205,6 @@ namespace MedicalShopDiaShop.MainView
             }
             _context.SaveChanges();
 
-            // Уведомление для всех сотрудников магазина
             string supplyText = $"Создана новая поставка №{CurrentSupply.Id} от поставщика {SelectedSupplier.Name} на сумму {CurrentSupply.TotalCost:N2} ₽";
             NotificationHelper.NotifyAllStoreEmployees(App.currentUser.StoreId, supplyText, supplyId: CurrentSupply.Id);
 
@@ -231,14 +221,5 @@ namespace MedicalShopDiaShop.MainView
                 return new DateTime(9999, 12, 31);
             return date;
         }
-    }
-
-    public class SupplyProductItem
-    {
-        public Product Product { get; set; }
-        public int Quantity { get; set; }
-        public decimal TotalPrice => Product.Price * Quantity;
-        public string DisplayName => Product.Name;
-        public string ImagePath => string.IsNullOrEmpty(Product.Image) ? "/Resources/placeholder.png" : Product.Image;
     }
 }
