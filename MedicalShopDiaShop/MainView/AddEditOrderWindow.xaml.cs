@@ -49,20 +49,6 @@ namespace MedicalShopDiaShop.MainView
             UpdateCourierVisibility();
         }
 
-        private void LoadCouriers()
-        {
-            using (var context = new DiaShopEntities3())
-            {
-                var couriers = context.User
-                    .Where(u => u.Role == (int)Role.Courier && u.IsDeleted != true)
-                    .Select(u => new { u.Id, FullName = $"{u.LastName} {u.FirstName}" })
-                    .ToList();
-                CourierCmb.ItemsSource = couriers;
-                CourierCmb.DisplayMemberPath = "FullName";
-                CourierCmb.SelectedValuePath = "Id";
-            }
-        }
-
         private void DeliveryTypeCmb_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             UpdateCourierVisibility();
@@ -349,6 +335,8 @@ namespace MedicalShopDiaShop.MainView
             {
                 var clients = context.User
                     .Where(u => u.Role == (int)Role.Client && u.IsDeleted != true)
+                    .Select(u => new { u.Id, u.LastName, u.FirstName })
+                    .ToList() // Выполняем запрос к БД
                     .Select(u => new { u.Id, FullName = $"{u.LastName} {u.FirstName}" })
                     .ToList();
                 ClientCmb.ItemsSource = clients;
@@ -364,16 +352,33 @@ namespace MedicalShopDiaShop.MainView
             {
                 var workers = context.User
                     .Where(u => u.Role == (int)Role.Worker && u.IsDeleted != true)
+                    .Select(u => new { u.Id, u.LastName, u.FirstName })
+                    .ToList()
                     .Select(u => new { u.Id, FullName = $"{u.LastName} {u.FirstName}" })
                     .ToList();
                 WorkerCmb.ItemsSource = workers;
                 WorkerCmb.DisplayMemberPath = "FullName";
                 WorkerCmb.SelectedValuePath = "Id";
-                // По умолчанию текущий пользователь, если он работник
                 if (App.currentUser.Role == (int)Role.Worker)
                     WorkerCmb.SelectedValue = App.currentUser.Id;
                 else if (WorkerCmb.Items.Count > 0)
                     WorkerCmb.SelectedIndex = 0;
+            }
+        }
+
+        private void LoadCouriers()
+        {
+            using (var context = new DiaShopEntities3())
+            {
+                var couriers = context.User
+                    .Where(u => u.Role == (int)Role.Courier && u.IsDeleted != true)
+                    .Select(u => new { u.Id, u.LastName, u.FirstName })
+                    .ToList()
+                    .Select(u => new { u.Id, FullName = $"{u.LastName} {u.FirstName}" })
+                    .ToList();
+                CourierCmb.ItemsSource = couriers;
+                CourierCmb.DisplayMemberPath = "FullName";
+                CourierCmb.SelectedValuePath = "Id";
             }
         }
 
