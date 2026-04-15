@@ -44,16 +44,12 @@ namespace MedicalShopDiaShop.MainView
                 string login = LoginTextBox.Text.Trim();
                 string password = PasswordBox.Password;
 
-                Database.User user = new Database.User();
+                var user = App.context.User.FirstOrDefault(u => u.Email == login || u.UserName == login);
 
-                if (App.context.User.FirstOrDefault(u => u.Email == login || u.UserName == login) != null)
-                    user = App.context.User.FirstOrDefault(u => u.Email == login || u.UserName == login);
-
-                if (user != null && PasswordHelper.VerifyPassword(password, user.Password))
+                if (user != null && PasswordHelper.VerifyAndUpgradePassword(password, user))
                 {
                     App.currentUser = user;
 
-                    // Сохраняем или очищаем настройки
                     if (RememberMeCheckBox.IsChecked == true)
                     {
                         Settings.Default.SavedLogin = login;
@@ -66,7 +62,6 @@ namespace MedicalShopDiaShop.MainView
                     }
                     Settings.Default.Save();
 
-                    // Открываем главное окно (например, StoreWindow)
                     MainWindow mainWindow = new MainWindow();
                     mainWindow.Show();
                     Close();
