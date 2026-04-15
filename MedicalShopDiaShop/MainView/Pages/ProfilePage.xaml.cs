@@ -320,7 +320,7 @@ namespace MedicalShopDiaShop.MainView.Pages
                     Id = task.Id,
                     Title = task.Description,
                     StartDate = task.StartAt,
-                    Deadline = task.Deadline ?? task.EndAt,
+                    Deadline = (DateTime)(task.Deadline ?? task.EndAt),
                     IsCompleted = task.IsCompleted,
                     AuthorName = author?.UserName ?? "Неизвестно"
                 });

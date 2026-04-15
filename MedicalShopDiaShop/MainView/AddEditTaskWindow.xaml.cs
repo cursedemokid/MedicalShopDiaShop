@@ -63,15 +63,20 @@ namespace MedicalShopDiaShop.MainView
                 return;
             }
 
+            DateTime startDate = ToSqlDateTime(StartDatePicker.SelectedDate.Value);
+            DateTime? deadline = DeadlinePicker.SelectedDate.HasValue
+                ? ToSqlDateTime(DeadlinePicker.SelectedDate.Value)
+                : (DateTime?)null;
+
             if (_editingTask == null)
             {
                 var task = new Task
                 {
                     Description = DescriptionTb.Text.Trim(),
                     UserId = (int)UserCmb.SelectedValue,
-                    StartAt = StartDatePicker.SelectedDate.Value,
-                    EndAt = StartDatePicker.SelectedDate.Value, // Добавлено: устанавливаем начальное значение EndAt
-                    Deadline = DeadlinePicker.SelectedDate,
+                    StartAt = startDate,
+                    EndAt = null, // Фактическое окончание пока не известно
+                    Deadline = deadline,
                     AuthorId = App.currentUser.Id,
                     IsCompleted = false
                 };
@@ -79,19 +84,29 @@ namespace MedicalShopDiaShop.MainView
                 App.context.SaveChanges();
 
                 NotificationHelper.CreateNotification(task.UserId,
-                    $"Новая задача: {task.Description}. Дедлайн: {task.Deadline:dd.MM.yyyy}",
+                    $"Новая задача: {task.Description}. Дедлайн: {(task.Deadline.HasValue ? task.Deadline.Value.ToString("dd.MM.yyyy") : "не указан")}",
                     taskId: task.Id);
             }
             else
             {
                 _editingTask.Description = DescriptionTb.Text.Trim();
-                _editingTask.StartAt = StartDatePicker.SelectedDate.Value;
-                _editingTask.Deadline = DeadlinePicker.SelectedDate;
+                _editingTask.StartAt = startDate;
+                _editingTask.Deadline = deadline;
+                // EndAt не трогаем при редактировании
                 App.context.SaveChanges();
             }
 
             DialogResult = true;
             Close();
+        }
+
+        private DateTime ToSqlDateTime(DateTime date)
+        {
+            if (date < new DateTime(1753, 1, 1))
+                return new DateTime(1753, 1, 1);
+            if (date > new DateTime(9999, 12, 31))
+                return new DateTime(9999, 12, 31);
+            return date;
         }
 
         private void CancelBtn_Click(object sender, RoutedEventArgs e) => DialogResult = false;

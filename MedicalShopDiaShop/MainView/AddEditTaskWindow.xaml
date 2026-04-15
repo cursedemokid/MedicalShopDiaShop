@@ -69,6 +69,12 @@
                     <DatePicker x:Name="DeadlinePicker" FontSize="18" FontFamily="{StaticResource GothamProFamily}"/>
                 </Border>
 
+                <TextBlock Grid.Row="10" Text="Факт окончание" FontSize="18" FontFamily="{StaticResource GothamProFamily}"
+           VerticalAlignment="Center"/>
+                <Border Grid.Row="10" Grid.Column="2" BorderThickness="1" BorderBrush="Black" CornerRadius="5">
+                    <DatePicker x:Name="EndDatePicker" FontSize="18" FontFamily="{StaticResource GothamProFamily}"/>
+                </Border>
+
                 <!-- Кнопки -->
                 <Grid Grid.Row="12" Grid.ColumnSpan="3">
                     <Grid.ColumnDefinitions>
