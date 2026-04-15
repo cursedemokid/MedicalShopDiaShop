@@ -66,6 +66,14 @@
                             <ComboBox x:Name="WorkerCmb" FontSize="16" FontFamily="{StaticResource GothamProFamily}"
                                       DisplayMemberPath="FullName" SelectedValuePath="Id" Height="35" IsEnabled="False"/>
                         </Border>
+
+                        <!-- Курьер (видим только при выборе доставки курьером) -->
+                        <TextBlock x:Name="CourierLabel" Grid.Row="2" Grid.Column="4" Text="Курьер:" FontWeight="Bold" FontSize="16" 
+           FontFamily="{StaticResource GothamProFamily}" VerticalAlignment="Center" Visibility="Collapsed"/>
+                        <Border x:Name="CourierBorder" Grid.Row="2" Grid.Column="6" BorderThickness="1" BorderBrush="Black" CornerRadius="5" Visibility="Collapsed">
+                            <ComboBox x:Name="CourierCmb" FontSize="16" FontFamily="{StaticResource GothamProFamily}"
+              DisplayMemberPath="FullName" SelectedValuePath="Id" Height="35"/>
+                        </Border>
                     </Grid>
                 </Border>
 

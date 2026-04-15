@@ -1,11 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
+using MedicalShopDiaShop.AppData;
+using MedicalShopDiaShop.Database;
+using static MedicalShopDiaShop.AppData.Status;
 
 namespace MedicalShopDiaShop.MainView.Pages
 {
@@ -22,8 +24,7 @@ namespace MedicalShopDiaShop.MainView.Pages
 
         private void OrdersPage_Loaded(object sender, RoutedEventArgs e)
         {
-            _allOrders = new ObservableCollection<OrderDto>(GetStaticOrders());
-            _filteredOrders = new ObservableCollection<OrderDto>(_allOrders);
+            LoadOrdersFromDatabase();
 
             OrdersListView.ItemsSource = _filteredOrders;
             OrdersListBox.ItemsSource = _filteredOrders;
@@ -33,81 +34,65 @@ namespace MedicalShopDiaShop.MainView.Pages
             SetActiveButton(ListViewOnBtn);
         }
 
-        private List<OrderDto> GetStaticOrders()
+        private void LoadOrdersFromDatabase()
         {
-            // Статические данные пользователей (клиенты, работники, курьеры)
-            var clients = new Dictionary<int, string> { { 3, "Кузнецов Алексей" }, { 6, "Морозова Екатерина" } };
-            var workers = new Dictionary<int, string> { { 1, "Иванов Иван" }, { 2, "Петрова Анна" } };
-            var couriers = new Dictionary<int, string> { { 4, "Сидоров Алексей" }, { 5, "Козлов Дмитрий" } };
-
-            // Товары для демонстрации
-            var products = new Dictionary<int, (string name, string image, decimal price)>
+            using (var context = new DiaShopEntities3())
             {
-                { 1, ("Accu-Chek Active", "/Resources/ProductsImages/Accu-ChekProductImage.jpg", 1450) },
-                { 2, ("Тест-полоски OneTouch", "/Resources/ProductsImages/OneTouchStripes.jpg", 950) },
-                { 3, ("НовоПен 4", "/Resources/ProductsImages/Novopen.jpg", 850) },
-                { 4, ("Крем для ног", "/Resources/ProductsImages/FootCream.jpg", 420) }
-            };
+                var orders = context.Order
+                    .OrderByDescending(o => o.DateTime)
+                    .ToList();
 
-            var orders = new List<OrderDto>
+                _allOrders = new ObservableCollection<OrderDto>(orders.Select(o => MapToOrderDto(o, context)));
+                _filteredOrders = new ObservableCollection<OrderDto>(_allOrders);
+            }
+        }
+
+        private OrderDto MapToOrderDto(Order order, DiaShopEntities3 context)
+        {
+            var client = context.User.FirstOrDefault(u => u.Id == order.ClientId);
+            var worker = context.User.FirstOrDefault(u => u.Id == order.WorkerId);
+            string courierName = null;
+            if (order.DeliveryId.HasValue)
             {
-                new OrderDto
+                var delivery = context.Delivery.FirstOrDefault(d => d.Id == order.DeliveryId);
+                if (delivery != null)
                 {
-                    Id = 101,
-                    OrderDate = DateTime.Now.AddDays(-5),
-                    ClientFullName = clients[3],
-                    WorkerFullName = workers[1],
-                    CourierFullName = couriers[4],
-                    DeliveryStartDate = DateTime.Now.AddDays(-3),
-                    DeliveryEndDate = DateTime.Now.AddDays(-2),
-                    DeliveryDescription = "Доставка по адресу: ул. Ленина, д.10",
-                    Status = 3, // Доставлен
-                    TotalCost = 2400,
-                    DeliveryType = 1, // Курьер
-                    Items = new List<OrderItemDto>
-                    {
-                        new OrderItemDto { ProductName = products[1].name, Quantity = 1, PricePerUnit = products[1].price, ImagePath = products[1].image },
-                        new OrderItemDto { ProductName = products[2].name, Quantity = 2, PricePerUnit = products[2].price, ImagePath = products[2].image }
-                    }
-                },
-                new OrderDto
-                {
-                    Id = 102,
-                    OrderDate = DateTime.Now.AddDays(-2),
-                    ClientFullName = clients[6],
-                    WorkerFullName = workers[2],
-                    CourierFullName = null, // ещё не назначен
-                    DeliveryStartDate = null,
-                    DeliveryEndDate = null,
-                    DeliveryDescription = null,
-                    Status = 2, // Ожидает курьера
-                    TotalCost = 850,
-                    DeliveryType = 1,
-                    Items = new List<OrderItemDto>
-                    {
-                        new OrderItemDto { ProductName = products[3].name, Quantity = 1, PricePerUnit = products[3].price, ImagePath = products[3].image }
-                    }
-                },
-                new OrderDto
-                {
-                    Id = 103,
-                    OrderDate = DateTime.Now.AddDays(-1),
-                    ClientFullName = clients[3],
-                    WorkerFullName = workers[1],
-                    CourierFullName = null,
-                    DeliveryStartDate = null,
-                    DeliveryEndDate = null,
-                    DeliveryDescription = null,
-                    Status = 1, // В обработке
-                    TotalCost = 420,
-                    DeliveryType = 2, // Самовывоз
-                    Items = new List<OrderItemDto>
-                    {
-                        new OrderItemDto { ProductName = products[4].name, Quantity = 1, PricePerUnit = products[4].price, ImagePath = products[4].image }
-                    }
+                    var courier = context.User.FirstOrDefault(u => u.Id == delivery.CourierId);
+                    courierName = courier != null ? $"{courier.LastName} {courier.FirstName}" : null;
                 }
+            }
+
+            var items = context.ProductOrder
+                .Where(po => po.OrderId == order.Id)
+                .Select(po => new OrderItemDto
+                {
+                    ProductName = po.Product.Name,
+                    Quantity = po.Quantity,
+                    PricePerUnit = po.Price,
+                    ImagePath = string.IsNullOrEmpty(po.Product.Image) ? "/Resources/placeholder.png" : po.Product.Image
+                }).ToList();
+
+            return new OrderDto
+            {
+                Id = order.Id,
+                OrderDate = order.DateTime,
+                ClientFullName = client != null ? $"{client.LastName} {client.FirstName}" : "Неизвестно",
+                WorkerFullName = worker != null ? $"{worker.LastName} {worker.FirstName}" : "Неизвестно",
+                CourierFullName = courierName,
+                Status = order.Status,
+                TotalCost = order.TotalCost,
+                DeliveryType = order.DeliveryType,
+                Items = items,
+                IsSelected = false
             };
-            return orders;
+        }
+
+        private void RefreshOrdersList()
+        {
+            OrdersListView.ItemsSource = null;
+            OrdersListView.ItemsSource = _filteredOrders;
+            OrdersListBox.ItemsSource = null;
+            OrdersListBox.ItemsSource = _filteredOrders;
         }
 
         private void StatusFilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -139,40 +124,57 @@ namespace MedicalShopDiaShop.MainView.Pages
             RefreshOrdersList();
         }
 
-        private void RefreshOrdersList()
-        {
-            OrdersListView.ItemsSource = null;
-            OrdersListView.ItemsSource = _filteredOrders;
-            OrdersListBox.ItemsSource = null;
-            OrdersListBox.ItemsSource = _filteredOrders;
-        }
-
         private void AddBtn_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Добавление заказа (будет реализовано)");
+            var window = new AddEditOrderWindow();
+            if (window.ShowDialog() == true)
+                LoadOrdersFromDatabase();
         }
 
         private void EditBtn_Click(object sender, RoutedEventArgs e)
         {
             var selected = GetSelectedOrder();
-            if (selected == null) MessageBox.Show("Выберите заказ.");
-            else MessageBox.Show($"Изменить заказ №{selected.Id}");
+            if (selected == null)
+            {
+                FeedbackService.Warning("Выберите заказ для редактирования.");
+                return;
+            }
+            var window = new AddEditOrderWindow(selected.Id);
+            if (window.ShowDialog() == true)
+                LoadOrdersFromDatabase();
         }
 
         private void DeleteBtn_Click(object sender, RoutedEventArgs e)
         {
             var selected = GetSelectedOrder();
-            if (selected == null) MessageBox.Show("Выберите заказ.");
-            else if (MessageBox.Show($"Удалить заказ №{selected.Id}?", "Подтверждение", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            if (selected == null)
             {
-                _allOrders.Remove(selected);
-                _filteredOrders.Remove(selected);
+                FeedbackService.Warning("Выберите заказ для удаления.");
+                return;
+            }
+            if (FeedbackService.Question($"Удалить заказ №{selected.Id}?") == MessageBoxResult.Yes)
+            {
+                using (var context = new DiaShopEntities3())
+                {
+                    var order = context.Order.FirstOrDefault(o => o.Id == selected.Id);
+                    if (order != null)
+                    {
+                        var productOrders = context.ProductOrder.Where(po => po.OrderId == order.Id);
+                        context.ProductOrder.RemoveRange(productOrders);
+                        var history = context.OrderHistory.Where(oh => oh.OrderId == order.Id);
+                        context.OrderHistory.RemoveRange(history);
+                        context.Order.Remove(order);
+                        context.SaveChanges();
+                    }
+                }
+                LoadOrdersFromDatabase();
+                FeedbackService.Information("Заказ удалён.");
             }
         }
 
         private OrderDto GetSelectedOrder()
         {
-            return _filteredOrders.FirstOrDefault(o => o.IsSelected);
+            return _filteredOrders?.FirstOrDefault(o => o.IsSelected);
         }
 
         private void ListViewOnBtn_Click(object sender, RoutedEventArgs e)
@@ -208,19 +210,6 @@ namespace MedicalShopDiaShop.MainView.Pages
                 var window = new OrderDetailsWindow(order.Id);
                 window.ShowDialog();
             }
-        }
-    }
-
-    // Конвертер для видимости (если нужен)
-    public class BoolToVisibilityConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            return (value is bool && (bool)value) ? Visibility.Visible : Visibility.Collapsed;
-        }
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -24,11 +24,14 @@ namespace MedicalShopDiaShop.MainView
             TitleText.Text = "Новый заказ";
             LoadClients();
             LoadWorkers();
+            LoadCouriers();
             LoadProducts();
             DeliveryTypeCmb.SelectedIndex = 0;
             _cartItems = new ObservableCollection<CartItem>();
             CartListBox.ItemsSource = _cartItems;
             UpdateTotalPrice();
+            DeliveryTypeCmb.SelectionChanged += DeliveryTypeCmb_SelectionChanged;
+            UpdateCourierVisibility();
         }
 
         public AddEditOrderWindow(int orderId)
@@ -38,9 +41,301 @@ namespace MedicalShopDiaShop.MainView
             TitleText.Text = "Редактирование заказа";
             LoadClients();
             LoadWorkers();
+            LoadCouriers();
             LoadProducts();
             LoadOrderData();
             UpdateTotalPrice();
+            DeliveryTypeCmb.SelectionChanged += DeliveryTypeCmb_SelectionChanged;
+            UpdateCourierVisibility();
+        }
+
+        private void LoadCouriers()
+        {
+            using (var context = new DiaShopEntities3())
+            {
+                var couriers = context.User
+                    .Where(u => u.Role == (int)Role.Courier && u.IsDeleted != true)
+                    .Select(u => new { u.Id, FullName = $"{u.LastName} {u.FirstName}" })
+                    .ToList();
+                CourierCmb.ItemsSource = couriers;
+                CourierCmb.DisplayMemberPath = "FullName";
+                CourierCmb.SelectedValuePath = "Id";
+            }
+        }
+
+        private void DeliveryTypeCmb_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            UpdateCourierVisibility();
+        }
+
+        private void UpdateCourierVisibility()
+        {
+            bool isCourierDelivery = DeliveryTypeCmb.SelectedItem is ComboBoxItem item &&
+                                     item.Tag.ToString() == "1";
+            CourierLabel.Visibility = isCourierDelivery ? Visibility.Visible : Visibility.Collapsed;
+            CourierBorder.Visibility = isCourierDelivery ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private void LoadOrderData()
+        {
+            using (var context = new DiaShopEntities3())
+            {
+                _editingOrder = context.Order.FirstOrDefault(o => o.Id == _orderId);
+                if (_editingOrder == null)
+                {
+                    FeedbackService.Error("Заказ не найден.");
+                    Close();
+                    return;
+                }
+
+                ClientCmb.SelectedValue = _editingOrder.ClientId;
+                WorkerCmb.SelectedValue = _editingOrder.WorkerId;
+                // Выбираем тип доставки
+                var deliveryTypeItem = DeliveryTypeCmb.Items
+                    .Cast<ComboBoxItem>()
+                    .FirstOrDefault(i => i.Tag.ToString() == _editingOrder.DeliveryType.ToString());
+                if (deliveryTypeItem != null) DeliveryTypeCmb.SelectedItem = deliveryTypeItem;
+
+                // Загружаем текущего курьера, если есть
+                if (_editingOrder.DeliveryId.HasValue)
+                {
+                    var delivery = context.Delivery.FirstOrDefault(d => d.Id == _editingOrder.DeliveryId);
+                    if (delivery != null)
+                        CourierCmb.SelectedValue = delivery.CourierId;
+                }
+
+                var products = context.ProductOrder
+                    .Where(po => po.OrderId == _editingOrder.Id)
+                    .Select(po => new CartItem
+                    {
+                        Product = new ProductItem
+                        {
+                            Id = po.Product.Id,
+                            Name = po.Product.Name,
+                            Price = po.Price,
+                            ImagePath = string.IsNullOrEmpty(po.Product.Image) ? "/Resources/placeholder.png" : po.Product.Image
+                        },
+                        Quantity = po.Quantity
+                    }).ToList();
+
+                _cartItems = new ObservableCollection<CartItem>(products);
+                CartListBox.ItemsSource = _cartItems;
+
+                // Удаляем из доступных те, что уже в корзине
+                foreach (var item in _cartItems)
+                {
+                    var existing = _allProducts.FirstOrDefault(p => p.Id == item.Product.Id);
+                    if (existing != null)
+                        _allProducts.Remove(existing);
+                }
+                _filteredProducts = new ObservableCollection<ProductItem>(_allProducts);
+                AvailableProductsListBox.ItemsSource = _filteredProducts;
+            }
+        }
+
+        private void SaveBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (ClientCmb.SelectedValue == null || WorkerCmb.SelectedValue == null || DeliveryTypeCmb.SelectedItem == null)
+            {
+                FeedbackService.Error("Заполните все поля.");
+                return;
+            }
+            if (_cartItems.Count == 0)
+            {
+                FeedbackService.Error("Добавьте хотя бы один товар.");
+                return;
+            }
+
+            int deliveryType = int.Parse(((ComboBoxItem)DeliveryTypeCmb.SelectedItem).Tag.ToString());
+            decimal totalCost = _cartItems.Sum(c => c.TotalPrice);
+            DateTime now = DateTime.Now;
+
+            using (var context = new DiaShopEntities3())
+            {
+                if (_editingOrder == null)
+                {
+                    // Создание заказа
+                    var order = new Order
+                    {
+                        DateTime = now,
+                        ClientId = (int)ClientCmb.SelectedValue,
+                        WorkerId = (int)WorkerCmb.SelectedValue,
+                        DeliveryType = deliveryType,
+                        Status = (int)OrderStatus.InProcess,
+                        TotalCost = totalCost,
+                        DeliveryId = null
+                    };
+                    context.Order.Add(order);
+                    context.SaveChanges();
+
+                    // Если тип доставки курьер и выбран курьер – создаём Delivery
+                    if (deliveryType == 1 && CourierCmb.SelectedValue != null)
+                    {
+                        var delivery = new Delivery
+                        {
+                            StartDate = now,
+                            EndDate = now.AddDays(3),
+                            CourierId = (int)CourierCmb.SelectedValue,
+                            Description = $"Доставка заказа №{order.Id}"
+                        };
+                        context.Delivery.Add(delivery);
+                        context.SaveChanges();
+                        order.DeliveryId = delivery.Id;
+                        // Обновляем статус заказа на "Ожидает курьера"
+                        order.Status = (int)OrderStatus.WaitCourier;
+                        context.SaveChanges();
+
+                        // Запись в историю
+                        context.OrderHistory.Add(new OrderHistory
+                        {
+                            OrderId = order.Id,
+                            OldStatus = (int)OrderStatus.InProcess,
+                            NewStatus = (int)OrderStatus.WaitCourier,
+                            UpdateAt = now,
+                            FromUserId = App.currentUser.Id,
+                            ToUserId = delivery.CourierId
+                        });
+                    }
+                    else
+                    {
+                        // Для самовывоза сразу доставлен?
+                        if (deliveryType == 2)
+                        {
+                            order.Status = (int)OrderStatus.Delivered;
+                            context.SaveChanges();
+                            context.OrderHistory.Add(new OrderHistory
+                            {
+                                OrderId = order.Id,
+                                OldStatus = (int)OrderStatus.InProcess,
+                                NewStatus = (int)OrderStatus.Delivered,
+                                UpdateAt = now,
+                                FromUserId = App.currentUser.Id,
+                                ToUserId = null
+                            });
+                        }
+                        else
+                        {
+                            context.OrderHistory.Add(new OrderHistory
+                            {
+                                OrderId = order.Id,
+                                OldStatus = (int)OrderStatus.InProcess,
+                                NewStatus = (int)OrderStatus.InProcess,
+                                UpdateAt = now,
+                                FromUserId = App.currentUser.Id,
+                                ToUserId = null
+                            });
+                        }
+                    }
+
+                    // Добавляем товары
+                    foreach (var item in _cartItems)
+                    {
+                        context.ProductOrder.Add(new ProductOrder
+                        {
+                            OrderId = order.Id,
+                            ProductId = item.Product.Id,
+                            Quantity = item.Quantity,
+                            Price = item.Product.Price
+                        });
+                    }
+                    context.SaveChanges();
+
+                    // Уведомление
+                    NotificationHelper.NotifyAllStoreEmployees(App.currentUser.StoreId,
+                        $"Новый заказ №{order.Id} на сумму {totalCost:N2} ₽");
+                }
+                else
+                {
+                    // Редактирование заказа
+                    _editingOrder.ClientId = (int)ClientCmb.SelectedValue;
+                    _editingOrder.WorkerId = (int)WorkerCmb.SelectedValue;
+                    _editingOrder.DeliveryType = deliveryType;
+                    _editingOrder.TotalCost = totalCost;
+
+                    // Обновляем доставку, если курьерская
+                    if (deliveryType == 1)
+                    {
+                        if (_editingOrder.DeliveryId.HasValue)
+                        {
+                            var delivery = context.Delivery.Find(_editingOrder.DeliveryId);
+                            if (delivery != null && CourierCmb.SelectedValue != null)
+                            {
+                                if (delivery.CourierId != (int)CourierCmb.SelectedValue)
+                                {
+                                    delivery.CourierId = (int)CourierCmb.SelectedValue;
+                                    context.OrderHistory.Add(new OrderHistory
+                                    {
+                                        OrderId = _editingOrder.Id,
+                                        OldStatus = _editingOrder.Status,
+                                        NewStatus = _editingOrder.Status,
+                                        UpdateAt = now,
+                                        FromUserId = App.currentUser.Id,
+                                        ToUserId = delivery.CourierId
+                                    });
+                                }
+                                context.SaveChanges();
+                            }
+                        }
+                        else if (CourierCmb.SelectedValue != null)
+                        {
+                            // Создаём новую доставку
+                            var delivery = new Delivery
+                            {
+                                StartDate = now,
+                                EndDate = now.AddDays(3),
+                                CourierId = (int)CourierCmb.SelectedValue,
+                                Description = $"Доставка заказа №{_editingOrder.Id}"
+                            };
+                            context.Delivery.Add(delivery);
+                            context.SaveChanges();
+                            _editingOrder.DeliveryId = delivery.Id;
+                            context.SaveChanges();
+
+                            context.OrderHistory.Add(new OrderHistory
+                            {
+                                OrderId = _editingOrder.Id,
+                                OldStatus = _editingOrder.Status,
+                                NewStatus = (int)OrderStatus.WaitCourier,
+                                UpdateAt = now,
+                                FromUserId = App.currentUser.Id,
+                                ToUserId = delivery.CourierId
+                            });
+                            _editingOrder.Status = (int)OrderStatus.WaitCourier;
+                        }
+                    }
+                    else
+                    {
+                        // Если сменили с курьера на самовывоз, удаляем связь с доставкой
+                        if (_editingOrder.DeliveryId.HasValue)
+                        {
+                            var delivery = context.Delivery.Find(_editingOrder.DeliveryId);
+                            if (delivery != null) context.Delivery.Remove(delivery);
+                            _editingOrder.DeliveryId = null;
+                            _editingOrder.Status = (int)OrderStatus.Delivered; // или InProcess?
+                            context.SaveChanges();
+                        }
+                    }
+
+                    // Обновляем товары
+                    var existingProducts = context.ProductOrder.Where(po => po.OrderId == _editingOrder.Id);
+                    context.ProductOrder.RemoveRange(existingProducts);
+                    foreach (var item in _cartItems)
+                    {
+                        context.ProductOrder.Add(new ProductOrder
+                        {
+                            OrderId = _editingOrder.Id,
+                            ProductId = item.Product.Id,
+                            Quantity = item.Quantity,
+                            Price = item.Product.Price
+                        });
+                    }
+                    context.SaveChanges();
+                }
+            }
+
+            FeedbackService.Information("Заказ сохранён.");
+            DialogResult = true;
+            Close();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -95,54 +390,6 @@ namespace MedicalShopDiaShop.MainView
                         Price = p.Price,
                         ImagePath = string.IsNullOrEmpty(p.Image) ? "/Resources/placeholder.png" : p.Image
                     }));
-                _filteredProducts = new ObservableCollection<ProductItem>(_allProducts);
-                AvailableProductsListBox.ItemsSource = _filteredProducts;
-            }
-        }
-
-        private void LoadOrderData()
-        {
-            using (var context = new DiaShopEntities3())
-            {
-                _editingOrder = context.Order.FirstOrDefault(o => o.Id == _orderId);
-                if (_editingOrder == null)
-                {
-                    FeedbackService.Error("Заказ не найден.");
-                    Close();
-                    return;
-                }
-
-                ClientCmb.SelectedValue = _editingOrder.ClientId;
-                WorkerCmb.SelectedValue = _editingOrder.WorkerId;
-                DeliveryTypeCmb.SelectedItem = DeliveryTypeCmb.Items
-                    .Cast<ComboBoxItem>()
-                    .FirstOrDefault(i => i.Tag.ToString() == _editingOrder.DeliveryType.ToString());
-
-                var products = context.ProductOrder
-                    .Where(po => po.OrderId == _editingOrder.Id)
-                    .Select(po => new CartItem
-                    {
-                        Product = new ProductItem
-                        {
-                            Id = po.Product.Id,
-                            Name = po.Product.Name,
-                            Price = po.Price,
-                            ImagePath = string.IsNullOrEmpty(po.Product.Image) ? "/Resources/placeholder.png" : po.Product.Image
-                        },
-                        Quantity = po.Quantity
-                    }).ToList();
-
-                _cartItems = new ObservableCollection<CartItem>(products);
-                CartListBox.ItemsSource = _cartItems;
-                UpdateTotalPrice();
-
-                // Удаляем из доступных те, что уже в корзине
-                foreach (var item in _cartItems)
-                {
-                    var existing = _allProducts.FirstOrDefault(p => p.Id == item.Product.Id);
-                    if (existing != null)
-                        _allProducts.Remove(existing);
-                }
                 _filteredProducts = new ObservableCollection<ProductItem>(_allProducts);
                 AvailableProductsListBox.ItemsSource = _filteredProducts;
             }
@@ -211,98 +458,6 @@ namespace MedicalShopDiaShop.MainView
             TotalPriceText.Text = total.ToString("N2") + " ₽";
         }
 
-        private void SaveBtn_Click(object sender, RoutedEventArgs e)
-        {
-            if (ClientCmb.SelectedValue == null || WorkerCmb.SelectedValue == null || DeliveryTypeCmb.SelectedItem == null)
-            {
-                FeedbackService.Error("Заполните все поля.");
-                return;
-            }
-            if (_cartItems.Count == 0)
-            {
-                FeedbackService.Error("Добавьте хотя бы один товар.");
-                return;
-            }
-
-            int deliveryType = int.Parse(((ComboBoxItem)DeliveryTypeCmb.SelectedItem).Tag.ToString());
-            decimal totalCost = _cartItems.Sum(c => c.TotalPrice);
-            DateTime now = DateTime.Now;
-
-            using (var context = new DiaShopEntities3())
-            {
-                if (_editingOrder == null)
-                {
-                    var order = new Order
-                    {
-                        DateTime = now,
-                        ClientId = (int)ClientCmb.SelectedValue,
-                        WorkerId = (int)WorkerCmb.SelectedValue,
-                        DeliveryType = deliveryType,
-                        Status = (int)OrderStatus.InProcess,
-                        TotalCost = totalCost,
-                        DeliveryId = null
-                    };
-                    context.Order.Add(order);
-                    context.SaveChanges();
-
-                    foreach (var item in _cartItems)
-                    {
-                        context.ProductOrder.Add(new ProductOrder
-                        {
-                            OrderId = order.Id,
-                            ProductId = item.Product.Id,
-                            Quantity = item.Quantity,
-                            Price = item.Product.Price
-                        });
-                    }
-
-                    // Добавляем запись в историю
-                    context.OrderHistory.Add(new OrderHistory
-                    {
-                        OrderId = order.Id,
-                        OldStatus = (int)OrderStatus.InProcess,
-                        NewStatus = (int)OrderStatus.InProcess,
-                        UpdateAt = now,
-                        FromUserId = App.currentUser.Id,
-                        ToUserId = null
-                    });
-
-                    context.SaveChanges();
-
-                    // Уведомление сотрудникам магазина
-                    NotificationHelper.NotifyAllStoreEmployees(App.currentUser.StoreId,
-                        $"Новый заказ №{order.Id} на сумму {totalCost:N2} ₽");
-                }
-                else
-                {
-                    // Редактирование
-                    _editingOrder.ClientId = (int)ClientCmb.SelectedValue;
-                    _editingOrder.WorkerId = (int)WorkerCmb.SelectedValue;
-                    _editingOrder.DeliveryType = deliveryType;
-                    _editingOrder.TotalCost = totalCost;
-                    // Статус не меняем при редактировании
-
-                    var existingProducts = context.ProductOrder.Where(po => po.OrderId == _editingOrder.Id);
-                    context.ProductOrder.RemoveRange(existingProducts);
-
-                    foreach (var item in _cartItems)
-                    {
-                        context.ProductOrder.Add(new ProductOrder
-                        {
-                            OrderId = _editingOrder.Id,
-                            ProductId = item.Product.Id,
-                            Quantity = item.Quantity,
-                            Price = item.Product.Price
-                        });
-                    }
-                    context.SaveChanges();
-                }
-            }
-
-            FeedbackService.Information("Заказ сохранён.");
-            DialogResult = true;
-            Close();
-        }
 
         private void CancelBtn_Click(object sender, RoutedEventArgs e)
         {
