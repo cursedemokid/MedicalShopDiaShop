@@ -160,6 +160,7 @@
     <Compile Include="AppData\CalendarScheduleBehavior.cs" />
     <Compile Include="AppData\FeedbackService.cs" />
     <Compile Include="AppData\NotificationHelper.cs" />
+    <Compile Include="AppData\PasswordHelper.cs" />
     <Compile Include="AppData\ProductWithFavorite.cs" />
     <Compile Include="AppData\Status.cs" />
     <Compile Include="Database\Delivery.cs">

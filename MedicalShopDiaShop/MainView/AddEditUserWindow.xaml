@@ -10,7 +10,7 @@
         <Image Source="/Resources/BackgroundPatternPurple.png" Stretch="Fill"/>
 
         <Border CornerRadius="20" BorderThickness="1" BorderBrush="White" Background="White" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Grid Margin="20" Height="480" Width="700" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Grid Margin="20" Width="700" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="10" />
@@ -31,7 +31,9 @@
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="10" />
                     <RowDefinition Height="auto" />
-                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="10" />
                     <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
@@ -39,54 +41,71 @@
                     <ColumnDefinition Width="10" />
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Name="WindowName" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}" FontWeight="Bold" Text="Изменение данных сотрудника"/>
-                <TextBlock Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Text="Фамилия"/>
-                <TextBlock Grid.Row="4" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Text="Имя"/>
-                <TextBlock Grid.Row="6" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Text="Отчество"/>
-                <TextBlock Grid.Row="8" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Text="Номер телефона"/>
-                <TextBlock Grid.Row="10" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Text="Почта"/>
-                <TextBlock Grid.Row="12" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Text="Юзернейм"/>
-                <TextBlock Grid.Row="14" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Text="Роль"/>
-                <TextBlock Grid.Row="16" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Text="Зарплата"/>
-                <TextBlock Grid.Row="18" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Text="Магазин"/>
 
+                <TextBlock Name="WindowName" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}" FontWeight="Bold" Text="Изменение данных сотрудника"/>
+
+                <!-- Фамилия -->
+                <TextBlock Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Text="Фамилия"/>
                 <Border Grid.Row="2" Grid.Column="2" BorderThickness="1" BorderBrush="Black" CornerRadius="3">
                     <TextBox Name="LastNameTb" FontSize="20" FontFamily="{StaticResource GothamProFamily}" VerticalAlignment="Center"/>
                 </Border>
 
+                <!-- Имя -->
+                <TextBlock Grid.Row="4" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Text="Имя"/>
                 <Border Grid.Row="4" Grid.Column="2" BorderThickness="1" BorderBrush="Black" CornerRadius="3">
                     <TextBox Name="FirstNameTb" FontSize="20" FontFamily="{StaticResource GothamProFamily}" VerticalAlignment="Center"/>
                 </Border>
 
+                <!-- Отчество -->
+                <TextBlock Grid.Row="6" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Text="Отчество"/>
                 <Border Grid.Row="6" Grid.Column="2" BorderThickness="1" BorderBrush="Black" CornerRadius="3">
                     <TextBox Name="MiddleNameTb" FontSize="20" FontFamily="{StaticResource GothamProFamily}" VerticalAlignment="Center"/>
                 </Border>
 
+                <!-- Номер телефона -->
+                <TextBlock Grid.Row="8" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Text="Номер телефона"/>
                 <Border Grid.Row="8" Grid.Column="2" BorderThickness="1" BorderBrush="Black" CornerRadius="3">
                     <TextBox Name="PhoneNumberTb" FontSize="20" FontFamily="{StaticResource GothamProFamily}" VerticalAlignment="Center"/>
                 </Border>
 
+                <!-- Почта -->
+                <TextBlock Grid.Row="10" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Text="Почта"/>
                 <Border Grid.Row="10" Grid.Column="2" BorderThickness="1" BorderBrush="Black" CornerRadius="3">
                     <TextBox Name="EmailTb" FontSize="20" FontFamily="{StaticResource GothamProFamily}" VerticalAlignment="Center"/>
                 </Border>
 
+                <!-- Юзернейм -->
+                <TextBlock Grid.Row="12" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Text="Юзернейм"/>
                 <Border Grid.Row="12" Grid.Column="2" BorderThickness="1" BorderBrush="Black" CornerRadius="3">
                     <TextBox Name="UserNameTb" FontSize="20" FontFamily="{StaticResource GothamProFamily}" VerticalAlignment="Center"/>
                 </Border>
 
-                <Border Grid.Row="14" Grid.Column="2" BorderThickness="1" BorderBrush="Black" CornerRadius="3">
-                    <ComboBox Name="RoleComboBox" FontSize="20" FontFamily="{StaticResource GothamProFamily}" VerticalAlignment="Center"/>
+                <!-- Роль (видна только для сотрудников) -->
+                <TextBlock x:Name="RoleLabel" Grid.Row="14" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Text="Роль"/>
+                <Border x:Name="RoleBorder" Grid.Row="14" Grid.Column="2" BorderThickness="1" BorderBrush="Black" CornerRadius="3">
+                    <ComboBox x:Name="RoleComboBox" FontSize="20" FontFamily="{StaticResource GothamProFamily}" VerticalAlignment="Center"/>
                 </Border>
 
-                <Border Grid.Row="16" Grid.Column="2" BorderThickness="1" BorderBrush="Black" CornerRadius="3">
-                    <TextBox Name="SalaryTb" FontSize="20" FontFamily="{StaticResource GothamProFamily}" VerticalAlignment="Center"/>
+                <!-- Зарплата (видна только для сотрудников) -->
+                <TextBlock x:Name="SalaryLabel" Grid.Row="16" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Text="Зарплата"/>
+                <Border x:Name="SalaryBorder" Grid.Row="16" Grid.Column="2" BorderThickness="1" BorderBrush="Black" CornerRadius="3">
+                    <TextBox x:Name="SalaryTb" FontSize="20" FontFamily="{StaticResource GothamProFamily}" VerticalAlignment="Center"/>
                 </Border>
 
-                <Border Grid.Row="18" Grid.Column="2" BorderThickness="1" BorderBrush="Black" CornerRadius="3">
-                    <ComboBox Name="StoreComboBox" FontSize="20" FontFamily="{StaticResource GothamProFamily}" VerticalAlignment="Center" DisplayMemberPath="Name" SelectedValuePath="Id"/>
+                <!-- Магазин (видна только для сотрудников) -->
+                <TextBlock x:Name="StoreLabel" Grid.Row="18" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Text="Магазин"/>
+                <Border x:Name="StoreBorder" Grid.Row="18" Grid.Column="2" BorderThickness="1" BorderBrush="Black" CornerRadius="3">
+                    <ComboBox x:Name="StoreComboBox" FontSize="20" FontFamily="{StaticResource GothamProFamily}" VerticalAlignment="Center" DisplayMemberPath="Name" SelectedValuePath="Id"/>
                 </Border>
 
-                <Grid Grid.Row="20" Grid.ColumnSpan="3">
+                <!-- Адрес (виден только для клиентов) -->
+                <TextBlock x:Name="AddressLabel" Grid.Row="20" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="20" FontFamily="{StaticResource GothamProFamily}" Text="Адрес" Visibility="Collapsed"/>
+                <Border x:Name="AddressBorder" Grid.Row="20" Grid.Column="2" BorderThickness="1" BorderBrush="Black" CornerRadius="3" Visibility="Collapsed">
+                    <TextBox x:Name="AddressTb" FontSize="20" FontFamily="{StaticResource GothamProFamily}" VerticalAlignment="Center"/>
+                </Border>
+
+                <!-- Кнопки -->
+                <Grid Grid.Row="22" Grid.ColumnSpan="3">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*" />
                         <ColumnDefinition Width="auto" />
@@ -94,14 +113,11 @@
                         <ColumnDefinition Width="auto" />
                         <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
-                    <Button Name="AddBtn" Grid.Column="1" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" Content="Добавить" FontFamily="{StaticResource GothamProFamily}" FontSize="20" Height="33" Click="AddBtn_Click"/>
-                    <Button Name="EditBtn" Grid.Column="1" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" Content="Сохранить" FontFamily="{StaticResource GothamProFamily}" FontSize="20" Height="33" Click="EditBtn_Click"/>
-                    <Button Name="CancelBtn" Grid.Column="3" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" Content="Отмена" FontFamily="{StaticResource GothamProFamily}" FontSize="20" Height="33" Click="CancelBtn_Click"/>
+                    <Button Name="AddBtn" Grid.Column="1" HorizontalAlignment="Center" Content="Добавить" FontFamily="{StaticResource GothamProFamily}" FontSize="20" Height="33" Click="AddBtn_Click"/>
+                    <Button Name="EditBtn" Grid.Column="1" HorizontalAlignment="Center" Content="Сохранить" FontFamily="{StaticResource GothamProFamily}" FontSize="20" Height="33" Click="EditBtn_Click"/>
+                    <Button Name="CancelBtn" Grid.Column="3" HorizontalAlignment="Center" Content="Отмена" FontFamily="{StaticResource GothamProFamily}" FontSize="20" Height="33" Click="CancelBtn_Click"/>
                 </Grid>
             </Grid>
         </Border>
-
-        
-
     </Grid>
 </Window>

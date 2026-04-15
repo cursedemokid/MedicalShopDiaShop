@@ -9,51 +9,103 @@ namespace MedicalShopDiaShop.MainView
 {
     public partial class AddEditUserWindow : Window
     {
-        private readonly int? _employeeId;
+        private readonly int? _userId;
         private readonly bool _isEditMode;
+        private readonly bool _isClientMode;
         private Database.User _editingUser;
 
         // Конструктор для добавления нового сотрудника
-        public AddEditUserWindow()
+        public AddEditUserWindow() : this(false) { }
+
+        public AddEditUserWindow(bool isClientMode)
         {
             InitializeComponent();
+            _isClientMode = isClientMode;
             _isEditMode = false;
-            WindowName.Text = "Добавление пользователя";
+            WindowName.Text = isClientMode ? "Добавление клиента" : "Добавление сотрудника";
             AddBtn.Visibility = Visibility.Visible;
             EditBtn.Visibility = Visibility.Collapsed;
+
+            if (isClientMode)
+            {
+                // Скрываем поля для сотрудника, показываем адрес
+                RoleLabel.Visibility = Visibility.Collapsed;
+                RoleBorder.Visibility = Visibility.Collapsed;
+                SalaryLabel.Visibility = Visibility.Collapsed;
+                SalaryBorder.Visibility = Visibility.Collapsed;
+                StoreLabel.Visibility = Visibility.Collapsed;
+                StoreBorder.Visibility = Visibility.Collapsed;
+                AddressLabel.Visibility = Visibility.Visible;
+                AddressBorder.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                RoleLabel.Visibility = Visibility.Visible;
+                RoleBorder.Visibility = Visibility.Visible;
+                SalaryLabel.Visibility = Visibility.Visible;
+                SalaryBorder.Visibility = Visibility.Visible;
+                StoreLabel.Visibility = Visibility.Visible;
+                StoreBorder.Visibility = Visibility.Visible;
+                AddressLabel.Visibility = Visibility.Collapsed;
+                AddressBorder.Visibility = Visibility.Collapsed;
+            }
         }
 
-        // Конструктор для редактирования существующего сотрудника
-        public AddEditUserWindow(int userId)
+        // Конструктор для редактирования существующего пользователя
+        public AddEditUserWindow(int userId, bool isClientMode = false)
         {
             InitializeComponent();
-            _employeeId = userId;
+            _userId = userId;
+            _isClientMode = isClientMode;
             _isEditMode = true;
-            WindowName.Text = "Изменение данных пользователя";
+            WindowName.Text = isClientMode ? "Редактирование клиента" : "Редактирование сотрудника";
             AddBtn.Visibility = Visibility.Collapsed;
             EditBtn.Visibility = Visibility.Visible;
+
+            if (isClientMode)
+            {
+                RoleLabel.Visibility = Visibility.Collapsed;
+                RoleBorder.Visibility = Visibility.Collapsed;
+                SalaryLabel.Visibility = Visibility.Collapsed;
+                SalaryBorder.Visibility = Visibility.Collapsed;
+                StoreLabel.Visibility = Visibility.Collapsed;
+                StoreBorder.Visibility = Visibility.Collapsed;
+                AddressLabel.Visibility = Visibility.Visible;
+                AddressBorder.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                RoleLabel.Visibility = Visibility.Visible;
+                RoleBorder.Visibility = Visibility.Visible;
+                SalaryLabel.Visibility = Visibility.Visible;
+                SalaryBorder.Visibility = Visibility.Visible;
+                StoreLabel.Visibility = Visibility.Visible;
+                StoreBorder.Visibility = Visibility.Visible;
+                AddressLabel.Visibility = Visibility.Collapsed;
+                AddressBorder.Visibility = Visibility.Collapsed;
+            }
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            LoadRoles();
-            LoadStores();
-
-            if (_isEditMode && _employeeId.HasValue)
+            if (!_isClientMode)
             {
-                LoadEmployeeData(_employeeId.Value);
+                LoadRoles();
+                LoadStores();
+            }
+
+            if (_isEditMode && _userId.HasValue)
+            {
+                LoadUserData(_userId.Value);
             }
         }
 
-        // Заполнение комбобокса ролей из enum Role (исключаем Client, Supplier если не нужны)
         private void LoadRoles()
         {
-            // Выбираем только роли, подходящие для сотрудников
             var roles = Enum.GetValues(typeof(Role))
                 .Cast<Role>()
                 .Select(r => new { Id = (int)r, Name = GetRoleDisplayName(r) })
                 .ToList();
-
             RoleComboBox.ItemsSource = roles;
             RoleComboBox.DisplayMemberPath = "Name";
             RoleComboBox.SelectedValuePath = "Id";
@@ -72,7 +124,6 @@ namespace MedicalShopDiaShop.MainView
             }
         }
 
-        // Загрузка списка магазинов из БД
         private void LoadStores()
         {
             var stores = App.context.Store.ToList();
@@ -81,13 +132,12 @@ namespace MedicalShopDiaShop.MainView
             StoreComboBox.SelectedValuePath = "Id";
         }
 
-        // Загрузка данных сотрудника для редактирования
-        private void LoadEmployeeData(int userId)
+        private void LoadUserData(int userId)
         {
             _editingUser = App.context.User.FirstOrDefault(u => u.Id == userId);
             if (_editingUser == null)
             {
-                FeedbackService.Error("Сотрудник не найден.");
+                FeedbackService.Error("Пользователь не найден.");
                 Close();
                 return;
             }
@@ -98,21 +148,27 @@ namespace MedicalShopDiaShop.MainView
             PhoneNumberTb.Text = _editingUser.PhoneNumber;
             EmailTb.Text = _editingUser.Email;
             UserNameTb.Text = _editingUser.UserName;
-            SalaryTb.Text = _editingUser.Salary?.ToString() ?? "";
 
-            // Установка выбранной роли
-            if (_editingUser.Role != 0)
-                RoleComboBox.SelectedValue = _editingUser.Role;
-
-            // Установка выбранного магазина
-            if (_editingUser.StoreId != 0)
-                StoreComboBox.SelectedValue = _editingUser.StoreId;
+            if (_isClientMode)
+            {
+                AddressTb.Text = _editingUser.Address;
+            }
+            else
+            {
+                SalaryTb.Text = _editingUser.Salary?.ToString() ?? "";
+                if (_editingUser.Role != 0)
+                    RoleComboBox.SelectedValue = _editingUser.Role;
+                if (_editingUser.StoreId != 0)
+                    StoreComboBox.SelectedValue = _editingUser.StoreId;
+            }
         }
 
-        // Обработчик кнопки "Добавить"
         private void AddBtn_Click(object sender, RoutedEventArgs e)
         {
             if (!ValidateInputs()) return;
+
+            string generatedPassword = GenerateRandomPassword();
+            string hashedPassword = PasswordHelper.HashPassword(generatedPassword);
 
             var newUser = new Database.User
             {
@@ -122,22 +178,23 @@ namespace MedicalShopDiaShop.MainView
                 PhoneNumber = PhoneNumberTb.Text.Trim(),
                 Email = EmailTb.Text.Trim(),
                 UserName = UserNameTb.Text.Trim(),
-                Password = "defaultPassword", // или сгенерировать / запросить отдельно
-                Role = (int)RoleComboBox.SelectedValue,
-                StoreId = (int)StoreComboBox.SelectedValue,
-                Salary = decimal.TryParse(SalaryTb.Text, out var sal) ? sal : (decimal?)null,
-                AvatarKey = null // или путь по умолчанию
+                Password = hashedPassword,
+                Role = _isClientMode ? (int)Role.Client : (int)RoleComboBox.SelectedValue,
+                StoreId = _isClientMode ? App.currentUser.StoreId : (int)StoreComboBox.SelectedValue, // для клиента текущий магазин
+                Salary = _isClientMode ? null : (decimal.TryParse(SalaryTb.Text, out var sal) ? sal : (decimal?)null),
+                AvatarKey = null,
+                Address = _isClientMode ? AddressTb.Text.Trim() : null,
+                IsDeleted = false
             };
 
             App.context.User.Add(newUser);
             App.context.SaveChanges();
 
-            FeedbackService.Information("Сотрудник успешно добавлен.");
+            FeedbackService.Information($"Пользователь успешно добавлен. Пароль: {generatedPassword}", "Регистрация");
             DialogResult = true;
             Close();
         }
 
-        // Обработчик кнопки "Сохранить" (редактирование)
         private void EditBtn_Click(object sender, RoutedEventArgs e)
         {
             if (!ValidateInputs() || _editingUser == null) return;
@@ -148,9 +205,17 @@ namespace MedicalShopDiaShop.MainView
             _editingUser.PhoneNumber = PhoneNumberTb.Text.Trim();
             _editingUser.Email = EmailTb.Text.Trim();
             _editingUser.UserName = UserNameTb.Text.Trim();
-            _editingUser.Role = (int)RoleComboBox.SelectedValue;
-            _editingUser.StoreId = (int)StoreComboBox.SelectedValue;
-            _editingUser.Salary = decimal.TryParse(SalaryTb.Text, out var sal) ? sal : (decimal?)null;
+
+            if (_isClientMode)
+            {
+                _editingUser.Address = AddressTb.Text.Trim();
+            }
+            else
+            {
+                _editingUser.Role = (int)RoleComboBox.SelectedValue;
+                _editingUser.StoreId = (int)StoreComboBox.SelectedValue;
+                _editingUser.Salary = decimal.TryParse(SalaryTb.Text, out var sal) ? sal : (decimal?)null;
+            }
 
             App.context.SaveChanges();
 
@@ -159,23 +224,37 @@ namespace MedicalShopDiaShop.MainView
             Close();
         }
 
-        // Валидация обязательных полей
         private bool ValidateInputs()
         {
             if (string.IsNullOrWhiteSpace(LastNameTb.Text) ||
                 string.IsNullOrWhiteSpace(FirstNameTb.Text) ||
                 string.IsNullOrWhiteSpace(UserNameTb.Text) ||
-                string.IsNullOrWhiteSpace(PhoneNumberTb.Text) ||
-                RoleComboBox.SelectedValue == null ||
-                StoreComboBox.SelectedValue == null)
+                string.IsNullOrWhiteSpace(PhoneNumberTb.Text))
             {
-                FeedbackService.Error("Заполните все обязательные поля (Фамилия, Имя, Юзернейм, Телефон, Роль, Магазин).");
+                FeedbackService.Error("Заполните все обязательные поля (Фамилия, Имя, Юзернейм, Телефон).");
                 return false;
             }
+
+            if (!_isClientMode)
+            {
+                if (RoleComboBox.SelectedValue == null || StoreComboBox.SelectedValue == null)
+                {
+                    FeedbackService.Error("Выберите роль и магазин.");
+                    return false;
+                }
+            }
+
             return true;
         }
 
-        // Кнопка "Отмена"
+        private string GenerateRandomPassword(int length = 8)
+        {
+            const string valid = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+            var random = new Random();
+            return new string(Enumerable.Repeat(valid, length)
+                              .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
         private void CancelBtn_Click(object sender, RoutedEventArgs e)
         {
             DialogResult = false;

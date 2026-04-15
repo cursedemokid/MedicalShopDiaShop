@@ -49,7 +49,7 @@ namespace MedicalShopDiaShop.MainView
                 if (App.context.User.FirstOrDefault(u => u.Email == login || u.UserName == login) != null)
                     user = App.context.User.FirstOrDefault(u => u.Email == login || u.UserName == login);
 
-                if (user != null && user.Password == password)
+                if (user != null && PasswordHelper.VerifyPassword(password, user.Password))
                 {
                     App.currentUser = user;
 

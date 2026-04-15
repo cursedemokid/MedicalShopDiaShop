@@ -84,11 +84,9 @@ namespace MedicalShopDiaShop.MainView.Pages
 
         private void AddBtn_Click(object sender, RoutedEventArgs e)
         {
-            var window = new AddEditUserWindow(); // окно для добавления пользователя (умеет работать с ролью Client)
+            var window = new AddEditUserWindow(isClientMode: true);
             if (window.ShowDialog() == true)
-            {
                 LoadClientsFromDatabase();
-            }
         }
 
         private void EditBtn_Click(object sender, RoutedEventArgs e)
@@ -99,12 +97,9 @@ namespace MedicalShopDiaShop.MainView.Pages
                 FeedbackService.Warning("Не выбран ни один клиент для изменения.", "Изменение");
                 return;
             }
-
-            var window = new AddEditUserWindow(selected.Id);
+            var window = new AddEditUserWindow(selected.Id, isClientMode: true);
             if (window.ShowDialog() == true)
-            {
                 LoadClientsFromDatabase();
-            }
         }
 
         private void DeleteBtn_Click(object sender, RoutedEventArgs e)
