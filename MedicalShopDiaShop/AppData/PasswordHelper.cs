@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -28,7 +29,7 @@ namespace MedicalShopDiaShop.AppData
         /// <param name="enteredPassword">Пароль, введённый пользователем</param>
         /// <param name="user">Объект пользователя из БД</param>
         /// <returns>true, если пароль верен</returns>
-        public static bool VerifyAndUpgradePassword(string enteredPassword, User user)
+        public static bool VerifyAndUpgradePassword(string enteredPassword, User user, DbContext context)
         {
             if (user == null || string.IsNullOrEmpty(enteredPassword))
                 return false;
@@ -53,11 +54,7 @@ namespace MedicalShopDiaShop.AppData
                 {
                     // Пароль верен – обновляем запись на хэш
                     user.Password = HashPassword(enteredPassword);
-                    using (var context = new DiaShopEntities3())
-                    {
-                        context.Entry(user).State = System.Data.Entity.EntityState.Modified;
-                        context.SaveChanges();
-                    }
+                    context.SaveChanges();
                     return true;
                 }
                 return false;

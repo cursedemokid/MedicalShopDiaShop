@@ -46,7 +46,7 @@ namespace MedicalShopDiaShop.MainView
 
                 var user = App.context.User.FirstOrDefault(u => u.Email == login || u.UserName == login);
 
-                if (user != null && PasswordHelper.VerifyAndUpgradePassword(password, user))
+                if (user != null && PasswordHelper.VerifyAndUpgradePassword(password, user, App.context))
                 {
                     App.currentUser = user;
 

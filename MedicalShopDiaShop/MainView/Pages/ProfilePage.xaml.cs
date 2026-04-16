@@ -105,7 +105,7 @@ namespace MedicalShopDiaShop.MainView.Pages
 
             string avatarPath = string.IsNullOrEmpty(_displayedUser.AvatarKey)
                 ? "/Resources/avatarka.png"
-                : $"/Resources/Avatars/{_displayedUser.AvatarKey}";
+                : _displayedUser.AvatarKey;   
             AvatarImage.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(avatarPath, UriKind.Relative));
         }
 
@@ -427,7 +427,6 @@ namespace MedicalShopDiaShop.MainView.Pages
 
         private void ChangeAvatar_Click(object sender, RoutedEventArgs e)
         {
-            // Разрешено только если это свой профиль
             if (App.currentUser.Id != _displayedUser.Id)
             {
                 FeedbackService.Warning("Вы можете изменить аватар только своего профиля.");
@@ -449,10 +448,18 @@ namespace MedicalShopDiaShop.MainView.Pages
                 try
                 {
                     System.IO.File.Copy(dialog.FileName, destPath, true);
-                    _displayedUser.AvatarKey = fileName;
+                    // Сохраняем полный относительный путь, начинающийся с /Resources/Avatars/
+                    string relativePath = $"/Resources/Avatars/{fileName}";
+                    _displayedUser.AvatarKey = relativePath;
                     App.context.SaveChanges();
-                    // Обновить отображение
+
+                    // Обновляем отображение на странице профиля
                     AvatarImage.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(destPath, UriKind.Absolute));
+
+                    // Обновляем аватар в главном окне
+                    if (Application.Current.MainWindow is MainWindow mainWindow)
+                        mainWindow.RefreshUserInfo();
+
                     FeedbackService.Information("Аватар успешно обновлён.");
                 }
                 catch (Exception ex)
