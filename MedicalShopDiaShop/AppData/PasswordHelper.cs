@@ -28,6 +28,7 @@ namespace MedicalShopDiaShop.AppData
         /// </summary>
         /// <param name="enteredPassword">Пароль, введённый пользователем</param>
         /// <param name="user">Объект пользователя из БД</param>
+        /// <param name="context">передает контекст, в котором был найден пользователь из авторизации</param>
         /// <returns>true, если пароль верен</returns>
         public static bool VerifyAndUpgradePassword(string enteredPassword, User user, DbContext context)
         {
