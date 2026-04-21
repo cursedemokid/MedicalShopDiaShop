@@ -22,12 +22,12 @@ namespace MedicalShopDiaShop.Database
         }
     
         public int Id { get; set; }
-        public int SupplierId { get; set; }
-        public int UserId { get; set; }
+        public Nullable<int> SupplierId { get; set; }
+        public Nullable<int> UserId { get; set; }
         public System.DateTime OrderDate { get; set; }
-        public System.DateTime ArrivedDate { get; set; }
+        public Nullable<System.DateTime> ArrivedDate { get; set; }
         public decimal TotalCost { get; set; }
-        public System.DateTime AroundDate { get; set; }
+        public Nullable<System.DateTime> AroundDate { get; set; }
         public Nullable<int> Status { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

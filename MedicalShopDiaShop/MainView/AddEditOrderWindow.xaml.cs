@@ -64,7 +64,7 @@ namespace MedicalShopDiaShop.MainView
 
         private void LoadOrderData()
         {
-            using (var context = new DiaShopEntities3())
+            using (var context = new DiaShopEntities())
             {
                 _editingOrder = context.Order.FirstOrDefault(o => o.Id == _orderId);
                 if (_editingOrder == null)
@@ -136,7 +136,7 @@ namespace MedicalShopDiaShop.MainView
             decimal totalCost = _cartItems.Sum(c => c.TotalPrice);
             DateTime now = DateTime.Now;
 
-            using (var context = new DiaShopEntities3())
+            using (var context = new DiaShopEntities())
             {
                 if (_editingOrder == null)
                 {
@@ -227,7 +227,7 @@ namespace MedicalShopDiaShop.MainView
                     context.SaveChanges();
 
                     // Уведомление
-                    NotificationHelper.NotifyAllStoreEmployees(App.currentUser.StoreId,
+                    NotificationHelper.NotifyAllStoreEmployees((int)App.currentUser.StoreId,
                         $"Новый заказ №{order.Id} на сумму {totalCost:N2} ₽");
                 }
                 else
@@ -331,7 +331,7 @@ namespace MedicalShopDiaShop.MainView
 
         private void LoadClients()
         {
-            using (var context = new DiaShopEntities3())
+            using (var context = new DiaShopEntities())
             {
                 var clients = context.User
                     .Where(u => u.Role == (int)Role.Client && u.IsDeleted != true)
@@ -348,7 +348,7 @@ namespace MedicalShopDiaShop.MainView
 
         private void LoadWorkers()
         {
-            using (var context = new DiaShopEntities3())
+            using (var context = new DiaShopEntities())
             {
                 var workers = context.User
                     .Where(u => u.Role == (int)Role.Worker && u.IsDeleted != true)
@@ -368,7 +368,7 @@ namespace MedicalShopDiaShop.MainView
 
         private void LoadCouriers()
         {
-            using (var context = new DiaShopEntities3())
+            using (var context = new DiaShopEntities())
             {
                 var couriers = context.User
                     .Where(u => u.Role == (int)Role.Courier && u.IsDeleted != true)
@@ -384,7 +384,7 @@ namespace MedicalShopDiaShop.MainView
 
         private void LoadProducts()
         {
-            using (var context = new DiaShopEntities3())
+            using (var context = new DiaShopEntities())
             {
                 var products = context.Product.ToList();
                 _allProducts = new ObservableCollection<ProductItem>(

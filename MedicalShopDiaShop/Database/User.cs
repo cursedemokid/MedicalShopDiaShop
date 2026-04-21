@@ -40,7 +40,7 @@ namespace MedicalShopDiaShop.Database
         public string UserName { get; set; }
         public int Role { get; set; }
         public string AvatarKey { get; set; }
-        public int StoreId { get; set; }
+        public Nullable<int> StoreId { get; set; }
         public Nullable<decimal> Salary { get; set; }
         public string Address { get; set; }
         public Nullable<bool> IsDeleted { get; set; }

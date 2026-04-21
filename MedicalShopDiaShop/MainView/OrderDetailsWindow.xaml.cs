@@ -21,7 +21,7 @@ namespace MedicalShopDiaShop.MainView
 
         private void LoadOrderDetails()
         {
-            using (var context = new DiaShopEntities3())
+            using (var context = new DiaShopEntities())
             {
                 var order = context.Order.FirstOrDefault(o => o.Id == _orderId);
                 if (order == null)
@@ -55,7 +55,7 @@ namespace MedicalShopDiaShop.MainView
                 }
                 CourierText.Text = courierName;
 
-                StatusText.Text = GetOrderStatusName(order.Status);
+                StatusText.Text = GetOrderStatusName((int)order.Status);
                 TotalText.Text = $"{order.TotalCost:N2} ₽";
 
                 // Товары
@@ -105,9 +105,9 @@ namespace MedicalShopDiaShop.MainView
 
                     historyItems.Add(new OrderHistoryItem
                     {
-                        UpdateTime = item.UpdateAt,
-                        OldStatusName = GetOrderStatusName(item.OldStatus),
-                        NewStatusName = GetOrderStatusName(item.NewStatus),
+                        UpdateTime = (DateTime)item.UpdateAt,
+                        OldStatusName = GetOrderStatusName((int)item.OldStatus),
+                        NewStatusName = GetOrderStatusName((int)item.NewStatus),
                         UserTransferText = transferText
                     });
                 }

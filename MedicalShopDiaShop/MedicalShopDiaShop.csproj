@@ -582,8 +582,8 @@
   <ItemGroup>
     <Content Include="Database\DiaShopModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>DiaShopModel.Context.cs</LastGenOutput>
       <DependentUpon>DiaShopModel.edmx</DependentUpon>
+      <LastGenOutput>DiaShopModel.Context.cs</LastGenOutput>
     </Content>
     <Content Include="Database\DiaShopModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

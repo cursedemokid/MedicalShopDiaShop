@@ -19,6 +19,7 @@ namespace MedicalShopDiaShop.Database
         public int ProductId { get; set; }
         public int Quantity { get; set; }
         public decimal TotalPrice { get; set; }
+        public Nullable<System.DateTime> ExpirationDate { get; set; }
     
         public virtual Product Product { get; set; }
         public virtual Supply Supply { get; set; }

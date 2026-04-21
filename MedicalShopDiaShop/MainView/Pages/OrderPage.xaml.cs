@@ -39,7 +39,7 @@ namespace MedicalShopDiaShop.MainView.Pages
 
         private void LoadOrdersFromDatabase()
         {
-            using (var context = new DiaShopEntities3())
+            using (var context = new DiaShopEntities())
             {
                 var orders = context.Order
                     .OrderByDescending(o => o.DateTime)
@@ -50,7 +50,7 @@ namespace MedicalShopDiaShop.MainView.Pages
             }
         }
 
-        private OrderDto MapToOrderDto(Order order, DiaShopEntities3 context)
+        private OrderDto MapToOrderDto(Order order, DiaShopEntities context)
         {
             var client = context.User.FirstOrDefault(u => u.Id == order.ClientId);
             var worker = context.User.FirstOrDefault(u => u.Id == order.WorkerId);
@@ -92,9 +92,9 @@ namespace MedicalShopDiaShop.MainView.Pages
                 DeliveryStartDate = deliveryStart,
                 DeliveryEndDate = deliveryEnd,
                 DeliveryDescription = deliveryDescription,
-                Status = order.Status,
+                Status = (int)order.Status,
                 TotalCost = order.TotalCost,
-                DeliveryType = order.DeliveryType,
+                DeliveryType = (int)order.DeliveryType,
                 Items = items,
                 IsSelected = false
             };
@@ -112,12 +112,12 @@ namespace MedicalShopDiaShop.MainView.Pages
             int orderId = (int)combo.Tag;
             int newStatus = int.Parse(((ComboBoxItem)combo.SelectedItem).Tag.ToString());
 
-            using (var context = new DiaShopEntities3())
+            using (var context = new DiaShopEntities())
             {
                 var order = context.Order.FirstOrDefault(o => o.Id == orderId);
                 if (order == null) return;
 
-                int oldStatus = order.Status;
+                int oldStatus = (int)order.Status;
                 if (oldStatus == newStatus) return;
 
                 order.Status = newStatus;
@@ -246,7 +246,7 @@ namespace MedicalShopDiaShop.MainView.Pages
 
             if (FeedbackService.Question($"Удалить заказ №{selected.Id}?") == MessageBoxResult.Yes)
             {
-                using (var context = new DiaShopEntities3())
+                using (var context = new DiaShopEntities())
                 {
                     var order = context.Order.FirstOrDefault(o => o.Id == selected.Id);
                     if (order != null)

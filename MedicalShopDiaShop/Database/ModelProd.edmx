@@ -1038,7 +1038,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="DiaShopEntities" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="DiaShopEntities4" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Delivery" EntityType="Self.Delivery" />
           <EntitySet Name="Favorite" EntityType="Self.Favorite" />
           <EntitySet Name="Notification" EntityType="Self.Notification" />
@@ -1151,7 +1151,7 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="Хранилище DiaShopModelContainer" CdmEntityContainer="DiaShopEntities">
+        <EntityContainerMapping StorageEntityContainer="Хранилище DiaShopModelContainer" CdmEntityContainer="DiaShopEntities4">
           <EntitySetMapping Name="Delivery">
             <EntityTypeMapping TypeName="DiaShopModel.Delivery">
               <MappingFragment StoreEntitySet="Delivery">
