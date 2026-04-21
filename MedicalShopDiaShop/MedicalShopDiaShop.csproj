@@ -163,6 +163,7 @@
     <Compile Include="AppData\PasswordHelper.cs" />
     <Compile Include="AppData\ProductWithFavorite.cs" />
     <Compile Include="AppData\Status.cs" />
+    <Compile Include="AppData\StockHelper.cs" />
     <Compile Include="Database\Delivery.cs">
       <DependentUpon>DiaShopModel.tt</DependentUpon>
     </Compile>
