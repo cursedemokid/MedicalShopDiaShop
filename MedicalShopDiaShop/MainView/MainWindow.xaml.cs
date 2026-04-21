@@ -38,7 +38,8 @@ namespace MedicalShopDiaShop.MainView
                 ["Supplies"] = (MaxSuppliesBtn, SuppliesBtn, SuppliesVisualBtn),
                 ["Employees"] = (MaxEmployeesBtn, EmployeesBtn, EmployeesVisualBtn),
                 ["Orders"] = (MaxOrdersBtn, OrdersBtn, OrdersVisualBtn),
-                ["Exit"] = (MaxExitBtn, ExitBtn, ExitVisualBtn)
+                ["Exit"] = (MaxExitBtn, ExitBtn, ExitVisualBtn),
+                ["Stock"] = (MaxStockBtn, StockBtn, StockVisualBtn),
             };
 
             foreach (var pair in _buttonPairs.Values)
@@ -51,6 +52,8 @@ namespace MedicalShopDiaShop.MainView
             SetActiveButton("Profile");
             LoadNotifications();
             LoadUserInfo();
+            UpdateNotificationBadge();
+            StockHelper.CheckExpiringProducts();
             UpdateNotificationBadge();
         }
 
@@ -223,6 +226,12 @@ namespace MedicalShopDiaShop.MainView
         {
             SetActiveButton("Orders");
             MainFrame.Navigate(new OrdersPage());
+        }
+
+        private void StockBtn_Click(object sender, RoutedEventArgs e)
+        {
+            SetActiveButton("Stock");
+            MainFrame.Navigate(new StockPage());
         }
 
         private void NotificationsBtn_Click(object sender, RoutedEventArgs e)
