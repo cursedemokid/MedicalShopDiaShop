@@ -123,7 +123,7 @@ namespace MedicalShopDiaShop.MainView.Pages
             // Формирование пути к аватару
             string avatarPath;
             if (string.IsNullOrEmpty(_displayedUser.AvatarKey))
-                avatarPath = "/Resources/avatarka.png";
+                avatarPath = "/Resources/ProfileIcon.png";
             else if (_displayedUser.AvatarKey.StartsWith("/Resources/"))
                 avatarPath = _displayedUser.AvatarKey;
             else

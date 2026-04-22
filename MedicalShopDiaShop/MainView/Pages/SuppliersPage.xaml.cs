@@ -43,7 +43,7 @@ namespace MedicalShopDiaShop.MainView.Pages
         {
             var cities = Enum.GetValues(typeof(City))
                 .Cast<City>()
-                .Select(c => new { Id = (int)c, Name = c.ToString() })
+                .Select(c => new { Id = (int)c, Name = GetCityName(c) })
                 .ToList();
             cities.Insert(0, new { Id = 0, Name = "Все" });
             CityFilterComboBox.ItemsSource = cities;
@@ -64,7 +64,7 @@ namespace MedicalShopDiaShop.MainView.Pages
                 Name = s.Name,
                 Address = s.Address,
                 City = s.City,
-                CityName = GetCityName(s.City),
+                CityName = GetCityName((City)s.City),
                 IsSelected = false
             });
 
@@ -83,12 +83,12 @@ namespace MedicalShopDiaShop.MainView.Pages
             var items = dbSupplies.Select(s => new SupplyItem
             {
                 Id = s.Id,
-                SupplierId = (int)s.SupplierId,
-                SupplierName = s.SupplierId != 0 ? (App.context.Store.Find(s.SupplierId)?.Name ?? "Неизвестно") : "Не выбран",
-                OrderDate = (DateTime)s.OrderDate,
-                AroundDate = (DateTime)s.AroundDate,
-                TotalCost = (decimal)s.TotalCost,
-                IsCompleted = s.ArrivedDate != default && s.ArrivedDate <= DateTime.Now,
+                SupplierId = s.SupplierId ?? 0,
+                SupplierName = s.SupplierId.HasValue ? (App.context.Store.Find(s.SupplierId)?.Name ?? "Неизвестно") : "Не выбран",
+                OrderDate = s.OrderDate,
+                AroundDate = s.AroundDate ?? s.OrderDate,
+                TotalCost = s.TotalCost,
+                IsCompleted = s.ArrivedDate.HasValue && s.ArrivedDate <= DateTime.Now,
                 IsSelected = false
             }).ToList();
 
@@ -98,9 +98,9 @@ namespace MedicalShopDiaShop.MainView.Pages
             SuppliesListBox.ItemsSource = _filteredSupplies;
         }
 
-        private string GetCityName(int cityId)
+        private string GetCityName(City city)
         {
-            switch ((City)cityId)
+            switch (city)
             {
                 case City.Moscow: return "Москва";
                 case City.SaintPetersburg: return "Санкт-Петербург";
@@ -158,10 +158,7 @@ namespace MedicalShopDiaShop.MainView.Pages
             }
         }
 
-        private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            // Можно вызывать фильтрацию по мере ввода, но для простоты оставим по кнопке
-        }
+        private void SearchBox_TextChanged(object sender, TextChangedEventArgs e) { }
 
         private void CityFilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -191,16 +188,24 @@ namespace MedicalShopDiaShop.MainView.Pages
         private void SetActiveMode(ViewMode mode)
         {
             _currentMode = mode;
+
+            var primaryBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF673AB7"));
+            var whiteBrush = Brushes.White;
+            var transparentBrush = Brushes.Transparent;
+
             if (mode == ViewMode.Suppliers)
             {
                 SuppliersListView.Visibility = Visibility.Visible;
                 SuppliesListBox.Visibility = Visibility.Collapsed;
                 CityFilterGroup.Visibility = Visibility.Visible;
-                AddSupplyBtn.Visibility = Visibility.Visible;
-                // Подсветка кнопок
-                SuppliersModeBtn.Background = Brushes.Purple;
-                SuppliesModeBtn.Background = Brushes.Transparent;
-                // Обновляем список
+
+                EditBtn.Visibility = Visibility.Visible;
+
+                SuppliersModeBtn.Background = primaryBrush;
+                SuppliersModeBtn.Foreground = whiteBrush;
+                SuppliesModeBtn.Background = transparentBrush;
+                SuppliesModeBtn.Foreground = primaryBrush;
+
                 ApplyFilterAndSearch();
                 SuppliersListView.ItemsSource = _filteredSuppliers;
             }
@@ -209,28 +214,25 @@ namespace MedicalShopDiaShop.MainView.Pages
                 SuppliersListView.Visibility = Visibility.Collapsed;
                 SuppliesListBox.Visibility = Visibility.Visible;
                 CityFilterGroup.Visibility = Visibility.Collapsed;
-                AddSupplyBtn.Visibility = Visibility.Collapsed;
-                SuppliersModeBtn.Background = Brushes.Transparent;
-                SuppliesModeBtn.Background = Brushes.Purple;
-                // Обновляем список поставок
+
+                EditBtn.Visibility = Visibility.Collapsed;
+
+                SuppliesModeBtn.Background = primaryBrush;
+                SuppliesModeBtn.Foreground = whiteBrush;
+                SuppliersModeBtn.Background = transparentBrush;
+                SuppliersModeBtn.Foreground = primaryBrush;
+
                 ApplySupplyFilterAndSearch();
                 SuppliesListBox.ItemsSource = _filteredSupplies;
             }
         }
 
-        private void SuppliersModeBtn_Click(object sender, RoutedEventArgs e)
-        {
-            SetActiveMode(ViewMode.Suppliers);
-        }
-
-        private void SuppliesModeBtn_Click(object sender, RoutedEventArgs e)
-        {
-            SetActiveMode(ViewMode.Supplies);
-        }
+        private void SuppliersModeBtn_Click(object sender, RoutedEventArgs e) => SetActiveMode(ViewMode.Suppliers);
+        private void SuppliesModeBtn_Click(object sender, RoutedEventArgs e) => SetActiveMode(ViewMode.Supplies);
 
         #endregion
 
-        #region Действия с поставщиками
+        #region Действия с поставщиками и поставками
 
         private void AddBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -242,7 +244,6 @@ namespace MedicalShopDiaShop.MainView.Pages
             }
             else
             {
-                // Добавление новой поставки
                 var window = new AddSupplyWindow();
                 if (window.ShowDialog() == true)
                     LoadSuppliesFromDatabase();
@@ -263,19 +264,7 @@ namespace MedicalShopDiaShop.MainView.Pages
                 if (window.ShowDialog() == true)
                     LoadSuppliersFromDatabase();
             }
-            else
-            {
-                var selected = GetSelectedSupply();
-                if (selected == null)
-                {
-                    FeedbackService.Warning("Выберите поставку для изменения.");
-                    return;
-                }
-                // Открываем окно редактирования поставки (продолжение черновика)
-                var window = new AddSupplyWindow(selected.Id);
-                if (window.ShowDialog() == true)
-                    LoadSuppliesFromDatabase();
-            }
+            // В режиме поставок кнопка Edit скрыта, поэтому else не требуется
         }
 
         private void DeleteBtn_Click(object sender, RoutedEventArgs e)
@@ -313,7 +302,6 @@ namespace MedicalShopDiaShop.MainView.Pages
                     var dbSupply = App.context.Supply.FirstOrDefault(s => s.Id == selected.Id);
                     if (dbSupply != null)
                     {
-                        // Удаляем связанные товары
                         var products = App.context.SupplyProduct.Where(sp => sp.SupplyId == dbSupply.Id);
                         App.context.SupplyProduct.RemoveRange(products);
                         App.context.Supply.Remove(dbSupply);
@@ -325,15 +313,8 @@ namespace MedicalShopDiaShop.MainView.Pages
             }
         }
 
-        private SupplierItem GetSelectedSupplier()
-        {
-            return _filteredSuppliers?.FirstOrDefault(s => s.IsSelected);
-        }
-
-        private SupplyItem GetSelectedSupply()
-        {
-            return _filteredSupplies?.FirstOrDefault(s => s.IsSelected);
-        }
+        private SupplierItem GetSelectedSupplier() => _filteredSuppliers?.FirstOrDefault(s => s.IsSelected);
+        private SupplyItem GetSelectedSupply() => _filteredSupplies?.FirstOrDefault(s => s.IsSelected);
 
         private void Details_Click(object sender, RoutedEventArgs e)
         {
@@ -345,13 +326,6 @@ namespace MedicalShopDiaShop.MainView.Pages
                     $"Название: {supplier.Name}\nАдрес: {supplier.Address}\nГород: {supplier.CityName}",
                     "Информация о поставщике");
             }
-        }
-
-        private void AddSupply_Click(object sender, RoutedEventArgs e)
-        {
-            var window = new AddSupplyWindow();
-            if (window.ShowDialog() == true)
-                LoadSuppliesFromDatabase();
         }
 
         private void EditSupply_Click(object sender, RoutedEventArgs e)
@@ -435,6 +409,17 @@ namespace MedicalShopDiaShop.MainView.Pages
         }
 
         #endregion
+
+        private void ViewSupplyDetails_Click(object sender, RoutedEventArgs e)
+        {
+            var btn = sender as Button;
+            var supply = btn?.Tag as SupplyItem;
+            if (supply != null)
+            {
+                var window = new SupplyDetailsWindow(supply.Id);
+                window.ShowDialog();
+            }
+        }
     }
 
     // Модель поставщика
@@ -477,8 +462,6 @@ namespace MedicalShopDiaShop.MainView.Pages
         }
 
         public string DisplayName => $"Поставка №{Id}";
-        public string StatusText => IsCompleted ? "Завершена" : "В процессе";
-        public Brush StatusColor => IsCompleted ? Brushes.Green : Brushes.Orange;
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

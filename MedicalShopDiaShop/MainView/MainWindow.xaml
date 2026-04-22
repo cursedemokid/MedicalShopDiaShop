@@ -129,7 +129,7 @@
                         <ColumnDefinition Width="5" />
                         <ColumnDefinition Width="auto" />
                     </Grid.ColumnDefinitions>
-                    <Image Name="UserAvatarImg" Source="/Resources/avatarPlaceHolder.png" Height="50" VerticalAlignment="Center" >
+                    <Image Name="UserAvatarImg" Source="/Resources/ProfileIcon.png" Height="50" VerticalAlignment="Center" >
                         <Image.Clip>
                             <EllipseGeometry Center="25,25" RadiusX="25" RadiusY="25"/>
                         </Image.Clip>

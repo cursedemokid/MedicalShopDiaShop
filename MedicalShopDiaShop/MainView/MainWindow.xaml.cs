@@ -387,11 +387,11 @@ namespace MedicalShopDiaShop.MainView
                     if (System.IO.File.Exists(fullPath))
                         UserAvatarImg.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(fullPath));
                     else
-                        UserAvatarImg.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri("/Resources/avatarPlaceHolder.png", UriKind.Relative));
+                        UserAvatarImg.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri("/Resources/ProfileIcon.png", UriKind.Relative));
                 }
                 catch
                 {
-                    UserAvatarImg.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri("/Resources/avatarPlaceHolder.png", UriKind.Relative));
+                    UserAvatarImg.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri("/Resources/ProfileIcon.png", UriKind.Relative));
                 }
             }
         }
