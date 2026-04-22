@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MedicalShopDiaShop.MainView"
+        xmlns:local="clr-namespace:MedicalShopDiaShop.MainView" xmlns:local1="clr-namespace:MedicalShopDiaShop.AppData"
         mc:Ignorable="d"
         Title="" MinHeight="720" MinWidth="1280" WindowStartupLocation="CenterScreen"
         Icon="/Resources/sugar.png">
@@ -64,6 +64,9 @@
                              Storyboard.TargetProperty="Opacity"
                              From="1" To="0" Duration="0:0:0.2"/>
         </Storyboard>
+
+        <local1:RelativeDateConverter x:Key="RelativeDateConverter"/>
+        
     </Window.Resources>
 
     <Grid Margin="5">
@@ -126,7 +129,11 @@
                         <ColumnDefinition Width="5" />
                         <ColumnDefinition Width="auto" />
                     </Grid.ColumnDefinitions>
-                    <Image Name="UserAvatarImg" Source="/Resources/ProfileIcon.png" Height="50" VerticalAlignment="Center"/>
+                    <Image Name="UserAvatarImg" Source="/Resources/avatarPlaceHolder.png" Height="50" VerticalAlignment="Center" >
+                        <Image.Clip>
+                            <EllipseGeometry Center="25,25" RadiusX="25" RadiusY="25"/>
+                        </Image.Clip>
+                    </Image>
                     <TextBlock Name="FullNameTbl" Foreground="Black" Grid.Column="2" Text="Профиль" FontFamily="{StaticResource GothamProFamily}" VerticalAlignment="Center" FontSize="20"/>
                 </Grid>
             </Grid>
@@ -385,7 +392,7 @@
         <!-- Затемнение и уведомления -->
         <Grid Name="BlurGrid" Background="White" Opacity="0" Visibility="Collapsed" MouseDown="BlurGrid_MouseDown" />
         <Grid Name="NotificationGrid" Visibility="Collapsed" HorizontalAlignment="Right" Grid.Column="1" Background="White"
-              Width="300" RenderTransformOrigin="0.5,0.5">
+              Width="400" RenderTransformOrigin="0.5,0.5">
             <Grid.RenderTransform>
                 <TranslateTransform X="300"/>
             </Grid.RenderTransform>
@@ -417,8 +424,9 @@
                             </Grid.RowDefinitions>
                             <Ellipse HorizontalAlignment="Right" VerticalAlignment="Top" Fill="Red" Height="10" Width="10" 
                                     Visibility="{Binding UnreadVisibility}"/>
-                            <TextBlock Grid.Row="0" Text="Заголовок" FontFamily="{StaticResource GothamProFamily}" FontSize="20" FontWeight="Bold" TextWrapping="Wrap"/>
-                            <TextBlock Grid.Row="2" Text="10 минут назад" FontFamily="{StaticResource GothamProFamily}" FontSize="15" FontWeight="Light" TextWrapping="Wrap"/>
+                            <TextBlock Grid.Row="0" Text="{Binding Text}" FontFamily="{StaticResource GothamProFamily}" FontSize="20" FontWeight="Bold" TextWrapping="Wrap"/>
+                            <TextBlock Grid.Row="2" Text="{Binding CreatedAt, Converter={StaticResource RelativeDateConverter}}" 
+                             FontFamily="{StaticResource GothamProFamily}" FontSize="15" FontWeight="Light" TextWrapping="Wrap"/>
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

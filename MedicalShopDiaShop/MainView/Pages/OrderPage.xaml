@@ -124,7 +124,7 @@
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <ComboBox SelectedValue="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                      SelectedValuePath="Tag" DisplayMemberPath="Content"
+                      SelectedValuePath="Tag" IsSynchronizedWithCurrentItem="True" DisplayMemberPath="Content"
                       SelectionChanged="OrderStatus_SelectionChanged"
                       Tag="{Binding Id}" Width="140">
                                         <ComboBoxItem Content="В обработке" Tag="1"/>

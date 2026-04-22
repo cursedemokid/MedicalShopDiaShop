@@ -61,5 +61,24 @@ namespace MedicalShopDiaShop.AppData
                 return false;
             }
         }
+
+        public static bool VerifyPassword(string enteredPassword, string storedHash)
+        {
+            if (string.IsNullOrEmpty(enteredPassword) || string.IsNullOrEmpty(storedHash))
+                return false;
+
+            // Если сохранённый пароль не похож на хэш (длина не 44 или не заканчивается на '='), считаем его открытым текстом
+            bool isHashFormat = storedHash.Length == 44 && storedHash.EndsWith("=");
+            if (isHashFormat)
+            {
+                string hashOfEntered = HashPassword(enteredPassword);
+                return hashOfEntered == storedHash;
+            }
+            else
+            {
+                // Старый формат – открытый текст
+                return enteredPassword == storedHash;
+            }
+        }
     }
 }

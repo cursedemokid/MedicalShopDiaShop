@@ -47,6 +47,7 @@ namespace MedicalShopDiaShop.MainView.Pages
 
                 _allOrders = new ObservableCollection<OrderDto>(orders.Select(o => MapToOrderDto(o, context)));
                 _filteredOrders = new ObservableCollection<OrderDto>(_allOrders);
+                SubscribeToOrderChanges(_filteredOrders);
             }
         }
 
@@ -92,12 +93,47 @@ namespace MedicalShopDiaShop.MainView.Pages
                 DeliveryStartDate = deliveryStart,
                 DeliveryEndDate = deliveryEnd,
                 DeliveryDescription = deliveryDescription,
-                Status = (int)order.Status,
+                Status = order.Status ?? 1, // если NULL, считаем "В обработке"
                 TotalCost = order.TotalCost,
-                DeliveryType = (int)order.DeliveryType,
+                DeliveryType = order.DeliveryType ?? 1,
                 Items = items,
                 IsSelected = false
             };
+        }
+
+        #endregion
+
+        #region Единичное выделение
+
+        private void SubscribeToOrderChanges(ObservableCollection<OrderDto> orders)
+        {
+            foreach (var o in orders)
+                o.PropertyChanged += OnOrderPropertyChanged;
+            orders.CollectionChanged += OnOrdersCollectionChanged;
+        }
+
+        private void OnOrdersCollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (e.NewItems != null)
+                foreach (OrderDto o in e.NewItems)
+                    o.PropertyChanged += OnOrderPropertyChanged;
+            if (e.OldItems != null)
+                foreach (OrderDto o in e.OldItems)
+                    o.PropertyChanged -= OnOrderPropertyChanged;
+        }
+
+        private void OnOrderPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(OrderDto.IsSelected))
+            {
+                var changed = sender as OrderDto;
+                if (changed != null && changed.IsSelected)
+                {
+                    foreach (var o in _filteredOrders)
+                        if (o != changed && o.IsSelected)
+                            o.IsSelected = false;
+                }
+            }
         }
 
         #endregion
@@ -107,7 +143,7 @@ namespace MedicalShopDiaShop.MainView.Pages
         private async void OrderStatus_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var combo = sender as ComboBox;
-            if (combo == null) return;
+            if (combo == null || combo.SelectedItem == null) return;
 
             int orderId = (int)combo.Tag;
             int newStatus = int.Parse(((ComboBoxItem)combo.SelectedItem).Tag.ToString());
@@ -117,7 +153,7 @@ namespace MedicalShopDiaShop.MainView.Pages
                 var order = context.Order.FirstOrDefault(o => o.Id == orderId);
                 if (order == null) return;
 
-                int oldStatus = (int)order.Status;
+                int oldStatus = order.Status ?? 1;
                 if (oldStatus == newStatus) return;
 
                 order.Status = newStatus;
@@ -138,7 +174,7 @@ namespace MedicalShopDiaShop.MainView.Pages
                     {
                         StartDate = DateTime.Now,
                         EndDate = DateTime.Now.AddDays(3),
-                        CourierId = 8,
+                        CourierId = 8, // позже можно назначить
                         Description = $"Доставка заказа №{order.Id}"
                     };
                     context.Delivery.Add(delivery);
@@ -184,6 +220,7 @@ namespace MedicalShopDiaShop.MainView.Pages
             {
                 _filteredOrders = new ObservableCollection<OrderDto>(_allOrders);
             }
+            SubscribeToOrderChanges(_filteredOrders);
             RefreshOrdersList();
         }
 
@@ -200,6 +237,7 @@ namespace MedicalShopDiaShop.MainView.Pages
                     (o.WorkerFullName?.ToLower().Contains(searchText) ?? false) ||
                     (o.CourierFullName?.ToLower().Contains(searchText) ?? false)));
             }
+            SubscribeToOrderChanges(_filteredOrders);
             RefreshOrdersList();
         }
 

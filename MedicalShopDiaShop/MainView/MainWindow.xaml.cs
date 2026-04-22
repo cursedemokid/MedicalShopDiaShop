@@ -277,7 +277,7 @@ namespace MedicalShopDiaShop.MainView
             {
                 var query = context.Notification
                     .Where(n => n.UserId == App.currentUser.Id)
-                    .OrderByDescending(n => n.Id); // порядок по убыванию Id (новые сверху)
+                    .OrderByDescending(n => n.CreationDate); // порядок по убыванию Id (новые сверху)
 
                 _totalNotificationsCount = query.Count();
                 var items = query
@@ -287,7 +287,8 @@ namespace MedicalShopDiaShop.MainView
                     {
                         Id = n.Id,
                         Text = n.Text,
-                        IsRead = n.IsRead
+                        IsRead = n.IsRead,
+                        CreatedAt = (DateTime)n.CreationDate
                     })
                     .ToList();
 
@@ -369,16 +370,28 @@ namespace MedicalShopDiaShop.MainView
                     fullName += $" {user.MiddleName}";
                 FullNameTbl.Text = fullName;
 
-                string avatarPath = string.IsNullOrEmpty(user.AvatarKey)
-                    ? "/Resources/ProfileIcon.png"
-                    : user.AvatarKey;   
+                // Определяем путь к аватару
+                string relativePath;
+                if (string.IsNullOrEmpty(user.AvatarKey))
+                    relativePath = "/Resources/avatarPlaceHolder.png";
+                else if (user.AvatarKey.StartsWith("/Resources/"))
+                    relativePath = user.AvatarKey;
+                else
+                    relativePath = $"/Resources/Avatars/{user.AvatarKey}";
+
+                // Преобразуем в абсолютный путь
+                string fullPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, relativePath.TrimStart('/'));
+
                 try
                 {
-                    UserAvatarImg.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(avatarPath, UriKind.Relative));
+                    if (System.IO.File.Exists(fullPath))
+                        UserAvatarImg.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(fullPath));
+                    else
+                        UserAvatarImg.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri("/Resources/avatarPlaceHolder.png", UriKind.Relative));
                 }
                 catch
                 {
-                    UserAvatarImg.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri("/Resources/ProfileIcon.png", UriKind.Relative));
+                    UserAvatarImg.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri("/Resources/avatarPlaceHolder.png", UriKind.Relative));
                 }
             }
         }

@@ -286,7 +286,7 @@
                         <Calendar Name="ScheduleCalendar" Language="Ru" FontFamily="{StaticResource GothamProLight}"
                                   behaviors:CalendarScheduleBehavior.ScheduledDates="{Binding ScheduledDates}"
                                   behaviors:CalendarScheduleBehavior.DateToolTipSelector="{Binding ScheduleToolTipSelector}"
-                                  SelectedDatesChanged="ScheduleCalendar_SelectedDatesChanged" />
+                                  SelectedDatesChanged="ScheduleCalendar_SelectedDatesChanged" Loaded="ScheduleCalendar_Loaded"/>
                     </Border>
 
                     <!-- Список смен (для выбора) -->
@@ -415,9 +415,9 @@
 
                     <!-- Пагинация задач -->
                     <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
-                        <Button x:Name="PrevTasksBtn" Content="◀" Width="40" Click="PrevTasksBtn_Click" Margin="5"/>
+                        <Button x:Name="PrevTasksBtn" Content="◀" FontSize="10" Width="40" Click="PrevTasksBtn_Click" Margin="5"/>
                         <TextBlock x:Name="TasksPageText" Text="1 / 1" VerticalAlignment="Center" Margin="10,0" FontSize="14"/>
-                        <Button x:Name="NextTasksBtn" Content="▶" Width="40" Click="NextTasksBtn_Click" Margin="5"/>
+                        <Button x:Name="NextTasksBtn" Content="▶" FontSize="10" Width="40" Click="NextTasksBtn_Click" Margin="5"/>
                     </StackPanel>
                 </Grid>
             </Border>

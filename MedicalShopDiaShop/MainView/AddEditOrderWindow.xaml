@@ -160,10 +160,10 @@
                                                            FontSize="14" FontFamily="{StaticResource GothamProFamily}" 
                                                            VerticalAlignment="Center" Margin="10,0"/>
                                                 <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="10,0">
-                                                    <Button Content="-" Width="30" Click="DecreaseQuantity_Click" Tag="{Binding}"/>
+                                                    <Button Content="-" Width="30" Padding="1" Click="DecreaseQuantity_Click" Tag="{Binding}"/>
                                                     <TextBlock Text="{Binding Quantity}" Width="40" TextAlignment="Center" 
-                                                               FontSize="14" VerticalAlignment="Center"/>
-                                                    <Button Content="+" Width="30" Click="IncreaseQuantity_Click" Tag="{Binding}"/>
+                                                               FontSize="14" VerticalAlignment="Center" FontFamily="{StaticResource GothamProFamily}"/>
+                                                    <Button Content="+" Width="30" Padding="1" Click="IncreaseQuantity_Click" Tag="{Binding}"/>
                                                 </StackPanel>
                                                 <TextBlock Grid.Column="3" Text="{Binding TotalPrice, StringFormat='{}{0:N2} ₽'}" 
                                                            FontSize="14" FontFamily="{StaticResource GothamProFamily}" 

@@ -92,10 +92,10 @@
                                                 </Grid.ColumnDefinitions>
                                                 <Image Source="{Binding Image}" Width="50" Height="50"/>
                                                 <TextBlock Grid.Column="2" Text="{Binding Name}" FontSize="16" FontFamily="{StaticResource GothamProFamily}" VerticalAlignment="Center" TextWrapping="Wrap"/>
-                                                <TextBlock Grid.Column="3" Text="{Binding Quantity, StringFormat='x{0}'}" FontSize="14" FontFamily="{StaticResource GothamProLight}" VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="3" Text="{Binding Quantity, StringFormat='x{0}'}" FontSize="16" FontFamily="{StaticResource GothamProLight}" VerticalAlignment="Center"/>
                                                 <TextBlock Grid.Column="5" VerticalAlignment="Center">
-                                                    <Run Text="{Binding TotalPrice, StringFormat={}{0:N2}}"/>
-                                                    <Run Text=" ₽"/>
+                                                    <Run Text="{Binding TotalPrice, StringFormat={}{0:N2}}" FontSize="16" FontFamily="{StaticResource GothamProLight}"/>
+                                                    <Run Text=" ₽" FontSize="16" FontFamily="{StaticResource GothamProLight}"/>
                                                 </TextBlock>
                                             </Grid>
                                         </Border>

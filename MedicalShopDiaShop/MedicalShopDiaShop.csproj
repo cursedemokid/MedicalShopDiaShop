@@ -162,6 +162,7 @@
     <Compile Include="AppData\NotificationHelper.cs" />
     <Compile Include="AppData\PasswordHelper.cs" />
     <Compile Include="AppData\ProductWithFavorite.cs" />
+    <Compile Include="AppData\RelativeDateConverter.cs" />
     <Compile Include="AppData\Status.cs" />
     <Compile Include="AppData\StockHelper.cs" />
     <Compile Include="Database\Delivery.cs">
@@ -251,6 +252,7 @@
     <Compile Include="MainView\ChangePasswordWindow.xaml.cs">
       <DependentUpon>ChangePasswordWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MainView\Dto\OrderItemDto.cs" />
     <Compile Include="MainView\OrderDetailsWindow.xaml.cs">
       <DependentUpon>OrderDetailsWindow.xaml</DependentUpon>
     </Compile>
