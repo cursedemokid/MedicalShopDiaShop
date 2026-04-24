@@ -336,28 +336,28 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="1*" />
                     </Grid.RowDefinitions>
-                    <Button x:Name="ProfileBtn" Grid.Row="1" Height="60" Background="White" Click="ProfileBtn_Click" BorderThickness="0">
+                    <Button x:Name="ProfileBtn" Grid.Row="1" Height="60" Background="White" Click="ProfileBtn_Click" BorderThickness="0" ToolTip="Профиль">
                         <Image Source="/Resources/ProfileIcon.png" Height="30"/>
                     </Button>
-                    <Button x:Name="ProductsBtn" Grid.Row="3" Height="60" Background="White" Click="ProductsBtn_Click" BorderThickness="0">
+                    <Button x:Name="ProductsBtn" Grid.Row="3" Height="60" Background="White" Click="ProductsBtn_Click" BorderThickness="0" ToolTip="Товары">
                         <Image Source="/Resources/box.png" Height="30"/>
                     </Button>
-                    <Button x:Name="StatsBtn" Grid.Row="5" Height="60" Background="White" Click="StatsBtn_Click" BorderThickness="0">
+                    <Button x:Name="StatsBtn" Grid.Row="5" Height="60" Background="White" Click="StatsBtn_Click" BorderThickness="0" ToolTip="Статистика">
                         <Image Source="/Resources/chart.png" Height="30"/>
                     </Button>
-                    <Button x:Name="ClientsBtn" Grid.Row="7" Height="60" Background="White" Click="ClientsBtn_Click" BorderThickness="0">
+                    <Button x:Name="ClientsBtn" Grid.Row="7" Height="60" Background="White" Click="ClientsBtn_Click" BorderThickness="0" ToolTip="Клиенты">
                         <Image Source="/Resources/customer.png" Height="30"/>
                     </Button>
-                    <Button x:Name="SuppliesBtn" Grid.Row="9" Height="60" Background="White" Click="SuppliesBtn_Click" BorderThickness="0">
+                    <Button x:Name="SuppliesBtn" Grid.Row="9" Height="60" Background="White" Click="SuppliesBtn_Click" BorderThickness="0" ToolTip="Поставщики">
                         <Image Source="/Resources/delivery.png" Height="30"/>
                     </Button>
-                    <Button x:Name="OrdersBtn" Grid.Row="11" Height="60" Background="White" Click="OrdersBtn_Click" BorderThickness="0">
+                    <Button x:Name="OrdersBtn" Grid.Row="11" Height="60" Background="White" Click="OrdersBtn_Click" BorderThickness="0" ToolTip="Заказы">
                         <Image Source="/Resources/check_1742953.png" Height="30"/>
                     </Button>
-                    <Button x:Name="EmployeesBtn" Grid.Row="13" Height="60" Background="White" Click="EmployeesBtn_Click" BorderThickness="0">
+                    <Button x:Name="EmployeesBtn" Grid.Row="13" Height="60" Background="White" Click="EmployeesBtn_Click" BorderThickness="0" ToolTip="Сотрудники">
                         <Image Source="/Resources/teamwork.png" Height="30"/>
                     </Button>
-                    <Button x:Name="ExitBtn" Grid.Row="15" Height="60" Background="White" Click="ExitBtn_Click" >
+                    <Button x:Name="ExitBtn" Grid.Row="15" Height="60" Background="White" Click="ExitBtn_Click" ToolTip="Выход">
                         <Image Source="/Resources/logout.png" Height="30"/>
                     </Button>
                 </Grid>
