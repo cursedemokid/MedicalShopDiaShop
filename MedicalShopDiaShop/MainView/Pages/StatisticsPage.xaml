@@ -5,8 +5,8 @@
       Title="Статистика"
       Background="#F5F5F5" Height="694" Width="1033">
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <WrapPanel Margin="20" Orientation="Horizontal"  ItemWidth="480" ItemHeight="300">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Background="White">
+        <WrapPanel Margin="20" Orientation="Horizontal"  ItemWidth="480" ItemHeight="300" Background="White">
 
             <!-- 1. Выручка по месяцам (гистограмма) -->
             <Border CornerRadius="20" Background="White" Margin="10" 
