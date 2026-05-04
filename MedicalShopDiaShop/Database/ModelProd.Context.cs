@@ -13,10 +13,10 @@ namespace MedicalShopDiaShop.Database
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class DiaShopEntities : DbContext
+    public partial class DiaShopEntities4 : DbContext
     {
-        public DiaShopEntities()
-            : base("name=DiaShopEntities")
+        public DiaShopEntities4()
+            : base("name=DiaShopEntities4")
         {
         }
     

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
-namespace MedicalShopDiaShop.MainView.Pages
+namespace MedicalShopDiaShop.MainView.Dto
 {
-    public class OrderDto
+    public class OrderDto : INotifyPropertyChanged
     {
         public int Id { get; set; }
         public DateTime OrderDate { get; set; }
@@ -13,7 +15,24 @@ namespace MedicalShopDiaShop.MainView.Pages
         public DateTime? DeliveryStartDate { get; set; }
         public DateTime? DeliveryEndDate { get; set; }
         public string DeliveryDescription { get; set; }
-        public int Status { get; set; }
+        public int DeliveryType { get; set; }
+        public decimal TotalCost { get; set; }
+        public List<OrderItemDto> Items { get; set; }
+
+        private int _status;
+        public int Status
+        {
+            get => _status;
+            set { _status = value; OnPropertyChanged(); OnPropertyChanged(nameof(StatusName)); }
+        }
+
+        private bool _isSelected;
+        public bool IsSelected
+        {
+            get => _isSelected;
+            set { _isSelected = value; OnPropertyChanged(); }
+        }
+
         public string StatusName
         {
             get
@@ -25,24 +44,16 @@ namespace MedicalShopDiaShop.MainView.Pages
                     case 3: return "Доставлен";
                     case 4: return "Ожидает оплаты";
                     case 5: return "В истории";
+                    case 9: return "У курьера";
                     default: return "Неизвестно";
                 }
             }
         }
-        public decimal TotalCost { get; set; }
-        public int DeliveryType { get; set; }
+
         public string DeliveryTypeName => DeliveryType == 1 ? "Курьер" : "Самовывоз";
 
-        public bool IsSelected { get; set; }
-        public List<OrderItemDto> Items { get; set; } = new List<OrderItemDto>();
-    }
-
-    public class OrderItemDto
-    {
-        public string ProductName { get; set; }
-        public int Quantity { get; set; }
-        public decimal PricePerUnit { get; set; }
-        public decimal TotalPrice => Quantity * PricePerUnit;
-        public string ImagePath { get; set; }
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string name = null) =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 }

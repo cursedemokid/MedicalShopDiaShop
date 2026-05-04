@@ -21,14 +21,14 @@ namespace MedicalShopDiaShop.MainView
 
         private int _currentStep = 1;
         private const int TotalSteps = 3;
-        private readonly DiaShopEntities3 _context;
+        private readonly DiaShopEntities _context;
         private int _navigationDirection = 1;
         private bool _isFirstLoad = true;
 
         public AddSupplyWindow()
         {
             InitializeComponent();
-            _context = new DiaShopEntities3();
+            _context = new DiaShopEntities();
             CreateDraftSupply();
             LoadStep(1);
         }
@@ -36,7 +36,7 @@ namespace MedicalShopDiaShop.MainView
         public AddSupplyWindow(int supplyId)
         {
             InitializeComponent();
-            _context = new DiaShopEntities3();
+            _context = new DiaShopEntities();
             LoadDraftSupply(supplyId);
             LoadStep(_currentStep);
         }
@@ -206,7 +206,7 @@ namespace MedicalShopDiaShop.MainView
             _context.SaveChanges();
 
             string supplyText = $"Создана новая поставка №{CurrentSupply.Id} от поставщика {SelectedSupplier.Name} на сумму {CurrentSupply.TotalCost:N2} ₽";
-            NotificationHelper.NotifyAllStoreEmployees(App.currentUser.StoreId, supplyText, supplyId: CurrentSupply.Id);
+            NotificationHelper.NotifyAllStoreEmployees((int)App.currentUser.StoreId, supplyText, supplyId: CurrentSupply.Id);
 
             FeedbackService.Information("Поставка успешно создана.");
             DialogResult = true;

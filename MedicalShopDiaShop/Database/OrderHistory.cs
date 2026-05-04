@@ -16,9 +16,9 @@ namespace MedicalShopDiaShop.Database
     {
         public int Id { get; set; }
         public int OrderId { get; set; }
-        public int OldStatus { get; set; }
-        public int NewStatus { get; set; }
-        public System.DateTime UpdateAt { get; set; }
+        public Nullable<int> OldStatus { get; set; }
+        public Nullable<int> NewStatus { get; set; }
+        public Nullable<System.DateTime> UpdateAt { get; set; }
         public Nullable<int> FromUserId { get; set; }
         public Nullable<int> ToUserId { get; set; }
     

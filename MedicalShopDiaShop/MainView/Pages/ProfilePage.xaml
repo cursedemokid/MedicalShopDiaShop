@@ -240,9 +240,9 @@
         <!-- Правая колонка для сотрудника (расписание и задачи) -->
         <Grid Grid.Column="2" Name="EmployeeProfileGrid" Visibility="Visible" Grid.RowSpan="2">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="1*   "/>
                 <RowDefinition Height="10"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
 
             <!-- Блок расписания -->
@@ -286,15 +286,18 @@
                         <Calendar Name="ScheduleCalendar" Language="Ru" FontFamily="{StaticResource GothamProLight}"
                                   behaviors:CalendarScheduleBehavior.ScheduledDates="{Binding ScheduledDates}"
                                   behaviors:CalendarScheduleBehavior.DateToolTipSelector="{Binding ScheduleToolTipSelector}"
-                                  SelectedDatesChanged="ScheduleCalendar_SelectedDatesChanged"/>
+                                  SelectedDatesChanged="ScheduleCalendar_SelectedDatesChanged" Loaded="ScheduleCalendar_Loaded"/>
                     </Border>
 
                     <!-- Список смен (для выбора) -->
                     <TextBlock Grid.Row="4" Text="Смены на выбранную дату:" FontSize="16" FontFamily="{StaticResource GothamProFamily}"/>
-                    <ListBox x:Name="SchedulesListBox" Grid.Row="6" MaxHeight="120" 
+                    <ListBox x:Name="SchedulesListBox" Grid.Row="6" MaxHeight="120" FontSize="16" FontFamily="{StaticResource GothamProFamily}" 
                              SelectionMode="Single" DisplayMemberPath="DisplayText"/>
                 </Grid>
             </Border>
+
+            <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" Background="LightGray" 
+                          ShowsPreview="True" ResizeDirection="Rows" Cursor="SizeNS"/>
 
             <!-- Блок задач -->
             <Border CornerRadius="30" Background="White" Margin="10" Grid.Row="2">
@@ -412,9 +415,9 @@
 
                     <!-- Пагинация задач -->
                     <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
-                        <Button x:Name="PrevTasksBtn" Content="◀" Width="40" Click="PrevTasksBtn_Click" Margin="5"/>
+                        <Button x:Name="PrevTasksBtn" Content="◀" FontSize="10" Width="40" Click="PrevTasksBtn_Click" Margin="5"/>
                         <TextBlock x:Name="TasksPageText" Text="1 / 1" VerticalAlignment="Center" Margin="10,0" FontSize="14"/>
-                        <Button x:Name="NextTasksBtn" Content="▶" Width="40" Click="NextTasksBtn_Click" Margin="5"/>
+                        <Button x:Name="NextTasksBtn" Content="▶" FontSize="10" Width="40" Click="NextTasksBtn_Click" Margin="5"/>
                     </StackPanel>
                 </Grid>
             </Border>

@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using static MedicalShopDiaShop.AppData.Status;
+using MedicalShopDiaShop.MainView;
 
 namespace MedicalShopDiaShop.MainView.Pages
 {
@@ -161,19 +162,22 @@ namespace MedicalShopDiaShop.MainView.Pages
         private void Details_Click(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
-            var client = button?.Tag as ClientItem; 
-            if (client != null)
+            var client = button?.Tag as ClientItem;
+            if (client == null)
             {
-                var mainWindow = Application.Current.MainWindow as MainWindow;
-                if (mainWindow != null)
-                {
-                    mainWindow.MainFrame.Navigate(new ProfilePage(client.Id));
-                }
-                else
-                {
-                    FeedbackService.Error("Не удалось получить главное окно.");
-                }
+                FeedbackService.Error("Не удалось получить данные клиента.");
+                return;
             }
+
+            // Получаем главное окно через визуальный родитель текущей страницы
+            var mainWindow = Window.GetWindow(this) as MainWindow;
+            if (mainWindow == null)
+            {
+                FeedbackService.Error("Не удалось получить главное окно.");
+                return;
+            }
+
+            mainWindow.MainFrame.Navigate(new ProfilePage(client.Id));
         }
 
         // --- Логика единственного выделения ---

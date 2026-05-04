@@ -8,7 +8,7 @@ namespace MedicalShopDiaShop.AppData
     {
         public static void CreateNotification(int userId, string text, int? taskId = null, int? supplyId = null)
         {
-            using (var context = new DiaShopEntities3())
+            using (var context = new DiaShopEntities())
             {
                 var notification = new Notification
                 {
@@ -25,7 +25,7 @@ namespace MedicalShopDiaShop.AppData
 
         public static void NotifyAllStoreEmployees(int storeId, string text, int? taskId = null, int? supplyId = null)
         {
-            using (var context = new DiaShopEntities3())
+            using (var context = new DiaShopEntities())
             {
                 var employees = context.User
                     .Where(u => u.StoreId == storeId && u.IsDeleted != true)

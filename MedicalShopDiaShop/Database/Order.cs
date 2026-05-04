@@ -25,9 +25,9 @@ namespace MedicalShopDiaShop.Database
         public System.DateTime DateTime { get; set; }
         public int ClientId { get; set; }
         public decimal TotalCost { get; set; }
-        public int DeliveryType { get; set; }
-        public int WorkerId { get; set; }
-        public int Status { get; set; }
+        public Nullable<int> DeliveryType { get; set; }
+        public Nullable<int> WorkerId { get; set; }
+        public Nullable<int> Status { get; set; }
         public Nullable<int> DeliveryId { get; set; }
     
         public virtual Delivery Delivery { get; set; }

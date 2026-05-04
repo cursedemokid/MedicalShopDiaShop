@@ -1,5 +1,6 @@
 ﻿using MedicalShopDiaShop.AppData;
 using MedicalShopDiaShop.Database;
+using System;
 using System.Linq;
 using System.Windows;
 
@@ -47,15 +48,30 @@ namespace MedicalShopDiaShop.MainView
                 return;
             }
 
-            // Для своего профиля проверяем старый пароль
-            if (App.currentUser.Id == _userId && user.Password != oldPwd)
+            if (App.currentUser.Id == _userId)
             {
-                FeedbackService.Error("Неверный старый пароль.");
-                return;
+                if (!PasswordHelper.VerifyPassword(oldPwd, user.Password))
+                {
+                    FeedbackService.Error("Неверный старый пароль.");
+                    return;
+                }
             }
 
-            user.Password = newPwd;
+            user.Password = PasswordHelper.HashPassword(newPwd);
             App.context.SaveChanges();
+
+            // Уведомление пользователю
+            NotificationHelper.CreateNotification(_userId,
+                $"Ваш пароль был успешно изменён.");
+
+            // Если администратор меняет пароль другому сотруднику
+            if (App.currentUser.Id != _userId)
+            {
+                NotificationHelper.CreateNotification(App.currentUser.Id,
+                    $"Вы изменили пароль пользователю {user.LastName} {user.FirstName}.");
+            }
+
+    (Application.Current.MainWindow as MainWindow)?.UpdateNotificationBadge();
 
             FeedbackService.Information("Пароль успешно изменён.");
             DialogResult = true;

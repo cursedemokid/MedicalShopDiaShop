@@ -3,22 +3,42 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Windows.Media;
 using MedicalShopDiaShop.AppData;
 using MedicalShopDiaShop.Database;
 using static MedicalShopDiaShop.AppData.Status;
 
 namespace MedicalShopDiaShop.MainView.Pages
 {
-    public partial class ProfilePage : Page
+    public partial class ProfilePage : Page, INotifyPropertyChanged
     {
         private Database.User _displayedUser;
         private bool _isAdmin => App.currentUser.Role == (int)Role.Admin;
 
         // Для расписания
-        public IEnumerable<DateTime> ScheduledDates { get; set; }
+        private IEnumerable<DateTime> _scheduledDates;
+        public IEnumerable<DateTime> ScheduledDates
+        {
+            get => _scheduledDates;
+            set
+            {
+                _scheduledDates = value;
+                OnPropertyChanged();
+                // Принудительно обновляем календарь (через поведение)
+                ScheduleCalendar?.Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    var temp = ScheduleCalendar.DisplayDate;
+                    ScheduleCalendar.DisplayDate = temp.AddDays(1);
+                    ScheduleCalendar.DisplayDate = temp;
+                }), System.Windows.Threading.DispatcherPriority.Background);
+            }
+        }
+
         public Func<DateTime, object> ScheduleToolTipSelector { get; set; }
         private ObservableCollection<ScheduleItem> _schedulesForSelectedDate;
 
@@ -35,12 +55,14 @@ namespace MedicalShopDiaShop.MainView.Pages
         public ProfilePage()
         {
             InitializeComponent();
+            DataContext = this;
             LoadUserData(App.currentUser.Id);
         }
 
         public ProfilePage(int userId)
         {
             InitializeComponent();
+            DataContext = this;
             LoadUserData(userId);
         }
 
@@ -59,29 +81,24 @@ namespace MedicalShopDiaShop.MainView.Pages
             {
                 ClientProfileGrid.Visibility = Visibility.Visible;
                 EmployeeProfileGrid.Visibility = Visibility.Collapsed;
-
-                // Показываем адрес, скрываем магазин
                 EmployeeTextBlock.Visibility = Visibility.Collapsed;
                 StoreTextBlock.Visibility = Visibility.Collapsed;
                 ClientTextBlock.Visibility = Visibility.Visible;
                 AddressTextBlock.Visibility = Visibility.Visible;
+                LoadClientHistory();
             }
             else
             {
                 ClientProfileGrid.Visibility = Visibility.Collapsed;
                 EmployeeProfileGrid.Visibility = Visibility.Visible;
-
-                // Показываем магазин, скрываем адрес
                 EmployeeTextBlock.Visibility = Visibility.Visible;
                 StoreTextBlock.Visibility = Visibility.Visible;
                 ClientTextBlock.Visibility = Visibility.Collapsed;
                 AddressTextBlock.Visibility = Visibility.Collapsed;
+                LoadEmployeeScheduleAndTasks();
             }
 
-            // Кнопки смены пароля
             ChangePasswordButton.Visibility = (App.currentUser.Id == userId || _isAdmin) ? Visibility.Visible : Visibility.Collapsed;
-
-            // Кнопки управления расписанием и задачами видны только админу
             AddScheduleBtn.Visibility = _isAdmin ? Visibility.Visible : Visibility.Collapsed;
             EditScheduleBtn.Visibility = _isAdmin ? Visibility.Visible : Visibility.Collapsed;
             DeleteScheduleBtn.Visibility = _isAdmin ? Visibility.Visible : Visibility.Collapsed;
@@ -103,10 +120,21 @@ namespace MedicalShopDiaShop.MainView.Pages
             StoreTextBlock.Text = store != null ? $"{store.Name}, {store.Address}" : "Не указан";
             AddressTextBlock.Text = !string.IsNullOrEmpty(_displayedUser.Address) ? _displayedUser.Address : "Не указан";
 
-            string avatarPath = string.IsNullOrEmpty(_displayedUser.AvatarKey)
-                ? "/Resources/avatarka.png"
-                : _displayedUser.AvatarKey;   
-            AvatarImage.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(avatarPath, UriKind.Relative));
+            // Формирование пути к аватару
+            string avatarPath;
+            if (string.IsNullOrEmpty(_displayedUser.AvatarKey))
+                avatarPath = "/Resources/ProfileIcon.png";
+            else if (_displayedUser.AvatarKey.StartsWith("/Resources/"))
+                avatarPath = _displayedUser.AvatarKey;
+            else
+                avatarPath = $"/Resources/Avatars/{_displayedUser.AvatarKey}";
+
+            // Используем абсолютный путь для надёжности
+            string fullPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, avatarPath.TrimStart('/'));
+            if (System.IO.File.Exists(fullPath))
+                AvatarImage.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(fullPath));
+            else
+                AvatarImage.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(avatarPath, UriKind.Relative));
         }
 
         private string GetRoleName(int roleId)
@@ -133,15 +161,26 @@ namespace MedicalShopDiaShop.MainView.Pages
             _allHistory = new List<OrderHistoryItem>();
             foreach (var order in orders)
             {
-                var orderItems = App.context.ProductOrder
+                // Сначала загружаем данные из БД без вызова GetImagePath
+                var productData = App.context.ProductOrder
                     .Where(po => po.OrderId == order.Id)
-                    .Select(po => new OrderItem
+                    .Select(po => new
                     {
-                        ImageSource = GetImagePath(po.Product.Image),
-                        Name = po.Product.Name,
-                        Quantity = po.Quantity,
-                        PricePerUnit = po.Price
-                    }).ToList();
+                        Image = po.Product.Image,
+                        po.Product.Name,
+                        po.Quantity,
+                        po.Price
+                    })
+                    .ToList(); // Выполняем запрос к БД
+
+                // Затем в памяти применяем GetImagePath
+                var orderItems = productData.Select(pd => new OrderItem
+                {
+                    ImageSource = GetImagePath(pd.Image),
+                    Name = pd.Name,
+                    Quantity = pd.Quantity,
+                    PricePerUnit = pd.Price
+                }).ToList();
 
                 _allHistory.Add(new OrderHistoryItem
                 {
@@ -158,18 +197,15 @@ namespace MedicalShopDiaShop.MainView.Pages
         {
             var query = _allHistory.AsEnumerable();
 
-            // Фильтр по дате
             if (HistoryDateFilter.SelectedDate.HasValue)
                 query = query.Where(h => h.OrderDate.Date == HistoryDateFilter.SelectedDate.Value.Date);
 
-            // Поиск по тексту (если добавить поле поиска)
             if (!string.IsNullOrWhiteSpace(HistorySearchBox.Text))
             {
                 string search = HistorySearchBox.Text.ToLower();
                 query = query.Where(h => h.Items.Any(i => i.Name.ToLower().Contains(search)));
             }
 
-            // Сортировка
             if (OrderByCmb.SelectedItem is ComboBoxItem selected && selected.Tag is string sort)
             {
                 if (sort == "Date")
@@ -213,16 +249,80 @@ namespace MedicalShopDiaShop.MainView.Pages
                 var daySchedules = schedules.Where(s => s.DateStart.Date == date).OrderBy(s => s.DateStart).ToList();
                 if (!daySchedules.Any()) return null;
                 var panel = new StackPanel();
-                panel.Children.Add(new TextBlock { Text = date.ToString("dd MMMM yyyy"), FontWeight = FontWeights.Bold, Margin = new Thickness(0, 0, 0, 5) });
+                // Применяем шрифт проекта
+                var fontFamily = (FontFamily)FindResource("GothamProFamily");
+                var lightFontFamily = (FontFamily)FindResource("GothamProLight");
+                panel.Children.Add(new TextBlock
+                {
+                    Text = date.ToString("dd MMMM yyyy"),
+                    FontWeight = FontWeights.Bold,
+                    Margin = new Thickness(0, 0, 0, 5),
+                    FontFamily = fontFamily
+                });
                 foreach (var s in daySchedules)
                 {
-                    panel.Children.Add(new TextBlock { Text = $"• {s.DateStart:HH:mm} – {s.DateStart.AddHours(s.Hours):HH:mm}", Margin = new Thickness(0, 2, 0, 0) });
+                    panel.Children.Add(new TextBlock
+                    {
+                        Text = $"• {s.DateStart:HH:mm} – {s.DateStart.AddHours(s.Hours):HH:mm}",
+                        Margin = new Thickness(0, 2, 0, 0),
+                        FontFamily = lightFontFamily,
+                        FontSize = 12
+                    });
                 }
                 return panel;
             };
-            DataContext = this;
+
             ScheduleCalendar.SelectedDate = DateTime.Today;
             UpdateSchedulesList(DateTime.Today);
+
+            ApplyCalendarHighlight();
+        }
+
+        private static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject
+        {
+            if (depObj == null) yield break;
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+            {
+                var child = VisualTreeHelper.GetChild(depObj, i);
+                if (child is T t) yield return t;
+                foreach (var childOfChild in FindVisualChildren<T>(child))
+                    yield return childOfChild;
+            }
+        }
+
+        private void ApplyCalendarHighlight()
+        {
+            if (ScheduledDates == null) return;
+            var scheduledSet = ScheduledDates.ToHashSet();
+            var accentBrush = TryFindResource("PrimaryHueLightBrush") as Brush ?? Brushes.Orange;
+
+            // Принудительно запускаем в потоке рендеринга, чтобы дождаться создания визуальных элементов
+            ScheduleCalendar.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                var buttons = FindVisualChildren<CalendarDayButton>(ScheduleCalendar);
+                if (buttons.Any())
+                {
+                    foreach (var btn in buttons)
+                    {
+                        if (btn.DataContext is DateTime date && scheduledSet.Contains(date.Date))
+                            btn.Background = accentBrush;
+                        else
+                            btn.Background = Brushes.Transparent;
+                    }
+                }
+                else
+                {
+                    // Если кнопки ещё не созданы, повторяем через 50 мс
+                    var timer = new System.Windows.Threading.DispatcherTimer();
+                    timer.Interval = TimeSpan.FromMilliseconds(50);
+                    timer.Tick += (s, args) =>
+                    {
+                        timer.Stop();
+                        ApplyCalendarHighlight();
+                    };
+                    timer.Start();
+                }
+            }), System.Windows.Threading.DispatcherPriority.Render);
         }
 
         private void ScheduleCalendar_SelectedDatesChanged(object sender, SelectionChangedEventArgs e)
@@ -256,7 +356,10 @@ namespace MedicalShopDiaShop.MainView.Pages
         {
             var window = new AddEditScheduleWindow(_displayedUser.Id);
             if (window.ShowDialog() == true)
+            {
                 LoadSchedules();
+                ApplyCalendarHighlight();
+            }
         }
 
         private void EditScheduleBtn_Click(object sender, RoutedEventArgs e)
@@ -319,7 +422,7 @@ namespace MedicalShopDiaShop.MainView.Pages
                 {
                     Id = task.Id,
                     Title = task.Description,
-                    StartDate = task.StartAt,
+                    StartDate = (DateTime)task.StartAt,
                     Deadline = (DateTime)(task.Deadline ?? task.EndAt),
                     IsCompleted = task.IsCompleted,
                     AuthorName = author?.UserName ?? "Неизвестно"
@@ -396,7 +499,6 @@ namespace MedicalShopDiaShop.MainView.Pages
             {
                 dbTask.IsCompleted = isCompleted;
                 App.context.SaveChanges();
-                // Обновляем кэш
                 var item = _taskItems.FirstOrDefault(t => t.Id == taskId);
                 if (item != null) item.IsCompleted = isCompleted;
             }
@@ -405,9 +507,9 @@ namespace MedicalShopDiaShop.MainView.Pages
         #endregion
 
         private string GetImagePath(string imageName) => string.IsNullOrEmpty(imageName) ? "/Resources/placeholder.png" : imageName;
+
         private void ShowDetails(string orderId)
         {
-            // orderId приходит в формате "Заказ №123"
             string numberStr = orderId.Replace("Заказ №", "");
             if (int.TryParse(numberStr, out int orderIdInt))
             {
@@ -471,7 +573,6 @@ namespace MedicalShopDiaShop.MainView.Pages
 
         private void ChangePassword_Click(object sender, RoutedEventArgs e)
         {
-            // Разрешено если свой профиль или админ
             if (App.currentUser.Id != _displayedUser.Id && App.currentUser.Role != (int)Role.Admin)
             {
                 FeedbackService.Warning("Вы можете сменить пароль только своего профиля.");
@@ -480,6 +581,25 @@ namespace MedicalShopDiaShop.MainView.Pages
 
             var window = new ChangePasswordWindow(_displayedUser.Id);
             window.ShowDialog();
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string name = null) =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
+        private void ScheduleCalendar_Loaded(object sender, RoutedEventArgs e)
+        {
+            // Даём время на полную отрисовку календаря
+            ApplyCalendarHighlight();
+            // Дополнительная попытка через 200 мс (для уверенности)
+            var timer = new System.Windows.Threading.DispatcherTimer();
+            timer.Interval = TimeSpan.FromMilliseconds(200);
+            timer.Tick += (s, args) =>
+            {
+                timer.Stop();
+                ApplyCalendarHighlight();
+            };
+            timer.Start();
         }
     }
 

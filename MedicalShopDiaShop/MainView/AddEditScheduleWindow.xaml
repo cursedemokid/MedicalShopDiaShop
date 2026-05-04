@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MedicalShopDiaShop.MainView"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         Title="Расписание" Height="720" Width="1280" MinHeight="400" MinWidth="500"
         WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
@@ -36,10 +37,15 @@
                            HorizontalAlignment="Center"/>
 
                 <!-- Дата и время начала -->
-                <TextBlock Grid.Row="2" Text="Дата начала" FontSize="18" FontFamily="{StaticResource GothamProFamily}"
+                <TextBlock Grid.Row="2" Text="Дата и время начала" FontSize="18" FontFamily="{StaticResource GothamProFamily}"
                            VerticalAlignment="Center"/>
                 <Border Grid.Row="2" Grid.Column="2" BorderThickness="1" BorderBrush="Black" CornerRadius="5">
-                    <DatePicker x:Name="StartDatePicker" FontSize="18" FontFamily="{StaticResource GothamProFamily}"/>
+                    <StackPanel Orientation="Horizontal">
+                        <DatePicker x:Name="StartDatePicker" FontSize="18" FontFamily="{StaticResource GothamProFamily}"
+                                    Width="150" Margin="0,0,5,0" Language="Ru"/>
+                        <materialDesign:TimePicker x:Name="StartTimePicker" FontSize="18" FontFamily="{StaticResource GothamProFamily}"
+                                                    Width="100" Language="Ru"/>
+                    </StackPanel>
                 </Border>
 
                 <!-- Количество часов -->

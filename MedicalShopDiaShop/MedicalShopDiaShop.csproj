@@ -162,6 +162,7 @@
     <Compile Include="AppData\NotificationHelper.cs" />
     <Compile Include="AppData\PasswordHelper.cs" />
     <Compile Include="AppData\ProductWithFavorite.cs" />
+    <Compile Include="AppData\RelativeDateConverter.cs" />
     <Compile Include="AppData\Status.cs" />
     <Compile Include="AppData\StockHelper.cs" />
     <Compile Include="Database\Delivery.cs">
@@ -251,6 +252,7 @@
     <Compile Include="MainView\ChangePasswordWindow.xaml.cs">
       <DependentUpon>ChangePasswordWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MainView\Dto\OrderItemDto.cs" />
     <Compile Include="MainView\OrderDetailsWindow.xaml.cs">
       <DependentUpon>OrderDetailsWindow.xaml</DependentUpon>
     </Compile>
@@ -298,6 +300,9 @@
     </Compile>
     <Compile Include="MainView\RegistrationWindow.xaml.cs">
       <DependentUpon>RegistrationWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainView\SupplyDetailsWindow.xaml.cs">
+      <DependentUpon>SupplyDetailsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\StatisticsViewModel.cs" />
     <Page Include="MainView\AddEditOrderWindow.xaml">
@@ -404,6 +409,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="MainView\SupplyDetailsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainView\TestElementWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -589,8 +598,8 @@
   <ItemGroup>
     <Content Include="Database\DiaShopModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>DiaShopModel.Context.cs</LastGenOutput>
       <DependentUpon>DiaShopModel.edmx</DependentUpon>
+      <LastGenOutput>DiaShopModel.Context.cs</LastGenOutput>
     </Content>
     <Content Include="Database\DiaShopModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

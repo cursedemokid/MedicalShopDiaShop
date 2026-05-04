@@ -21,7 +21,8 @@ namespace MedicalShopDiaShop.MainView
             else
             {
                 TitleText.Text = "Новая смена";
-                StartDatePicker.SelectedDate = DateTime.Now;
+                StartDatePicker.SelectedDate = DateTime.Now.Date;
+                StartTimePicker.SelectedTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 9, 0, 0);
             }
         }
 
@@ -35,15 +36,16 @@ namespace MedicalShopDiaShop.MainView
                 return;
             }
             TitleText.Text = "Редактирование смены";
-            StartDatePicker.SelectedDate = _editingSchedule.DateStart;
+            StartDatePicker.SelectedDate = _editingSchedule.DateStart.Date;
+            StartTimePicker.SelectedTime = _editingSchedule.DateStart;
             HoursTb.Text = _editingSchedule.Hours.ToString();
         }
 
         private void SaveBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (StartDatePicker.SelectedDate == null)
+            if (StartDatePicker.SelectedDate == null || StartTimePicker.SelectedTime == null)
             {
-                FeedbackService.Error("Выберите дату начала.");
+                FeedbackService.Error("Выберите дату и время начала.");
                 return;
             }
             if (!int.TryParse(HoursTb.Text, out int hours) || hours <= 0)
@@ -52,38 +54,39 @@ namespace MedicalShopDiaShop.MainView
                 return;
             }
 
+            // Объединяем дату и время
+            DateTime selectedDate = StartDatePicker.SelectedDate.Value;
+            DateTime selectedTime = StartTimePicker.SelectedTime.Value;
+            DateTime startDateTime = new DateTime(selectedDate.Year, selectedDate.Month, selectedDate.Day,
+                                                  selectedTime.Hour, selectedTime.Minute, 0);
+
             if (_editingSchedule == null)
             {
-                // Новая смена
                 var schedule = new Schedule
                 {
-                    DateStart = StartDatePicker.SelectedDate.Value,
+                    DateStart = startDateTime,
                     UserId = _userId,
                     Hours = hours,
-                    FactStartAt = StartDatePicker.SelectedDate.Value,
-                    FactExitAt = StartDatePicker.SelectedDate.Value.AddHours(hours),
+                    FactStartAt = startDateTime,
+                    FactExitAt = startDateTime.AddHours(hours),
                     FactHours = 0
                 };
                 App.context.Schedule.Add(schedule);
                 App.context.SaveChanges();
 
-                // Отправка уведомления сотруднику
-                string startTime = schedule.DateStart.ToString("dd.MM.yyyy HH:mm");
+                string startTimeStr = startDateTime.ToString("dd.MM.yyyy HH:mm");
                 NotificationHelper.CreateNotification(_userId,
-                    $"Новая смена: {startTime}, продолжительность {hours} ч.");
+                    $"Новая смена: {startTimeStr}, продолжительность {hours} ч.");
 
-                // Обновляем бейдж уведомлений в главном окне
                 (Application.Current.MainWindow as MainWindow)?.UpdateNotificationBadge();
             }
             else
             {
-                // Редактирование существующей смены
-                _editingSchedule.DateStart = StartDatePicker.SelectedDate.Value;
+                _editingSchedule.DateStart = startDateTime;
                 _editingSchedule.Hours = hours;
-                _editingSchedule.FactStartAt = StartDatePicker.SelectedDate.Value;
-                _editingSchedule.FactExitAt = StartDatePicker.SelectedDate.Value.AddHours(hours);
+                _editingSchedule.FactStartAt = startDateTime;
+                _editingSchedule.FactExitAt = startDateTime.AddHours(hours);
                 App.context.SaveChanges();
-                // При редактировании уведомление не отправляем (можно добавить при необходимости)
             }
 
             DialogResult = true;

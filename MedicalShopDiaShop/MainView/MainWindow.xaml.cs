@@ -39,7 +39,7 @@ namespace MedicalShopDiaShop.MainView
                 ["Employees"] = (MaxEmployeesBtn, EmployeesBtn, EmployeesVisualBtn),
                 ["Orders"] = (MaxOrdersBtn, OrdersBtn, OrdersVisualBtn),
                 ["Exit"] = (MaxExitBtn, ExitBtn, ExitVisualBtn),
-                ["Stock"] = (MaxStockBtn, StockBtn, StockVisualBtn),
+                //["Stock"] = (MaxStockBtn, StockBtn, StockVisualBtn),
             };
 
             foreach (var pair in _buttonPairs.Values)
@@ -52,8 +52,7 @@ namespace MedicalShopDiaShop.MainView
             SetActiveButton("Profile");
             LoadNotifications();
             LoadUserInfo();
-            UpdateNotificationBadge();
-            StockHelper.CheckExpiringProducts();
+            //StockHelper.CheckExpiringProducts();
             UpdateNotificationBadge();
         }
 
@@ -274,11 +273,11 @@ namespace MedicalShopDiaShop.MainView
 
         private void LoadNotifications(int page = 1)
         {
-            using (var context = new DiaShopEntities3())
+            using (var context = new DiaShopEntities())
             {
                 var query = context.Notification
                     .Where(n => n.UserId == App.currentUser.Id)
-                    .OrderByDescending(n => n.Id); // порядок по убыванию Id (новые сверху)
+                    .OrderByDescending(n => n.CreationDate); // порядок по убыванию Id (новые сверху)
 
                 _totalNotificationsCount = query.Count();
                 var items = query
@@ -288,7 +287,8 @@ namespace MedicalShopDiaShop.MainView
                     {
                         Id = n.Id,
                         Text = n.Text,
-                        IsRead = n.IsRead
+                        IsRead = n.IsRead,
+                        CreatedAt = (DateTime)n.CreationDate
                     })
                     .ToList();
 
@@ -301,7 +301,7 @@ namespace MedicalShopDiaShop.MainView
 
         public void UpdateNotificationBadge()
         {
-            using (var context = new DiaShopEntities3())
+            using (var context = new DiaShopEntities())
             {
                 int unreadCount = context.Notification.Count(n => n.UserId == App.currentUser.Id && !n.IsRead);
                 NotificationCheck.Visibility = unreadCount > 0 ? Visibility.Visible : Visibility.Collapsed;
@@ -313,7 +313,7 @@ namespace MedicalShopDiaShop.MainView
             if (NotificationListBox.SelectedItem is NotificationItem selected)
             {
                 // Помечаем как прочитанное
-                using (var context = new DiaShopEntities3())
+                using (var context = new DiaShopEntities())
                 {
                     var dbNotification = context.Notification.Find(selected.Id);
                     if (dbNotification != null && !dbNotification.IsRead)
@@ -336,7 +336,7 @@ namespace MedicalShopDiaShop.MainView
             var notification = grid?.DataContext as NotificationItem;
             if (notification != null && !notification.IsRead)
             {
-                using (var context = new DiaShopEntities3())
+                using (var context = new DiaShopEntities())
                 {
                     var dbNotif = context.Notification.Find(notification.Id);
                     if (dbNotif != null) dbNotif.IsRead = true;
@@ -370,12 +370,24 @@ namespace MedicalShopDiaShop.MainView
                     fullName += $" {user.MiddleName}";
                 FullNameTbl.Text = fullName;
 
-                string avatarPath = string.IsNullOrEmpty(user.AvatarKey)
-                    ? "/Resources/ProfileIcon.png"
-                    : user.AvatarKey;   
+                // Определяем путь к аватару
+                string relativePath;
+                if (string.IsNullOrEmpty(user.AvatarKey))
+                    relativePath = "/Resources/avatarPlaceHolder.png";
+                else if (user.AvatarKey.StartsWith("/Resources/"))
+                    relativePath = user.AvatarKey;
+                else
+                    relativePath = $"/Resources/Avatars/{user.AvatarKey}";
+
+                // Преобразуем в абсолютный путь
+                string fullPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, relativePath.TrimStart('/'));
+
                 try
                 {
-                    UserAvatarImg.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(avatarPath, UriKind.Relative));
+                    if (System.IO.File.Exists(fullPath))
+                        UserAvatarImg.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(fullPath));
+                    else
+                        UserAvatarImg.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri("/Resources/ProfileIcon.png", UriKind.Relative));
                 }
                 catch
                 {

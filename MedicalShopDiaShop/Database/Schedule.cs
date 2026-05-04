@@ -18,9 +18,9 @@ namespace MedicalShopDiaShop.Database
         public System.DateTime DateStart { get; set; }
         public int UserId { get; set; }
         public int Hours { get; set; }
-        public System.DateTime FactStartAt { get; set; }
-        public System.DateTime FactExitAt { get; set; }
-        public int FactHours { get; set; }
+        public Nullable<System.DateTime> FactStartAt { get; set; }
+        public Nullable<System.DateTime> FactExitAt { get; set; }
+        public Nullable<int> FactHours { get; set; }
     
         public virtual User User { get; set; }
     }

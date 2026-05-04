@@ -20,6 +20,7 @@ namespace MedicalShopDiaShop.Database
         public Nullable<int> SupplyId { get; set; }
         public bool IsRead { get; set; }
         public int UserId { get; set; }
+        public Nullable<System.DateTime> CreationDate { get; set; } = DateTime.Now;
     
         public virtual Supply Supply { get; set; }
         public virtual Task Task { get; set; }

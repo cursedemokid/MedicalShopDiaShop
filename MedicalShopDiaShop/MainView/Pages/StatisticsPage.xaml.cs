@@ -20,13 +20,13 @@ namespace MedicalShopDiaShop.MainView.Pages
             InitializeComponent();
             _viewModel = new StatisticsViewModel();
             DataContext = _viewModel;
-            _currentStoreId = App.currentUser.StoreId;
+            _currentStoreId = (int)App.currentUser.StoreId;
             LoadAllData();
         }
 
         private void LoadAllData()
         {
-            using (var context = new DiaShopEntities3())
+            using (var context = new DiaShopEntities())
             {
                 LoadMonthlyRevenue(context);
                 LoadSupplierPie(context);
@@ -38,7 +38,7 @@ namespace MedicalShopDiaShop.MainView.Pages
             }
         }
 
-        private void LoadMonthlyRevenue(DiaShopEntities3 context)
+        private void LoadMonthlyRevenue(DiaShopEntities context)
         {
             var orders = context.Order
                 .Where(o => o.User.StoreId == _currentStoreId)
@@ -66,7 +66,7 @@ namespace MedicalShopDiaShop.MainView.Pages
             _viewModel.TotalRevenueAllTime = monthlyData.Sum(d => d.Revenue);
         }
 
-        private void LoadSupplierPie(DiaShopEntities3 context)
+        private void LoadSupplierPie(DiaShopEntities context)
         {
             var supplies = context.Supply
                 .Where(s => s.User.StoreId == _currentStoreId)
@@ -88,7 +88,7 @@ namespace MedicalShopDiaShop.MainView.Pages
             _viewModel.SupplierPieSeries = series;
         }
 
-        private void LoadTopProducts(DiaShopEntities3 context)
+        private void LoadTopProducts(DiaShopEntities context)
         {
             var topProducts = context.ProductOrder
                 .Where(po => po.Order.User.StoreId == _currentStoreId)
@@ -121,7 +121,7 @@ namespace MedicalShopDiaShop.MainView.Pages
             };
         }
 
-        private void LoadOrderCount(DiaShopEntities3 context)
+        private void LoadOrderCount(DiaShopEntities context)
         {
             var orders = context.Order
                 .Where(o => o.User.StoreId == _currentStoreId)
@@ -147,7 +147,7 @@ namespace MedicalShopDiaShop.MainView.Pages
             _viewModel.TotalOrdersAllTime = monthlyCount.Sum();
         }
 
-        private void LoadDeliveryTypePie(DiaShopEntities3 context)
+        private void LoadDeliveryTypePie(DiaShopEntities context)
         {
             var deliveryGroups = context.Order
                 .Where(o => o.User.StoreId == _currentStoreId)
@@ -169,7 +169,7 @@ namespace MedicalShopDiaShop.MainView.Pages
             _viewModel.DeliveryTypePieSeries = series;
         }
 
-        private void LoadProfitability(DiaShopEntities3 context)
+        private void LoadProfitability(DiaShopEntities context)
         {
             var products = context.Product.ToList();
             var profitabilityData = new List<decimal>();
@@ -211,7 +211,7 @@ namespace MedicalShopDiaShop.MainView.Pages
     };
         }
 
-        private void LoadTaskPerformancePie(DiaShopEntities3 context)
+        private void LoadTaskPerformancePie(DiaShopEntities context)
         {
             var tasks = context.Task
                 .Where(t => t.User.StoreId == _currentStoreId && t.Deadline.HasValue)

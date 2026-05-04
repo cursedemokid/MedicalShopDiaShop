@@ -51,7 +51,7 @@
             <Button Name="EditBtn" Grid.Column="5" Content="Изменить" FontSize="20" 
                     FontFamily="{StaticResource GothamProFamily}" Click="EditBtn_Click" Height="50"/>
             <Button Name="DeleteBtn" Grid.Column="7" Content="Удалить" FontSize="20" 
-                    FontFamily="{StaticResource GothamProFamily}" Click="DeleteBtn_Click" Height="50"/>
+                    FontFamily="{StaticResource GothamProFamily}" Click="DeleteBtn_Click" Height="50" Cursor="Hand"/>
         </Grid>
 
         <!-- Панель фильтрации и переключения режимов -->
@@ -84,10 +84,6 @@
                           FontFamily="{StaticResource GothamProFamily}"
                           SelectionChanged="CityFilterComboBox_SelectionChanged"/>
             </GroupBox>
-
-            <!-- Кнопка создания поставки (только для режима поставщиков) -->
-            <Button x:Name="AddSupplyBtn" Grid.Column="7" Content="Создать поставку" FontSize="20" 
-                    FontFamily="{StaticResource GothamProFamily}" Height="50" Click="AddSupply_Click"/>
         </Grid>
 
         <!-- Область отображения поставщиков (ListView) -->
@@ -148,7 +144,7 @@
                 <DataTemplate>
                     <!-- Карточка поставки -->
                     <Border CornerRadius="20" Background="White" Margin="10" Width="350"
-                            BorderBrush="LightGray" BorderThickness="1">
+        BorderBrush="LightGray" BorderThickness="1">
                         <Border.Effect>
                             <DropShadowEffect BlurRadius="15" ShadowDepth="0" Opacity="0.2" Color="Gray"/>
                         </Border.Effect>
@@ -165,38 +161,39 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="10"/>
-                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
+
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <CheckBox Grid.Column="0" IsChecked="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                          VerticalAlignment="Center" Margin="0,0,10,0"/>
+                      VerticalAlignment="Center" Margin="0,0,10,0"/>
                                 <TextBlock Grid.Column="1" Text="{Binding DisplayName}" FontSize="18" FontWeight="Bold"
-                                           FontFamily="{StaticResource GothamProFamily}" TextWrapping="Wrap"/>
+                       FontFamily="{StaticResource GothamProFamily}" TextWrapping="Wrap"/>
                             </Grid>
                             <Separator Grid.Row="1"/>
+
                             <TextBlock Grid.Row="2" Text="{Binding SupplierName}" FontSize="16" 
-                                       FontFamily="{StaticResource GothamProLight}"/>
+                   FontFamily="{StaticResource GothamProLight}"/>
+
                             <TextBlock Grid.Row="4" Text="Дата заказа:" FontSize="14" FontFamily="{StaticResource GothamProFamily}"/>
                             <TextBlock Grid.Row="5" Text="{Binding OrderDate, StringFormat='dd.MM.yyyy'}" FontSize="14" 
-                                       FontFamily="{StaticResource GothamProLight}"/>
+                   FontFamily="{StaticResource GothamProLight}"/>
+
                             <TextBlock Grid.Row="6" Text="Ожидаемая дата:" FontSize="14" FontFamily="{StaticResource GothamProFamily}"/>
                             <TextBlock Grid.Row="7" Text="{Binding AroundDate, StringFormat='dd.MM.yyyy'}" FontSize="14" 
-                                       FontFamily="{StaticResource GothamProLight}"/>
+                   FontFamily="{StaticResource GothamProLight}"/>
+
                             <TextBlock Grid.Row="8" Text="Сумма:" FontSize="14" FontFamily="{StaticResource GothamProFamily}"/>
                             <TextBlock Grid.Row="9" Text="{Binding TotalCost, StringFormat='{}{0:N2} ₽'}" FontSize="14" 
-                                       FontFamily="{StaticResource GothamProLight}"/>
-                            <TextBlock Grid.Row="10" Text="Статус:" FontSize="14" FontFamily="{StaticResource GothamProFamily}"/>
-                            <TextBlock Grid.Row="11" Text="{Binding StatusText}" FontSize="14" 
-                                       FontFamily="{StaticResource GothamProLight}" Foreground="{Binding StatusColor}"/>
-                            <Button Grid.Row="12" Content="Продолжить / Подробнее" Margin="0,15,0,0"
-                                    FontSize="14" FontFamily="{StaticResource GothamProFamily}"
-                                    Click="EditSupply_Click" Tag="{Binding}"/>
+                   FontFamily="{StaticResource GothamProLight}"/>
+
+                            <Button Grid.Row="10" Content="Подробнее" Margin="0,15,0,0"
+                FontSize="14" FontFamily="{StaticResource GothamProFamily}"
+                Click="ViewSupplyDetails_Click" Tag="{Binding}"/>
                         </Grid>
                     </Border>
                 </DataTemplate>

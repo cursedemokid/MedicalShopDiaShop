@@ -24,8 +24,8 @@ namespace MedicalShopDiaShop.Database
         public string Description { get; set; }
         public int UserId { get; set; }
         public bool IsCompleted { get; set; }
-        public System.DateTime StartAt { get; set; }
-        public System.DateTime? EndAt { get; set; }
+        public Nullable<System.DateTime> StartAt { get; set; }
+        public Nullable<System.DateTime> EndAt { get; set; }
         public int AuthorId { get; set; }
         public Nullable<System.DateTime> Deadline { get; set; }
     
