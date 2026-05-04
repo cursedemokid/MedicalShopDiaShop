@@ -3,39 +3,76 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MedicalShopDiaShop.MainView"
         mc:Ignorable="d"
-        Title="ProductDetailsWindow" Height="450" Width="800">
-    <Grid Margin="10">
+        Title="Детали товара" Height="550" Width="800"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
+    <Grid Margin="20">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="20" />
             <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
-        <Grid>
-            <Image Source="{Binding ImagePath}"/>
-        </Grid>
+
+        <!-- Левая колонка: изображение -->
+        <Border CornerRadius="10" BorderBrush="LightGray" BorderThickness="1" Padding="10">
+            <Image x:Name="ProductImage" Stretch="Uniform" />
+        </Border>
+
+        <!-- Правая колонка: информация о товаре -->
         <Grid Grid.Column="2">
             <Grid.RowDefinitions>
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="1*" />
-                <RowDefinition Height="auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <TextBlock Text="Название" FontFamily="{StaticResource GothamProFamily}" FontSize="20" FontWeight="Bold"/>
-            
-            <Grid Grid.Row="6">
+            <TextBlock Text="{Binding Name}" FontFamily="{StaticResource GothamProFamily}" 
+                       FontSize="25" FontWeight="Bold" TextWrapping="Wrap"/>
+
+            <TextBlock Grid.Row="1" Margin="0,10,0,5" Text="Категория:" 
+                       FontFamily="{StaticResource GothamProFamily}" FontSize="20" FontWeight="Bold"/>
+            <TextBlock Grid.Row="2" x:Name="CategoryText" Text="{Binding CategoryName}" 
+                       FontFamily="{StaticResource GothamProLight}" FontSize="18" TextWrapping="Wrap"/>
+
+            <TextBlock Grid.Row="3" Margin="0,15,0,5" Text="Описание:" 
+                       FontFamily="{StaticResource GothamProFamily}" FontSize="20" FontWeight="Bold"/>
+            <TextBlock Grid.Row="4" x:Name="DescriptionText" Text="{Binding Description}" 
+                       FontFamily="{StaticResource GothamProLight}" FontSize="16" TextWrapping="Wrap"/>
+
+            <TextBlock Grid.Row="5" Margin="0,15,0,5" Text="Остаток на складе:" 
+                       FontFamily="{StaticResource GothamProFamily}" FontSize="20" FontWeight="Bold"/>
+            <TextBlock Grid.Row="6" x:Name="StockText" Text="{Binding Stock}" 
+                       FontFamily="{StaticResource GothamProLight}" FontSize="18" 
+                       Foreground="{Binding StockColor}"/>
+
+            <TextBlock Grid.Row="8" Margin="0,15,0,5" Text="Цена:" 
+                       FontFamily="{StaticResource GothamProFamily}" FontSize="20" FontWeight="Bold"/>
+            <TextBlock Grid.Row="9" x:Name="PriceText" 
+                       FontFamily="{StaticResource GothamProLight}" FontSize="18" Foreground="#4CAF50">
+                <Run Text="{Binding Price, StringFormat={}{0:N2}}"/>
+                <Run Text=" ₽"/>
+            </TextBlock>
+
+            <Grid Grid.Row="10" Margin="0,20,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*" />
                     <ColumnDefinition Width="10" />
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Name="EditBtn" Content="Изменить" FontFamily="{StaticResource GothamProFamily}" FontSize="20"/>
-                <Button Grid.Column="2" Name="CloseBtn" Content="Закрыть" FontFamily="{StaticResource GothamProFamily}" FontSize="20"/>
+                <Button Grid.Column="0" x:Name="EditBtn" Content="Изменить" 
+                        FontFamily="{StaticResource GothamProFamily}" FontSize="18" Height="40"
+                        Click="EditBtn_Click"/>
+                <Button Grid.Column="2" x:Name="CloseBtn" Content="Закрыть" 
+                        FontFamily="{StaticResource GothamProFamily}" FontSize="18" Height="40"
+                        Click="CloseBtn_Click"/>
             </Grid>
         </Grid>
     </Grid>

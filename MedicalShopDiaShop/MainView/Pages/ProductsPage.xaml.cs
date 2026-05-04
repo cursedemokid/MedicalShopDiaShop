@@ -180,7 +180,12 @@ namespace MedicalShopDiaShop.MainView.Pages
             var btn = sender as Button;
             var product = btn?.Tag as ProductDto;
             if (product != null)
-                MessageBox.Show($"Товар: {product.Name}\nКатегория: {product.CategoryName}\nЦена: {product.Price:N2} ₽\nОписание: {product.Description}");
+            {
+                var detailsWindow = new ProductDetailsWindow(product.Id);
+                detailsWindow.ShowDialog();
+                LoadProductsFromDatabase();
+                RefreshProductsList();
+            }
         }
     }
 }
