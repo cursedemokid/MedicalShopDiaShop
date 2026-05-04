@@ -24,7 +24,7 @@ namespace MedicalShopDiaShop.AppData
         /// </summary>
         public static List<StockItem> GetCurrentStock(int storeId)
         {
-            using (var context = new DiaShopEntities4())
+            using (var context = new DiaShopEntities())
             {
                 // Поставки (приход)
                 var supplies = context.SupplyProduct
@@ -57,7 +57,7 @@ namespace MedicalShopDiaShop.AppData
                     {
                         ProductId = g.Key.ProductId,
                         ProductName = g.First().Name,
-                        ExpirationDate = g.Key.ExpirationDate,
+                        ExpirationDate = (DateTime)g.Key.ExpirationDate,
                         InStock = g.Sum(x => x.Quantity),
                         Reserved = 0
                     })
@@ -101,7 +101,7 @@ namespace MedicalShopDiaShop.AppData
         /// </summary>
         public static void CheckExpiringProducts()
         {
-            using (var context = new DiaShopEntities4())
+            using (var context = new DiaShopEntities())
             {
                 var stores = context.Store.Select(s => s.Id).ToList();
                 foreach (var storeId in stores)
