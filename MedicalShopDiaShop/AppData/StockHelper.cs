@@ -52,12 +52,12 @@ namespace MedicalShopDiaShop.AppData
 
                 // Группируем приход по товару и сроку годности
                 var stockIn = supplies
-                    .GroupBy(s => new { s.ProductId, s.ExpirationDate })
+                    .GroupBy(s => new { s.ProductId, ExpirationDate = s.ExpirationDate ?? DateTime.MaxValue })
                     .Select(g => new StockItem
                     {
                         ProductId = g.Key.ProductId,
                         ProductName = g.First().Name,
-                        ExpirationDate = (DateTime)g.Key.ExpirationDate,
+                        ExpirationDate = g.Key.ExpirationDate,
                         InStock = g.Sum(x => x.Quantity),
                         Reserved = 0
                     })

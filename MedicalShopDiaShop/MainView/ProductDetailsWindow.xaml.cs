@@ -1,7 +1,9 @@
 ﻿using MedicalShopDiaShop.AppData;
 using MedicalShopDiaShop.Database;
 using System;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Media;
 
@@ -11,19 +13,22 @@ namespace MedicalShopDiaShop.MainView
     {
         private readonly int _productId;
         private Product _product;
+        private ProductDetailsViewModel _viewModel;
 
         public ProductDetailsWindow(int productId)
         {
             InitializeComponent();
             _productId = productId;
+            _viewModel = new ProductDetailsViewModel();
+            DataContext = _viewModel;
             LoadProductData();
         }
 
-        private void LoadProductData()
+        private async void LoadProductData()
         {
             using (var context = new DiaShopEntities())
             {
-                _product = context.Product.FirstOrDefault(p => p.Id == _productId);
+                _product = await context.Product.FindAsync(_productId);
                 if (_product == null)
                 {
                     FeedbackService.Error("Товар не найден.");
@@ -31,23 +36,21 @@ namespace MedicalShopDiaShop.MainView
                     return;
                 }
 
-                // Загрузка аватара
+                // Загрузка изображения
                 string imagePath = string.IsNullOrEmpty(_product.Image)
                     ? "/Resources/productPlaceholder.png"
                     : _product.Image;
                 ProductImage.Source = new System.Windows.Media.Imaging.BitmapImage(
                     new Uri(imagePath, UriKind.Relative));
 
-                // Установка DataContext для привязок
-                DataContext = new
-                {
-                    Name = _product.Name,
-                    CategoryName = GetCategoryName(_product.Category),
-                    Description = _product.Description,
-                    Price = _product.Price,
-                    Stock = GetProductStock(_product.Id),
-                    StockColor = GetStockColor(GetProductStock(_product.Id))
-                };
+                // Заполнение ViewModel
+                _viewModel.Name = _product.Name;
+                _viewModel.CategoryName = GetCategoryName(_product.Category);
+                _viewModel.Description = _product.Description;
+                _viewModel.Price = _product.Price;
+                int stock = GetProductStock(_product.Id);
+                _viewModel.Stock = stock;
+                _viewModel.StockColor = GetStockColor(stock);
             }
         }
 
@@ -82,7 +85,7 @@ namespace MedicalShopDiaShop.MainView
             var editWindow = new AddEditProductWindow(_productId);
             if (editWindow.ShowDialog() == true)
             {
-                // Обновляем данные в окне после редактирования
+                // Обновляем данные после редактирования
                 LoadProductData();
             }
         }
@@ -92,5 +95,56 @@ namespace MedicalShopDiaShop.MainView
             DialogResult = false;
             Close();
         }
+    }
+
+    // ViewModel для окна деталей
+    public class ProductDetailsViewModel : INotifyPropertyChanged
+    {
+        private string _name;
+        private string _categoryName;
+        private string _description;
+        private decimal _price;
+        private int _stock;
+        private SolidColorBrush _stockColor;
+
+        public string Name
+        {
+            get => _name;
+            set { _name = value; OnPropertyChanged(); }
+        }
+
+        public string CategoryName
+        {
+            get => _categoryName;
+            set { _categoryName = value; OnPropertyChanged(); }
+        }
+
+        public string Description
+        {
+            get => _description;
+            set { _description = value; OnPropertyChanged(); }
+        }
+
+        public decimal Price
+        {
+            get => _price;
+            set { _price = value; OnPropertyChanged(); }
+        }
+
+        public int Stock
+        {
+            get => _stock;
+            set { _stock = value; OnPropertyChanged(); }
+        }
+
+        public SolidColorBrush StockColor
+        {
+            get => _stockColor;
+            set { _stockColor = value; OnPropertyChanged(); }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string name = null) =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 }
