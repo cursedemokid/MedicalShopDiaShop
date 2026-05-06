@@ -68,6 +68,7 @@
                 </GroupBox.Header>
                 <ComboBox x:Name="StatusFilterComboBox" Width="200" FontSize="18"
               SelectionChanged="StatusFilterComboBox_SelectionChanged">
+                    <ComboBoxItem Tag="0">Все</ComboBoxItem>
                     <ComboBoxItem Tag="1">В обработке</ComboBoxItem>
                     <ComboBoxItem Tag="2">Ожидает курьера</ComboBoxItem>
                     <ComboBoxItem Tag="3">Доставлен</ComboBoxItem>

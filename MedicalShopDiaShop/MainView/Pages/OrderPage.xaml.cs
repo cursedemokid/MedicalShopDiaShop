@@ -212,9 +212,16 @@ namespace MedicalShopDiaShop.MainView.Pages
 
         private void StatusFilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (StatusFilterComboBox.SelectedItem is ComboBoxItem selectedItem && selectedItem.Tag is string tag && int.TryParse(tag, out int selectedStatus))
+            if (StatusFilterComboBox.SelectedItem is ComboBoxItem selectedItem)
             {
-                _filteredOrders = new ObservableCollection<OrderDto>(_allOrders.Where(o => o.Status == selectedStatus));
+                if (selectedItem.Tag is string tag && int.TryParse(tag, out int selectedStatus) && selectedStatus > 0)
+                {
+                    _filteredOrders = new ObservableCollection<OrderDto>(_allOrders.Where(o => o.Status == selectedStatus));
+                }
+                else
+                {
+                    _filteredOrders = new ObservableCollection<OrderDto>(_allOrders);
+                }
             }
             else
             {
