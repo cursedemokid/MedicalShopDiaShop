@@ -6,6 +6,15 @@ using System.Threading.Tasks;
 
 namespace MedicalShopDiaShop.AppData
 {
+    public static class OrderStatusValues
+    {
+        public const int InProcess = 1;
+        public const int WaitCourier = 2;
+        public const int Delivered = 3;
+        public const int WaitPayment = 4;
+        public const int InHistory = 5;
+        public const int InDelive = 9;
+    }
     public class Status
     {
         public enum DeliveryType
@@ -77,5 +86,7 @@ namespace MedicalShopDiaShop.AppData
             Creams = 4,
             Vitamins = 5
         }
+
+        
     }
 }

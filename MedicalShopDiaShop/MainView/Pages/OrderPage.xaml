@@ -3,6 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:status="clr-namespace:MedicalShopDiaShop.AppData"
       mc:Ignorable="d" 
       d:DesignHeight="694" d:DesignWidth="1033"
       Title="OrdersPage">
@@ -124,9 +125,11 @@
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <ComboBox SelectedValue="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                      SelectedValuePath="Tag" IsSynchronizedWithCurrentItem="True" DisplayMemberPath="Content"
-                      SelectionChanged="OrderStatus_SelectionChanged"
-                      Tag="{Binding Id}" Width="140">
+                                              SelectedValuePath="Tag"
+                                              DisplayMemberPath="Content"
+                                              SelectionChanged="OrderStatus_SelectionChanged"
+                                              Tag="{Binding Id}"
+                                              Width="140">
                                         <ComboBoxItem Content="В обработке" Tag="1"/>
                                         <ComboBoxItem Content="Ожидает курьера" Tag="2"/>
                                         <ComboBoxItem Content="Доставлен" Tag="3"/>
