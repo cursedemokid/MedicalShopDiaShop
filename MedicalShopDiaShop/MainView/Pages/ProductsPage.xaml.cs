@@ -132,7 +132,7 @@ namespace MedicalShopDiaShop.MainView.Pages
                 return;
             }
 
-            if (MessageBox.Show($"Удалить {selected.Name}?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            if (FeedbackService.Question($"Удалить {selected.Name}?", "Подтверждение") == MessageBoxResult.Yes)
             {
                 var productFromDb = App.context.Product.FirstOrDefault(p => p.Id == selected.Id);
                 if (productFromDb != null)

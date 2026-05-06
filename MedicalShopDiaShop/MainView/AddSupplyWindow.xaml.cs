@@ -62,7 +62,7 @@ namespace MedicalShopDiaShop.MainView
             CurrentSupply = _context.Supply.Find(supplyId);
             if (CurrentSupply == null)
             {
-                MessageBox.Show("Черновик не найден.");
+                FeedbackService.Information("Черновик не найден.");
                 Close();
                 return;
             }

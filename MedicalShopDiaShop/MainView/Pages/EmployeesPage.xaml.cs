@@ -110,11 +110,9 @@ namespace MedicalShopDiaShop.MainView.Pages
                 return;
             }
 
-            var result = MessageBox.Show(
+            var result = FeedbackService.Question(
                 $"Вы действительно хотите удалить сотрудника: {selected.FullName}?",
-                "Подтверждение удаления",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Question);
+                "Подтверждение удаления");
 
             if (result == MessageBoxResult.Yes)
             {

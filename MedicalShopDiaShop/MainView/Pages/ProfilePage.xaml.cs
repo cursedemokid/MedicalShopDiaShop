@@ -71,7 +71,7 @@ namespace MedicalShopDiaShop.MainView.Pages
             _displayedUser = App.context.User.FirstOrDefault(u => u.Id == userId);
             if (_displayedUser == null)
             {
-                MessageBox.Show("Пользователь не найден");
+                FeedbackService.Error("Пользователь не найден");
                 return;
             }
 
