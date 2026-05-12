@@ -5,12 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MedicalShopDiaShop.MainView"
         mc:Ignorable="d"
-        Title="" MaxWidth="1280" MaxHeight="720" Width="1280" Height="720" MinWidth="580" MinHeight="328" 
+        Title="" MaxWidth="1280" MaxHeight="720" Width="1280" Height="720" 
+        MinWidth="580" MinHeight="328" 
         WindowStartupLocation="CenterScreen" Icon="/Resources/sugar.png">
     <Grid>
         <Image Source="/Resources/BackgroundPatternPurple.png" Stretch="Fill"/>
 
-        <Border CornerRadius="20" BorderThickness="1" BorderBrush="White" Height="350" Width="600" Background="White" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Border CornerRadius="20" BorderThickness="1" BorderBrush="White" Height="350" Width="600" Background="White" 
+                HorizontalAlignment="Center" VerticalAlignment="Center">
             <Grid  Width="580" Margin="10" Background="White">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*" />

@@ -112,13 +112,13 @@
                     </Button>-->
                 </Grid>
 
-                <Button Name="NotificationsBtn" Grid.Column="4" VerticalContentAlignment="Center" Height="50" Padding="0" Background="White" BorderBrush="White" Click="NotificationsBtn_Click">
+                <Button Name="NotificationsBtn" Grid.Column="4" VerticalContentAlignment="Center" Height="50" Padding="5" Background="White" BorderBrush="White" Click="NotificationsBtn_Click">
                     <Button.Content>
                         <Grid>
                             <Grid HorizontalAlignment="Right" VerticalAlignment="Top">
                                 <Ellipse Name="NotificationCheck" Fill="Red" Height="10" Width="10"/>
                             </Grid>
-                            <Image Source="/Resources/notification.png" Height="50"/>
+                            <Image Source="/Resources/notification.png" Height="35"/>
                         </Grid>
                     </Button.Content>
                 </Button>
