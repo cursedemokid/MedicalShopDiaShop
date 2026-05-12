@@ -4,9 +4,21 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:status="clr-namespace:MedicalShopDiaShop.AppData"
+      xmlns:sys="clr-namespace:System;assembly=mscorlib"
       mc:Ignorable="d" 
       d:DesignHeight="694" d:DesignWidth="1033"
       Title="OrdersPage">
+
+    <Page.Resources>
+        <x:Array x:Key="StatusList" Type="sys:String">
+            <sys:String>В обработке</sys:String>
+            <sys:String>Ожидает курьера</sys:String>
+            <sys:String>Доставлен</sys:String>
+            <sys:String>Ожидает оплаты</sys:String>
+            <sys:String>В истории</sys:String>
+            <sys:String>У курьера</sys:String>
+        </x:Array>
+    </Page.Resources>
 
     <Grid Background="White">
         <Grid.RowDefinitions>
@@ -125,19 +137,11 @@
                         <GridViewColumn Header="Статус" Width="auto">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <ComboBox SelectedValue="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                              SelectedValuePath="Tag"
-                                              DisplayMemberPath="Content"
+                                    <ComboBox ItemsSource="{StaticResource StatusList}"
+                                              SelectedItem="{Binding StatusString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                               SelectionChanged="OrderStatus_SelectionChanged"
                                               Tag="{Binding Id}"
-                                              Width="140">
-                                        <ComboBoxItem Content="В обработке" Tag="1"/>
-                                        <ComboBoxItem Content="Ожидает курьера" Tag="2"/>
-                                        <ComboBoxItem Content="Доставлен" Tag="3"/>
-                                        <ComboBoxItem Content="Ожидает оплаты" Tag="4"/>
-                                        <ComboBoxItem Content="В истории" Tag="5"/>
-                                        <ComboBoxItem Content="У курьера" Tag="9"/>
-                                    </ComboBox>
+                                              Width="140"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>

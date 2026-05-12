@@ -19,13 +19,6 @@ namespace MedicalShopDiaShop.MainView.Dto
         public decimal TotalCost { get; set; }
         public List<OrderItemDto> Items { get; set; }
 
-        private int _status;
-        public int Status
-        {
-            get => _status;
-            set { _status = value; OnPropertyChanged(); OnPropertyChanged(nameof(StatusName)); }
-        }
-
         private bool _isSelected;
         public bool IsSelected
         {
@@ -33,7 +26,20 @@ namespace MedicalShopDiaShop.MainView.Dto
             set { _isSelected = value; OnPropertyChanged(); }
         }
 
-        public string StatusName
+        private int _status;
+        public int Status
+        {
+            get => _status;
+            set
+            {
+                _status = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(StatusString));
+                OnPropertyChanged(nameof(StatusName));
+            }
+        }
+
+        public string StatusString
         {
             get
             {
@@ -45,11 +51,25 @@ namespace MedicalShopDiaShop.MainView.Dto
                     case 4: return "Ожидает оплаты";
                     case 5: return "В истории";
                     case 9: return "У курьера";
-                    default: return "Неизвестно";
+                    default: return "В обработке";
+                }
+            }
+            set
+            {
+                switch (value)
+                {
+                    case "В обработке": Status = 1; break;
+                    case "Ожидает курьера": Status = 2; break;
+                    case "Доставлен": Status = 3; break;
+                    case "Ожидает оплаты": Status = 4; break;
+                    case "В истории": Status = 5; break;
+                    case "У курьера": Status = 9; break;
+                    default: Status = 1; break;
                 }
             }
         }
 
+        public string StatusName => StatusString;
         public string DeliveryTypeName => DeliveryType == 1 ? "Курьер" : "Самовывоз";
 
         public event PropertyChangedEventHandler PropertyChanged;

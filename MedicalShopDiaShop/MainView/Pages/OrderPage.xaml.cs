@@ -146,15 +146,22 @@ namespace MedicalShopDiaShop.MainView.Pages
             if (combo == null || combo.SelectedItem == null) return;
 
             int orderId = (int)combo.Tag;
-            int newStatus = int.Parse(((ComboBoxItem)combo.SelectedItem).Tag.ToString());
+            string newStatusText = combo.SelectedItem.ToString(); // "В обработке" и т.д.
+            int newStatus = GetStatusValue(newStatusText);
+
+            var orderDto = _allOrders.FirstOrDefault(o => o.Id == orderId);
+            if (orderDto == null) return;
+
+            int oldStatus = orderDto.Status;
+            if (oldStatus == newStatus) return;
+
+            // Обновляем DTO (привязка уже обновила StatusString, но Status ещё нет)
+            orderDto.Status = newStatus;
 
             using (var context = new DiaShopEntities())
             {
                 var order = context.Order.FirstOrDefault(o => o.Id == orderId);
                 if (order == null) return;
-
-                int oldStatus = order.Status ?? 1;
-                if (oldStatus == newStatus) return;
 
                 order.Status = newStatus;
 
@@ -174,7 +181,7 @@ namespace MedicalShopDiaShop.MainView.Pages
                     {
                         StartDate = DateTime.Now,
                         EndDate = DateTime.Now.AddDays(3),
-                        CourierId = 8, // позже можно назначить
+                        CourierId = 8,
                         Description = $"Доставка заказа №{order.Id}"
                     };
                     context.Delivery.Add(delivery);
@@ -185,24 +192,21 @@ namespace MedicalShopDiaShop.MainView.Pages
                 await context.SaveChangesAsync();
             }
 
-            var updatedOrder = _allOrders.FirstOrDefault(o => o.Id == orderId);
-            if (updatedOrder != null) updatedOrder.Status = newStatus;
             RefreshOrdersList();
-
-            FeedbackService.Information($"Статус заказа №{orderId} изменён на {GetStatusName(newStatus)}");
+            FeedbackService.Information($"Статус заказа №{orderId} изменён на {newStatusText}");
         }
 
-        private string GetStatusName(int statusId)
+        private int GetStatusValue(string statusText)
         {
-            switch (statusId)
+            switch (statusText)
             {
-                case (int)OrderStatus.InProcess: return "В обработке";
-                case (int)OrderStatus.WaitCourier: return "Ожидает курьера";
-                case (int)OrderStatus.Delivered: return "Доставлен";
-                case (int)OrderStatus.WaitPayment: return "Ожидает оплаты";
-                case (int)OrderStatus.InHistory: return "В истории";
-                case (int)OrderStatus.InDelive: return "У курьера";
-                default: return "Неизвестно";
+                case "В обработке": return (int)OrderStatus.InProcess;
+                case "Ожидает курьера": return (int)OrderStatus.WaitCourier;
+                case "Доставлен": return (int)OrderStatus.Delivered;
+                case "Ожидает оплаты": return (int)OrderStatus.WaitPayment;
+                case "В истории": return (int)OrderStatus.InHistory;
+                case "У курьера": return (int)OrderStatus.InDelive;
+                default: return (int)OrderStatus.InProcess;
             }
         }
 
