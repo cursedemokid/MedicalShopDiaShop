@@ -160,19 +160,19 @@ namespace MedicalShopDiaShop.MainView.Pages
             }
         }
 
-        private void ProductSearchButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void ProductSearchBar_SearchClicked(object sender, System.Windows.RoutedEventArgs e)
         {
             ApplyProductFilter();
         }
 
-        private void ProductSearchBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void ProductSearchBar_FilterTextChanged(object sender, TextChangedEventArgs e)
         {
             ApplyProductFilter();
         }
 
         private void ApplyProductFilter()
         {
-            string search = ProductSearchBox.Text?.Trim().ToLowerInvariant() ?? string.Empty;
+            string search = PageSearchBar.Text?.Trim().ToLowerInvariant() ?? string.Empty;
 
             var filtered = string.IsNullOrWhiteSpace(search)
                 ? _allProducts

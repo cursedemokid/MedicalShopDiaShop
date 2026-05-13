@@ -82,12 +82,13 @@ namespace MedicalShopDiaShop.MainView.Pages
 
             if (CategoryFilterComboBox.SelectedItem is ComboBoxItem selectedItem &&
                 selectedItem.Tag is string tag &&
+                tag != "all" &&
                 int.TryParse(tag, out int selectedCat))
             {
                 query = query.Where(p => p.Category == selectedCat);
             }
 
-            string searchText = SearchBox.Text?.Trim().ToLower();
+            string searchText = PageSearchBar.Text?.Trim().ToLower();
             if (!string.IsNullOrEmpty(searchText))
             {
                 query = query.Where(p =>
@@ -113,6 +114,11 @@ namespace MedicalShopDiaShop.MainView.Pages
         }
 
         private void CategoryFilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ApplyProductFiltersFromUi();
+        }
+
+        private void PageSearchBar_FilterTextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
             ApplyProductFiltersFromUi();
         }

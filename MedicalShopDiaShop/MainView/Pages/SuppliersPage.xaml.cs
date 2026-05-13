@@ -151,7 +151,7 @@ namespace MedicalShopDiaShop.MainView.Pages
             if (CityFilterComboBox.SelectedValue is int cityId && cityId != 0)
                 filtered = filtered.Where(s => s.City == cityId);
 
-            string searchText = SearchBox.Text?.Trim().ToLower();
+            string searchText = PageSearchBar.Text?.Trim().ToLower();
             if (!string.IsNullOrEmpty(searchText))
             {
                 filtered = filtered.Where(s =>
@@ -177,7 +177,22 @@ namespace MedicalShopDiaShop.MainView.Pages
             }
         }
 
-        private void SearchBox_TextChanged(object sender, TextChangedEventArgs e) { }
+        private void PageSearchBar_FilterTextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            if (_currentMode == ViewMode.Suppliers)
+            {
+                if (_allSuppliers == null) return;
+                ApplyFilterAndSearch();
+                SubscribeToSupplierChanges(_filteredSuppliers);
+                SuppliersListView.ItemsSource = _filteredSuppliers;
+            }
+            else
+            {
+                if (_allSupplies == null) return;
+                ApplySupplyFilterAndSearch();
+                SuppliesListBox.ItemsSource = _filteredSupplies;
+            }
+        }
 
         private void CityFilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -190,7 +205,7 @@ namespace MedicalShopDiaShop.MainView.Pages
         private void ApplySupplyFilterAndSearch()
         {
             var filtered = _allSupplies.AsEnumerable();
-            string searchText = SearchBox.Text?.Trim().ToLower();
+            string searchText = PageSearchBar.Text?.Trim().ToLower();
             if (!string.IsNullOrEmpty(searchText))
             {
                 filtered = filtered.Where(s =>
@@ -226,6 +241,7 @@ namespace MedicalShopDiaShop.MainView.Pages
                 SuppliesModeBtn.Foreground = primaryBrush;
 
                 ApplyFilterAndSearch();
+                SubscribeToSupplierChanges(_filteredSuppliers);
                 SuppliersListView.ItemsSource = _filteredSuppliers;
             }
             else
@@ -242,6 +258,7 @@ namespace MedicalShopDiaShop.MainView.Pages
                 SuppliersModeBtn.Foreground = primaryBrush;
 
                 ApplySupplyFilterAndSearch();
+                SubscribeToSupplyChanges(_filteredSupplies);
                 SuppliesListBox.ItemsSource = _filteredSupplies;
             }
         }

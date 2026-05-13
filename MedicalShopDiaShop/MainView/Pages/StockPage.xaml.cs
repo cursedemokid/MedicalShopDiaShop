@@ -1,68 +1,58 @@
-﻿//using MedicalShopDiaShop.AppData;
-//using System.Collections.ObjectModel;
-//using System.Linq;
-//using System.Windows;
-//using System.Windows.Controls;
-//using System.Windows.Media;
+﻿using MedicalShopDiaShop.AppData;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows.Controls;
 
-//namespace MedicalShopDiaShop.MainView.Pages
-//{
-//    public partial class StockPage : Page
-//    {
-//        private ObservableCollection<StockItem> _allStock;
-//        private ObservableCollection<StockItem> _filteredStock;
+namespace MedicalShopDiaShop.MainView.Pages
+{
+    public partial class StockPage : Page
+    {
+        private ObservableCollection<StockItem> _allStock;
+        private ObservableCollection<StockItem> _filteredStock;
 
-//        public StockPage()
-//        {
-//            InitializeComponent();
-//            Loaded += StockPage_Loaded;
-//            SearchBox.TextChanged += SearchBox_TextChanged;
-//        }
+        public StockPage()
+        {
+            InitializeComponent();
+            Loaded += StockPage_Loaded;
+        }
 
-//        private void StockPage_Loaded(object sender, RoutedEventArgs e)
-//        {
-//            //LoadStock();
-//        }
+        private void StockPage_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            LoadStock();
+        }
 
-//        //private void LoadStock()
-//        //{
-//        //    _allStock = new ObservableCollection<StockItem>(StockHelper.GetCurrentStock(App.currentUser.StoreId));
-//        //    _filteredStock = new ObservableCollection<StockItem>(_allStock);
-//        //    StockListView.ItemsSource = _filteredStock;
-//        //}
+        private void LoadStock()
+        {
+            if (!App.currentUser.StoreId.HasValue)
+            {
+                _allStock = new ObservableCollection<StockItem>();
+                _filteredStock = new ObservableCollection<StockItem>();
+                StockListView.ItemsSource = _filteredStock;
+                return;
+            }
 
-//        private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
-//        {
-//            string search = SearchBox.Text?.Trim().ToLower() ?? "";
-//            if (string.IsNullOrEmpty(search))
-//                _filteredStock = new ObservableCollection<StockItem>(_allStock);
-//            else
-//                _filteredStock = new ObservableCollection<StockItem>(_allStock.Where(s => s.ProductName.ToLower().Contains(search)));
-//            StockListView.ItemsSource = _filteredStock;
-//        }
-//    }
+            var list = StockHelper.GetCurrentStock(App.currentUser.StoreId.Value);
+            _allStock = new ObservableCollection<StockItem>(list);
+            ApplyStockFilter();
+        }
 
-//    // Расширение для отображения статуса в UI
-//    public partial class StockItem
-//    {
-//        public string StatusText
-//        {
-//            get
-//            {
-//                if (IsExpired) return "Просрочен";
-//                if (IsExpiringSoon) return "Скоро истекает";
-//                return "Годен";
-//            }
-//        }
+        private void ApplyStockFilter()
+        {
+            if (_allStock == null) return;
 
-//        public Brush StatusColor
-//        {
-//            get
-//            {
-//                if (IsExpired) return Brushes.Red;
-//                if (IsExpiringSoon) return Brushes.Orange;
-//                return Brushes.Green;
-//            }
-//        }
-//    }
-//}
+            string search = PageSearchBar.Text?.Trim().ToLowerInvariant() ?? string.Empty;
+            if (string.IsNullOrEmpty(search))
+                _filteredStock = new ObservableCollection<StockItem>(_allStock);
+            else
+                _filteredStock = new ObservableCollection<StockItem>(
+                    _allStock.Where(s =>
+                        (s.ProductName ?? string.Empty).ToLowerInvariant().Contains(search)));
+
+            StockListView.ItemsSource = _filteredStock;
+        }
+
+        private void PageSearchBar_FilterTextChanged(object sender, TextChangedEventArgs e) => ApplyStockFilter();
+
+        private void PageSearchBar_SearchClicked(object sender, System.Windows.RoutedEventArgs e) => ApplyStockFilter();
+    }
+}

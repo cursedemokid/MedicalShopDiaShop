@@ -200,9 +200,9 @@ namespace MedicalShopDiaShop.MainView.Pages
             if (HistoryDateFilter.SelectedDate.HasValue)
                 query = query.Where(h => h.OrderDate.Date == HistoryDateFilter.SelectedDate.Value.Date);
 
-            if (!string.IsNullOrWhiteSpace(HistorySearchBox.Text))
+            if (!string.IsNullOrWhiteSpace(HistorySearchBar.Text))
             {
-                string search = HistorySearchBox.Text.ToLower();
+                string search = HistorySearchBar.Text.ToLower();
                 query = query.Where(h => h.Items.Any(i => i.Name.ToLower().Contains(search)));
             }
 
@@ -221,6 +221,9 @@ namespace MedicalShopDiaShop.MainView.Pages
             _filteredHistory = new ObservableCollection<OrderHistoryItem>(query);
             HistoryListBox.ItemsSource = _filteredHistory;
         }
+
+        private void HistorySearchBar_FilterTextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e) =>
+            ApplyHistoryFilterAndSort();
 
         private void HistorySearch_Click(object sender, RoutedEventArgs e) => ApplyHistoryFilterAndSort();
         private void OrderByCmb_SelectionChanged(object sender, SelectionChangedEventArgs e) => ApplyHistoryFilterAndSort();

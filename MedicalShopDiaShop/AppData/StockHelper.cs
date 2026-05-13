@@ -2,6 +2,7 @@ using MedicalShopDiaShop.Database;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Media;
 
 namespace MedicalShopDiaShop.AppData
 {
@@ -15,6 +16,26 @@ namespace MedicalShopDiaShop.AppData
         public int Available => InStock - Reserved;
         public bool IsExpired => ExpirationDate < DateTime.Today;
         public bool IsExpiringSoon => ExpirationDate > DateTime.Today && ExpirationDate <= DateTime.Today.AddDays(30);
+
+        public string StatusText
+        {
+            get
+            {
+                if (IsExpired) return "Просрочен";
+                if (IsExpiringSoon) return "Скоро истекает";
+                return "Годен";
+            }
+        }
+
+        public Brush StatusBrush
+        {
+            get
+            {
+                if (IsExpired) return Brushes.Red;
+                if (IsExpiringSoon) return Brushes.Orange;
+                return Brushes.Green;
+            }
+        }
     }
 
     public static class StockHelper

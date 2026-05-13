@@ -77,7 +77,7 @@ namespace MedicalShopDiaShop.MainView.Pages
         {
             if (_allClients == null) return;
 
-            string searchText = SearchBox.Text?.Trim().ToLower();
+            string searchText = PageSearchBar.Text?.Trim().ToLower();
             if (string.IsNullOrEmpty(searchText))
             {
                 _filteredClients = new ObservableCollection<ClientItem>(_allClients);
@@ -94,6 +94,11 @@ namespace MedicalShopDiaShop.MainView.Pages
             SubscribeToClientChanges(_filteredClients);
             ClientsListView.ItemsSource = _filteredClients;
             ClientsListBox.ItemsSource = _filteredClients;
+        }
+
+        private void PageSearchBar_FilterTextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            ApplyClientSearchFromUi();
         }
 
         private void SearchBtn_Click(object sender, RoutedEventArgs e)

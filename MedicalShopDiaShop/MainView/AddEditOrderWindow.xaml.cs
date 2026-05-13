@@ -431,9 +431,16 @@ namespace MedicalShopDiaShop.MainView
             }
         }
 
-        private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void OrderProductSearchBar_FilterTextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
-            string search = SearchBox.Text?.Trim().ToLower() ?? "";
+            ApplyOrderProductSearchFilter();
+        }
+
+        private void OrderProductSearchBar_SearchClicked(object sender, RoutedEventArgs e) => ApplyOrderProductSearchFilter();
+
+        private void ApplyOrderProductSearchFilter()
+        {
+            string search = OrderProductSearchBar.Text?.Trim().ToLower() ?? "";
             if (string.IsNullOrEmpty(search))
                 _filteredProducts = new ObservableCollection<ProductItem>(_allProducts);
             else

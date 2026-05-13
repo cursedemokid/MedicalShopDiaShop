@@ -254,6 +254,9 @@
     <Compile Include="MainView\ChangePasswordWindow.xaml.cs">
       <DependentUpon>ChangePasswordWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MainView\Controls\SearchBarControl.xaml.cs">
+      <DependentUpon>SearchBarControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MainView\Dto\OrderItemDto.cs" />
     <Compile Include="MainView\OrderDetailsWindow.xaml.cs">
       <DependentUpon>OrderDetailsWindow.xaml</DependentUpon>
@@ -359,6 +362,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MainView\Pages\ChooseProductsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainView\Controls\SearchBarControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

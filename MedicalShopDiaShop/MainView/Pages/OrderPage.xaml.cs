@@ -81,7 +81,7 @@ namespace MedicalShopDiaShop.MainView.Pages
                 query = query.Where(o => o.Status == selectedStatus);
             }
 
-            string searchText = SearchBox.Text?.Trim().ToLower();
+            string searchText = PageSearchBar.Text?.Trim().ToLower();
             if (!string.IsNullOrEmpty(searchText))
             {
                 query = query.Where(o =>
@@ -260,6 +260,11 @@ namespace MedicalShopDiaShop.MainView.Pages
         #region Фильтр, поиск, обновление
 
         private void StatusFilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ApplyOrderFiltersFromUi();
+        }
+
+        private void PageSearchBar_FilterTextChanged(object sender, TextChangedEventArgs e)
         {
             ApplyOrderFiltersFromUi();
         }

@@ -1,6 +1,7 @@
 ﻿using MedicalShopDiaShop.Database;
 using MedicalShopDiaShop.AppData;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -14,7 +15,8 @@ namespace MedicalShopDiaShop.MainView.Pages
 {
     public partial class EmployeesPage : Page
     {
-        private ObservableCollection<EmployeeItem> _employees;
+        private ObservableCollection<EmployeeItem> _allEmployees;
+        private ObservableCollection<EmployeeItem> _filteredEmployees;
 
         public EmployeesPage()
         {
@@ -34,12 +36,12 @@ namespace MedicalShopDiaShop.MainView.Pages
         // Загрузка сотрудников из БД и преобразование в EmployeeItem
         private void LoadEmployeesFromDatabase()
         {
-            // Получаем сотрудников (роли Admin, Worker, Courier)
             var dbEmployees = App.context.User
-                .Where(u => u.Role == (int)Role.Admin ||
-                            u.Role == (int)Role.Worker ||
-                            u.Role == (int)Role.Courier &&
-                            u.IsDeleted != true)
+                .Where(u =>
+                    (u.Role == (int)Role.Admin ||
+                     u.Role == (int)Role.Worker ||
+                     u.Role == (int)Role.Courier) &&
+                    u.IsDeleted != true)
                 .ToList();
 
             var items = dbEmployees.Select(u => new EmployeeItem
@@ -48,6 +50,7 @@ namespace MedicalShopDiaShop.MainView.Pages
                 FullName = $"{u.LastName} {u.FirstName} {u.MiddleName}".Trim(),
                 UserName = u.UserName,
                 RoleName = GetRoleName(u.Role),
+                Role = u.Role,
                 PhoneNumber = u.PhoneNumber,
                 Email = u.Email,
                 AvatarKey = string.IsNullOrEmpty(u.AvatarKey)
@@ -56,11 +59,47 @@ namespace MedicalShopDiaShop.MainView.Pages
                 IsSelected = false
             });
 
-            _employees = new ObservableCollection<EmployeeItem>(items);
-            SubscribeToEmployeeChanges(_employees);
-            EmployeesListView.ItemsSource = _employees;
-            EmployeesListBox.ItemsSource = _employees;
+            _allEmployees = new ObservableCollection<EmployeeItem>(items);
+            ApplyEmployeeFilters();
         }
+
+        private void ApplyEmployeeFilters()
+        {
+            if (_allEmployees == null) return;
+
+            UnsubscribeFromEmployeeChanges(_filteredEmployees);
+
+            IEnumerable<EmployeeItem> query = _allEmployees;
+
+            if (RoleFilterComboBox.SelectedItem is ComboBoxItem roleItem &&
+                roleItem.Tag is string roleTag &&
+                int.TryParse(roleTag, out int roleId))
+            {
+                query = query.Where(e => e.Role == roleId);
+            }
+
+            string search = PageSearchBar.Text?.Trim().ToLowerInvariant() ?? string.Empty;
+            if (!string.IsNullOrEmpty(search))
+            {
+                query = query.Where(e =>
+                    (e.FullName ?? string.Empty).ToLowerInvariant().Contains(search) ||
+                    (e.UserName ?? string.Empty).ToLowerInvariant().Contains(search) ||
+                    (e.Email ?? string.Empty).ToLowerInvariant().Contains(search) ||
+                    (e.PhoneNumber ?? string.Empty).ToLowerInvariant().Contains(search) ||
+                    (e.RoleName ?? string.Empty).ToLowerInvariant().Contains(search));
+            }
+
+            _filteredEmployees = new ObservableCollection<EmployeeItem>(query);
+            SubscribeToEmployeeChanges(_filteredEmployees);
+            EmployeesListView.ItemsSource = _filteredEmployees;
+            EmployeesListBox.ItemsSource = _filteredEmployees;
+        }
+
+        private void PageSearchBar_FilterTextChanged(object sender, TextChangedEventArgs e) => ApplyEmployeeFilters();
+
+        private void SearchBtn_Click(object sender, RoutedEventArgs e) => ApplyEmployeeFilters();
+
+        private void RoleFilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) => ApplyEmployeeFilters();
 
         private string GetRoleName(int roleId)
         {
@@ -173,7 +212,7 @@ namespace MedicalShopDiaShop.MainView.Pages
 
         private EmployeeItem GetSelectedEmployee()
         {
-            return _employees?.FirstOrDefault(e => e.IsSelected);
+            return _filteredEmployees?.FirstOrDefault(e => e.IsSelected);
         }
 
         // --- Логика единственного выделения ---
@@ -208,7 +247,7 @@ namespace MedicalShopDiaShop.MainView.Pages
                 var changed = sender as EmployeeItem;
                 if (changed != null && changed.IsSelected)
                 {
-                    foreach (var emp in _employees)
+                    foreach (var emp in _filteredEmployees)
                         if (emp != changed && emp.IsSelected)
                             emp.IsSelected = false;
                 }
@@ -231,6 +270,7 @@ namespace MedicalShopDiaShop.MainView.Pages
         public string FullName { get; set; }
         public string UserName { get; set; }
         public string RoleName { get; set; }
+        public int Role { get; set; }
         public string PhoneNumber { get; set; }
         public string Email { get; set; }
         public string AvatarKey { get; set; }

@@ -1,6 +1,7 @@
 ﻿<Window x:Class="MedicalShopDiaShop.MainView.AddEditOrderWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:MedicalShopDiaShop.MainView.Controls"
         Title="Заказ" Height="720" Width="1280" MinHeight="600" MinWidth="900"
         WindowStartupLocation="CenterOwner" Loaded="Window_Loaded">
     <Grid>
@@ -99,8 +100,10 @@
                             <TextBlock Text="Доступные товары" FontSize="18" FontWeight="Bold" 
                                        FontFamily="{StaticResource GothamProFamily}"/>
 
-                            <TextBox x:Name="SearchBox" Grid.Row="2" FontSize="14" FontFamily="{StaticResource GothamProFamily}"
-                                     Height="30" Margin="0,0,0,10" TextChanged="SearchBox_TextChanged"/>
+                            <controls:SearchBarControl x:Name="OrderProductSearchBar" Grid.Row="2" Margin="0,0,0,10"
+                                                      PlaceholderText="Поиск по товарам"
+                                                      FilterTextChanged="OrderProductSearchBar_FilterTextChanged"
+                                                      SearchClicked="OrderProductSearchBar_SearchClicked"/>
 
                             <ListBox x:Name="AvailableProductsListBox" Grid.Row="4" 
                                      SelectionMode="Single" MouseDoubleClick="AvailableProduct_MouseDoubleClick">
