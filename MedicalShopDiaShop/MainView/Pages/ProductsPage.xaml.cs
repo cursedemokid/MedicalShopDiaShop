@@ -35,6 +35,12 @@ namespace MedicalShopDiaShop.MainView.Pages
 
         private void LoadProductsFromDatabase()
         {
+            var stockMap = App.currentUser.StoreId.HasValue
+                ? StockHelper.GetCurrentStock(App.currentUser.StoreId.Value)
+                    .GroupBy(s => s.ProductId)
+                    .ToDictionary(g => g.Key, g => g.Sum(x => x.Available))
+                : null;
+
             var products = App.context.Product.ToList();
             _allProducts = new ObservableCollection<ProductDto>(
                 products.Select(p => new ProductDto
@@ -45,6 +51,7 @@ namespace MedicalShopDiaShop.MainView.Pages
                     Category = p.Category,
                     Price = p.Price,
                     Image = p.Image,
+                    AvailableQuantity = stockMap != null && stockMap.ContainsKey(p.Id) ? stockMap[p.Id] : 0,
                     IsSelected = false
                 }));
             _filteredProducts = new ObservableCollection<ProductDto>(_allProducts);

@@ -16,6 +16,8 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="15"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="15"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
                     <!-- Заголовок -->
@@ -38,6 +40,10 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="10"/>
                                 <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="10"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="10"/>
+                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
                             <TextBlock Grid.Row="0" Grid.Column="0" Text="Поставщик:" FontWeight="Bold" FontSize="16" FontFamily="{StaticResource GothamProFamily}"/>
@@ -51,6 +57,12 @@
 
                             <TextBlock Grid.Row="6" Grid.Column="0" Text="Общая сумма:" FontWeight="Bold" FontSize="16" FontFamily="{StaticResource GothamProFamily}"/>
                             <TextBlock Grid.Row="6" Grid.Column="2" x:Name="TotalText" FontSize="16" FontFamily="{StaticResource GothamProLight}" Foreground="#4CAF50"/>
+
+                            <TextBlock Grid.Row="8" Grid.Column="0" Text="Фактическая дата:" FontWeight="Bold" FontSize="16" FontFamily="{StaticResource GothamProFamily}"/>
+                            <TextBlock Grid.Row="8" Grid.Column="2" x:Name="ArrivedDateText" FontSize="16" FontFamily="{StaticResource GothamProLight}"/>
+
+                            <TextBlock Grid.Row="10" Grid.Column="0" Text="Отклонение:" FontWeight="Bold" FontSize="16" FontFamily="{StaticResource GothamProFamily}"/>
+                            <TextBlock Grid.Row="10" Grid.Column="2" x:Name="DeviationText" FontSize="16" FontFamily="{StaticResource GothamProLight}"/>
                         </Grid>
                     </Border>
 
@@ -77,11 +89,19 @@
                                                     <ColumnDefinition Width="Auto"/>
                                                     <ColumnDefinition Width="20"/>
                                                     <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="20"/>
+                                                    <ColumnDefinition Width="Auto"/>
                                                 </Grid.ColumnDefinitions>
                                                 <Image Source="{Binding Image}" Width="50" Height="50"/>
                                                 <TextBlock Grid.Column="2" Text="{Binding Name}" FontSize="16" FontFamily="{StaticResource GothamProFamily}" VerticalAlignment="Center" TextWrapping="Wrap"/>
-                                                <TextBlock Grid.Column="3" Text="{Binding Quantity, StringFormat='x{0}'}" FontSize="16" FontFamily="{StaticResource GothamProLight}" VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="3" Text="{Binding Quantity, StringFormat='Кол-во: {0}'}" FontSize="16" FontFamily="{StaticResource GothamProLight}" VerticalAlignment="Center"/>
                                                 <TextBlock Grid.Column="5" VerticalAlignment="Center">
+                                                    <Run Text="Цена/1: " FontSize="16" FontFamily="{StaticResource GothamProFamily}"/>
+                                                    <Run Text="{Binding PricePerUnit, StringFormat={}{0:N2}}" FontSize="16" FontFamily="{StaticResource GothamProLight}"/>
+                                                    <Run Text=" ₽" FontSize="16" FontFamily="{StaticResource GothamProLight}"/>
+                                                </TextBlock>
+                                                <TextBlock Grid.Column="7" VerticalAlignment="Center">
+                                                    <Run Text="Итог: " FontSize="16" FontFamily="{StaticResource GothamProFamily}"/>
                                                     <Run Text="{Binding TotalPrice, StringFormat={}{0:N2}}" FontSize="16" FontFamily="{StaticResource GothamProLight}"/>
                                                     <Run Text=" ₽" FontSize="16" FontFamily="{StaticResource GothamProLight}"/>
                                                 </TextBlock>
@@ -92,6 +112,11 @@
                             </ItemsControl>
                         </Grid>
                     </Border>
+
+                    <Button Grid.Row="6" x:Name="MarkArrivedBtn" Content="Принять поставку"
+                            Width="180" Height="36" HorizontalAlignment="Center"
+                            FontFamily="{StaticResource GothamProFamily}"
+                            Click="MarkArrivedBtn_Click"/>
                 </Grid>
             </ScrollViewer>
         </Border>

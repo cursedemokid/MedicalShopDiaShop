@@ -304,6 +304,9 @@
     <Compile Include="MainView\SupplyDetailsWindow.xaml.cs">
       <DependentUpon>SupplyDetailsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MainView\Pages\SupplierProfilePage.xaml.cs">
+      <DependentUpon>SupplierProfilePage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\StatisticsViewModel.cs" />
     <Page Include="MainView\AddEditOrderWindow.xaml">
       <SubType>Designer</SubType>
@@ -410,6 +413,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="MainView\SupplyDetailsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainView\Pages\SupplierProfilePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

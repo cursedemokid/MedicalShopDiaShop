@@ -52,7 +52,7 @@ namespace MedicalShopDiaShop.MainView
             SetActiveButton("Profile");
             LoadNotifications();
             LoadUserInfo();
-            //StockHelper.CheckExpiringProducts();
+            StockHelper.CheckExpiringProducts();
             UpdateNotificationBadge();
         }
 

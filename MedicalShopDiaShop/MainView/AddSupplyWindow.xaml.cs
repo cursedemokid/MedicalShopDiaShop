@@ -46,11 +46,11 @@ namespace MedicalShopDiaShop.MainView
             CurrentSupply = new Supply
             {
                 UserId = App.currentUser.Id,
-                SupplierId = 8,
+                SupplierId = null,
                 OrderDate = DateTime.Now,
                 TotalCost = 0,
-                AroundDate = DateTime.Now,
-                ArrivedDate = DateTime.Now
+                AroundDate = null,
+                ArrivedDate = null
             };
             _context.Supply.Add(CurrentSupply);
             _context.SaveChanges();
@@ -67,7 +67,7 @@ namespace MedicalShopDiaShop.MainView
                 return;
             }
 
-            if (CurrentSupply.SupplierId != 0)
+            if (CurrentSupply.SupplierId.HasValue)
                 SelectedSupplier = _context.Store.Find(CurrentSupply.SupplierId);
 
             var products = _context.SupplyProduct
@@ -188,7 +188,7 @@ namespace MedicalShopDiaShop.MainView
 
             CurrentSupply.SupplierId = SelectedSupplier.Id;
             CurrentSupply.AroundDate = ToSqlDateTimeRange(DeliveryDate.Value);
-            CurrentSupply.ArrivedDate = ToSqlDateTimeRange(DeliveryDate.Value);
+            CurrentSupply.ArrivedDate = null;
             CurrentSupply.TotalCost = SelectedProducts.Sum(p => p.TotalPrice);
 
             var existingProducts = _context.SupplyProduct.Where(sp => sp.SupplyId == CurrentSupply.Id);
@@ -206,7 +206,8 @@ namespace MedicalShopDiaShop.MainView
             _context.SaveChanges();
 
             string supplyText = $"Создана новая поставка №{CurrentSupply.Id} от поставщика {SelectedSupplier.Name} на сумму {CurrentSupply.TotalCost:N2} ₽";
-            NotificationHelper.NotifyAllStoreEmployees((int)App.currentUser.StoreId, supplyText, supplyId: CurrentSupply.Id);
+            if (App.currentUser.StoreId.HasValue)
+                NotificationHelper.NotifyAllStoreEmployees(App.currentUser.StoreId.Value, supplyText, supplyId: CurrentSupply.Id);
 
             FeedbackService.Information("Поставка успешно создана.");
             DialogResult = true;

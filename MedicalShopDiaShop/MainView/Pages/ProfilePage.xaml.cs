@@ -601,6 +601,12 @@ namespace MedicalShopDiaShop.MainView.Pages
             };
             timer.Start();
         }
+
+        private void SupplierProductSearchBox_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            // Оставляем пустым, чтобы не падать при вводе в поле поиска на вкладке поставщика.
+            // Фильтрация реализована в отдельном окне SupplierProfileWindow.
+        }
     }
 
     // Модели для отображения

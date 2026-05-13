@@ -10,6 +10,7 @@ namespace MedicalShopDiaShop.MainView.Dto
         public int Category { get; set; }      // числовой код категории
         public decimal Price { get; set; }
         public string Image { get; set; }
+        public int AvailableQuantity { get; set; }
 
         // UI-свойства
         public bool IsSelected { get; set; }
@@ -36,5 +37,6 @@ namespace MedicalShopDiaShop.MainView.Dto
             : Description;
 
         public string ImagePath => Image ?? "/Resources/default_product.png";
+        public string AvailableText => $"{AvailableQuantity} шт.";
     }
 }

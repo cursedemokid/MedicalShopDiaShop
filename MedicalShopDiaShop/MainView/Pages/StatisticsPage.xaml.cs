@@ -20,7 +20,7 @@ namespace MedicalShopDiaShop.MainView.Pages
             InitializeComponent();
             _viewModel = new StatisticsViewModel();
             DataContext = _viewModel;
-            _currentStoreId = (int)App.currentUser.StoreId;
+            _currentStoreId = App.currentUser.StoreId ?? 0;
             LoadAllData();
         }
 

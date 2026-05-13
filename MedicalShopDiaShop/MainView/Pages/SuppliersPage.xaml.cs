@@ -87,6 +87,7 @@ namespace MedicalShopDiaShop.MainView.Pages
                 SupplierName = s.SupplierId.HasValue ? (App.context.Store.Find(s.SupplierId)?.Name ?? "Неизвестно") : "Не выбран",
                 OrderDate = s.OrderDate,
                 AroundDate = s.AroundDate ?? s.OrderDate,
+                ArrivedDate = s.ArrivedDate,
                 TotalCost = s.TotalCost,
                 IsCompleted = s.ArrivedDate.HasValue && s.ArrivedDate <= DateTime.Now,
                 IsSelected = false
@@ -136,8 +137,8 @@ namespace MedicalShopDiaShop.MainView.Pages
             if (!string.IsNullOrEmpty(searchText))
             {
                 filtered = filtered.Where(s =>
-                    s.Name.ToLower().Contains(searchText) ||
-                    s.Address.ToLower().Contains(searchText));
+                    (s.Name ?? string.Empty).ToLower().Contains(searchText) ||
+                    (s.Address ?? string.Empty).ToLower().Contains(searchText));
             }
 
             _filteredSuppliers = new ObservableCollection<SupplierItem>(filtered);
@@ -175,7 +176,7 @@ namespace MedicalShopDiaShop.MainView.Pages
             if (!string.IsNullOrEmpty(searchText))
             {
                 filtered = filtered.Where(s =>
-                    s.SupplierName.ToLower().Contains(searchText) ||
+                    (s.SupplierName ?? string.Empty).ToLower().Contains(searchText) ||
                     s.Id.ToString().Contains(searchText));
             }
             _filteredSupplies = new ObservableCollection<SupplyItem>(filtered);
@@ -322,9 +323,7 @@ namespace MedicalShopDiaShop.MainView.Pages
             var supplier = btn?.Tag as SupplierItem;
             if (supplier != null)
             {
-                FeedbackService.Information(
-                    $"Название: {supplier.Name}\nАдрес: {supplier.Address}\nГород: {supplier.CityName}",
-                    "Информация о поставщике");
+                NavigationService?.Navigate(new SupplierProfilePage(supplier.Id));
             }
         }
 
@@ -418,6 +417,9 @@ namespace MedicalShopDiaShop.MainView.Pages
             {
                 var window = new SupplyDetailsWindow(supply.Id);
                 window.ShowDialog();
+                LoadSuppliesFromDatabase();
+                ApplySupplyFilterAndSearch();
+                SuppliesListBox.ItemsSource = _filteredSupplies;
             }
         }
     }
@@ -451,6 +453,7 @@ namespace MedicalShopDiaShop.MainView.Pages
         public string SupplierName { get; set; }
         public DateTime OrderDate { get; set; }
         public DateTime AroundDate { get; set; }
+        public DateTime? ArrivedDate { get; set; }
         public decimal TotalCost { get; set; }
         public bool IsCompleted { get; set; }
 
@@ -462,6 +465,21 @@ namespace MedicalShopDiaShop.MainView.Pages
         }
 
         public string DisplayName => $"Поставка №{Id}";
+        public string DeliveryStatusText
+        {
+            get
+            {
+                if (!ArrivedDate.HasValue)
+                    return "Статус: в пути";
+
+                int diffDays = (ArrivedDate.Value.Date - AroundDate.Date).Days;
+                if (diffDays == 0)
+                    return "Статус: вовремя";
+                if (diffDays < 0)
+                    return $"Статус: раньше на {Math.Abs(diffDays)} д.";
+                return $"Статус: опоздание на {diffDays} д.";
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

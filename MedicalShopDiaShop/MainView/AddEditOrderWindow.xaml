@@ -113,12 +113,16 @@
                                                     <ColumnDefinition Width="10"/>
                                                     <ColumnDefinition Width="*"/>
                                                     <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="Auto"/>
                                                 </Grid.ColumnDefinitions>
                                                 <Image Source="{Binding ImagePath}" Width="40" Height="40"/>
                                                 <TextBlock Grid.Column="2" Text="{Binding Name}" FontSize="14" 
                                                            FontFamily="{StaticResource GothamProFamily}" 
                                                            VerticalAlignment="Center" TextWrapping="Wrap"/>
-                                                <TextBlock Grid.Column="3" Text="{Binding Price, StringFormat='{}{0:N2} ₽'}" 
+                                                <TextBlock Grid.Column="3" Text="{Binding AvailableText}" 
+                                                           FontSize="13" FontFamily="{StaticResource GothamProLight}" 
+                                                           VerticalAlignment="Center" Margin="10,0,0,0" Foreground="DimGray"/>
+                                                <TextBlock Grid.Column="4" Text="{Binding Price, StringFormat='{}{0:N2} ₽'}" 
                                                            FontSize="14" FontFamily="{StaticResource GothamProFamily}" 
                                                            VerticalAlignment="Center" Margin="10,0,0,0"/>
                                             </Grid>
@@ -156,16 +160,19 @@
                                                 <TextBlock Text="{Binding Product.Name}" FontSize="14" 
                                                            FontFamily="{StaticResource GothamProFamily}" 
                                                            VerticalAlignment="Center" TextWrapping="Wrap"/>
-                                                <TextBlock Grid.Column="1" Text="{Binding Product.Price, StringFormat='{}{0:N2} ₽'}" 
+                                                <TextBlock Grid.Column="1" Text="{Binding UnitPriceText}" 
                                                            FontSize="14" FontFamily="{StaticResource GothamProFamily}" 
                                                            VerticalAlignment="Center" Margin="10,0"/>
                                                 <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="10,0">
                                                     <Button Content="-" Width="30" Padding="1" Click="DecreaseQuantity_Click" Tag="{Binding}"/>
-                                                    <TextBlock Text="{Binding Quantity}" Width="40" TextAlignment="Center" 
+                                                    <TextBlock Text="{Binding Quantity, StringFormat='Кол-во: {0}'}" Width="90" TextAlignment="Center" 
                                                                FontSize="14" VerticalAlignment="Center" FontFamily="{StaticResource GothamProFamily}"/>
                                                     <Button Content="+" Width="30" Padding="1" Click="IncreaseQuantity_Click" Tag="{Binding}"/>
                                                 </StackPanel>
-                                                <TextBlock Grid.Column="3" Text="{Binding TotalPrice, StringFormat='{}{0:N2} ₽'}" 
+                                                <TextBlock Grid.Column="2" VerticalAlignment="Bottom" Margin="10,0,0,-2"
+                                                           Text="{Binding QuantityHint}" FontSize="12"
+                                                           FontFamily="{StaticResource GothamProLight}" Foreground="DimGray"/>
+                                                <TextBlock Grid.Column="3" Text="{Binding TotalPriceText}" 
                                                            FontSize="14" FontFamily="{StaticResource GothamProFamily}" 
                                                            VerticalAlignment="Center" Margin="10,0" Foreground="#4CAF50"/>
                                             </Grid>

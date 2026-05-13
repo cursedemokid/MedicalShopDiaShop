@@ -115,17 +115,24 @@ namespace MedicalShopDiaShop.AppData
                     foreach (var item in expiring)
                     {
                         string message = $"Товар '{item.ProductName}' истекает {item.ExpirationDate:dd.MM.yyyy}. Остаток: {item.Available} шт.";
-                        // Уведомляем всех сотрудников магазина
+                        // Уведомляем сотрудников и администраторов магазина не чаще 1 раза в день по одному товару.
                         var employees = context.User.Where(u => u.StoreId == storeId && u.Role != (int)Status.Role.Client);
                         foreach (var emp in employees)
                         {
-                            if (!context.Notification.Any(n => n.UserId == emp.Id && n.Text == message && !n.IsRead))
+                            bool alreadyNotifiedToday = context.Notification.Any(n =>
+                                n.UserId == emp.Id &&
+                                n.Text == message &&
+                                n.CreationDate.HasValue &&
+                                n.CreationDate.Value.Date == DateTime.Today);
+
+                            if (!alreadyNotifiedToday)
                             {
                                 context.Notification.Add(new Notification
                                 {
                                     UserId = emp.Id,
                                     Text = message,
-                                    IsRead = false
+                                    IsRead = false,
+                                    CreationDate = DateTime.Now
                                 });
                             }
                         }

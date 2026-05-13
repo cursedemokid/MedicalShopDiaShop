@@ -167,6 +167,7 @@ namespace MedicalShopDiaShop.MainView.Pages
             public string Description { get; set; }
             public decimal PricePerTen { get; set; }
             public string Image { get; set; }
+            public decimal PricePerUnit => PricePerTen / 10m;
         }
 
         public class CartItem : INotifyPropertyChanged
@@ -176,9 +177,11 @@ namespace MedicalShopDiaShop.MainView.Pages
             public int Quantity
             {
                 get => _quantity;
-                set { _quantity = value; OnPropertyChanged(); OnPropertyChanged(nameof(TotalPrice)); }
+                set { _quantity = value; OnPropertyChanged(); OnPropertyChanged(nameof(TotalPrice)); OnPropertyChanged(nameof(TotalPriceText)); }
             }
             public decimal TotalPrice => Product.Price * Quantity / 10m; // Если Price за 10 шт.
+            public string UnitPriceText => $"Цена/1: {Product.Price / 10m:N2} ₽";
+            public string TotalPriceText => $"Итог: {TotalPrice:N2} ₽";
 
             public event PropertyChangedEventHandler PropertyChanged;
             protected void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string prop = null)

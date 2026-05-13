@@ -115,7 +115,8 @@
                         <GridViewColumn Header="Название" DisplayMemberBinding="{Binding Name}" Width="auto"/>
                         <GridViewColumn Header="Категория" DisplayMemberBinding="{Binding CategoryName}" Width="auto"/>
                         <GridViewColumn Header="Цена" DisplayMemberBinding="{Binding Price}" Width="auto"/>
-                        <GridViewColumn Header="Описание" DisplayMemberBinding="{Binding ShortDescription}" Width="300"/>
+                        <GridViewColumn Header="Остаток" DisplayMemberBinding="{Binding AvailableText}" Width="120"/>
+                        <GridViewColumn Header="Описание" DisplayMemberBinding="{Binding ShortDescription}" Width="250"/>
                         <GridViewColumn Width="auto">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
@@ -208,6 +209,8 @@
                                         <TextBlock Text="{Binding CategoryName}" FontSize="20" FontFamily="{StaticResource GothamProLight}" TextWrapping="Wrap"/>
                                         <TextBlock Text="Цена" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
                                         <TextBlock Text="{Binding Price}" FontSize="20" FontFamily="{StaticResource GothamProLight}" TextWrapping="Wrap"/>
+                                        <TextBlock Text="Остаток" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
+                                        <TextBlock Text="{Binding AvailableText}" FontSize="20" FontFamily="{StaticResource GothamProLight}" TextWrapping="Wrap"/>
                                         <TextBlock Text="Описание" FontSize="20" FontFamily="{StaticResource GothamProFamily}"/>
                                         <TextBlock Text="{Binding ShortDescription}" FontSize="20" FontFamily="{StaticResource GothamProLight}" TextWrapping="Wrap"/>
                                     </StackPanel>

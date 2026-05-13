@@ -161,6 +161,7 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="10"/>
                             </Grid.RowDefinitions>
 
@@ -191,7 +192,10 @@
                             <TextBlock Grid.Row="9" Text="{Binding TotalCost, StringFormat='{}{0:N2} ₽'}" FontSize="14" 
                    FontFamily="{StaticResource GothamProLight}"/>
 
-                            <Button Grid.Row="10" Content="Подробнее" Margin="0,15,0,0"
+                            <TextBlock Grid.Row="10" Text="{Binding DeliveryStatusText}" FontSize="13"
+                   FontFamily="{StaticResource GothamProLight}" Foreground="DimGray" Margin="0,10,0,0"/>
+
+                            <Button Grid.Row="11" Content="Подробнее" Margin="0,15,0,0"
                 FontSize="14" FontFamily="{StaticResource GothamProFamily}"
                 Click="ViewSupplyDetails_Click" Tag="{Binding}"/>
                         </Grid>

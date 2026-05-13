@@ -17,6 +17,7 @@ namespace MedicalShopDiaShop.MainView
         private ObservableCollection<CartItem> _cartItems;
         private ObservableCollection<ProductItem> _allProducts;
         private ObservableCollection<ProductItem> _filteredProducts;
+        private int _orderStoreId;
 
         public AddEditOrderWindow()
         {
@@ -99,10 +100,14 @@ namespace MedicalShopDiaShop.MainView
                             Id = po.Product.Id,
                             Name = po.Product.Name,
                             Price = po.Price,
-                            ImagePath = string.IsNullOrEmpty(po.Product.Image) ? "/Resources/placeholder.png" : po.Product.Image
+                            ImagePath = string.IsNullOrEmpty(po.Product.Image) ? "/Resources/placeholder.png" : po.Product.Image,
+                            AvailableQuantity = GetAvailableQuantity(po.Product.Id)
                         },
                         Quantity = po.Quantity
                     }).ToList();
+
+                foreach (var item in products)
+                    item.MaxQuantity = item.Product.AvailableQuantity + item.Quantity;
 
                 _cartItems = new ObservableCollection<CartItem>(products);
                 CartListBox.ItemsSource = _cartItems;
@@ -130,6 +135,21 @@ namespace MedicalShopDiaShop.MainView
             {
                 FeedbackService.Error("Добавьте хотя бы один товар.");
                 return;
+            }
+
+            foreach (var item in _cartItems)
+            {
+                if (item.Quantity > item.MaxQuantity)
+                {
+                    FeedbackService.Error($"Для товара '{item.Product.Name}' доступно только {item.MaxQuantity} шт.");
+                    return;
+                }
+
+                if (_orderStoreId > 0 && !StockHelper.CheckAvailability(item.Product.Id, item.Quantity, _orderStoreId))
+                {
+                    FeedbackService.Error($"Недостаточно остатков по товару '{item.Product.Name}'.");
+                    return;
+                }
             }
 
             int deliveryType = int.Parse(((ComboBoxItem)DeliveryTypeCmb.SelectedItem).Tag.ToString());
@@ -227,8 +247,11 @@ namespace MedicalShopDiaShop.MainView
                     context.SaveChanges();
 
                     // Уведомление
-                    NotificationHelper.NotifyAllStoreEmployees((int)App.currentUser.StoreId,
-                        $"Новый заказ №{order.Id} на сумму {totalCost:N2} ₽");
+                    if (App.currentUser.StoreId.HasValue)
+                    {
+                        NotificationHelper.NotifyAllStoreEmployees(App.currentUser.StoreId.Value,
+                            $"Новый заказ №{order.Id} на сумму {totalCost:N2} ₽");
+                    }
                 }
                 else
                 {
@@ -363,6 +386,9 @@ namespace MedicalShopDiaShop.MainView
                     WorkerCmb.SelectedValue = App.currentUser.Id;
                 else if (WorkerCmb.Items.Count > 0)
                     WorkerCmb.SelectedIndex = 0;
+
+                WorkerCmb.SelectionChanged += WorkerCmb_SelectionChanged;
+                RefreshStoreContext();
             }
         }
 
@@ -386,6 +412,7 @@ namespace MedicalShopDiaShop.MainView
         {
             using (var context = new DiaShopEntities())
             {
+                RefreshStoreContext();
                 var products = context.Product.ToList();
                 _allProducts = new ObservableCollection<ProductItem>(
                     products.Select(p => new ProductItem
@@ -393,7 +420,8 @@ namespace MedicalShopDiaShop.MainView
                         Id = p.Id,
                         Name = p.Name,
                         Price = p.Price,
-                        ImagePath = string.IsNullOrEmpty(p.Image) ? "/Resources/placeholder.png" : p.Image
+                        ImagePath = string.IsNullOrEmpty(p.Image) ? "/Resources/placeholder.png" : p.Image,
+                        AvailableQuantity = GetAvailableQuantity(p.Id)
                     }));
                 _filteredProducts = new ObservableCollection<ProductItem>(_allProducts);
                 AvailableProductsListBox.ItemsSource = _filteredProducts;
@@ -417,9 +445,16 @@ namespace MedicalShopDiaShop.MainView
             {
                 var existing = _cartItems.FirstOrDefault(c => c.Product.Id == selected.Id);
                 if (existing != null)
+                {
+                    if (existing.Quantity >= existing.MaxQuantity)
+                    {
+                        FeedbackService.Warning($"Нельзя добавить больше. Доступно: {existing.MaxQuantity} шт.");
+                        return;
+                    }
                     existing.Quantity++;
+                }
                 else
-                    _cartItems.Add(new CartItem { Product = selected, Quantity = 1 });
+                    _cartItems.Add(new CartItem { Product = selected, Quantity = 1, MaxQuantity = selected.AvailableQuantity });
                 _allProducts.Remove(selected);
                 _filteredProducts = new ObservableCollection<ProductItem>(_allProducts);
                 AvailableProductsListBox.ItemsSource = _filteredProducts;
@@ -433,6 +468,11 @@ namespace MedicalShopDiaShop.MainView
             var cartItem = btn?.Tag as CartItem;
             if (cartItem != null)
             {
+                if (cartItem.Quantity >= cartItem.MaxQuantity)
+                {
+                    FeedbackService.Warning($"Превышен лимит по товару '{cartItem.Product.Name}'. Доступно: {cartItem.MaxQuantity} шт.");
+                    return;
+                }
                 cartItem.Quantity++;
                 UpdateTotalPrice();
             }
@@ -463,6 +503,59 @@ namespace MedicalShopDiaShop.MainView
             TotalPriceText.Text = total.ToString("N2") + " ₽";
         }
 
+        private void WorkerCmb_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            RefreshStoreContext();
+            RefreshAvailableQuantities();
+        }
+
+        private void RefreshStoreContext()
+        {
+            using (var context = new DiaShopEntities())
+            {
+                int workerId = 0;
+                if (WorkerCmb.SelectedValue is int selectedWorkerId)
+                    workerId = selectedWorkerId;
+                else
+                    workerId = App.currentUser.Id;
+
+                _orderStoreId = context.User
+                    .Where(u => u.Id == workerId)
+                    .Select(u => u.StoreId)
+                    .FirstOrDefault() ?? (App.currentUser.StoreId ?? 0);
+            }
+        }
+
+        private int GetAvailableQuantity(int productId)
+        {
+            if (_orderStoreId <= 0) return 0;
+
+            var stock = StockHelper.GetCurrentStock(_orderStoreId);
+            return stock.Where(s => s.ProductId == productId).Sum(s => s.Available);
+        }
+
+        private void RefreshAvailableQuantities()
+        {
+            if (_allProducts != null)
+            {
+                foreach (var product in _allProducts)
+                    product.AvailableQuantity = GetAvailableQuantity(product.Id);
+            }
+
+            if (_cartItems != null)
+            {
+                foreach (var item in _cartItems)
+                {
+                    item.Product.AvailableQuantity = GetAvailableQuantity(item.Product.Id);
+                    if (item.MaxQuantity < item.Quantity)
+                        item.MaxQuantity = item.Quantity;
+                }
+            }
+
+            AvailableProductsListBox.Items.Refresh();
+            CartListBox.Items.Refresh();
+        }
+
 
         private void CancelBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -478,6 +571,8 @@ namespace MedicalShopDiaShop.MainView
         public string Name { get; set; }
         public decimal Price { get; set; }
         public string ImagePath { get; set; }
+        public int AvailableQuantity { get; set; }
+        public string AvailableText => $"Остаток: {AvailableQuantity} шт.";
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string name) =>
@@ -488,12 +583,16 @@ namespace MedicalShopDiaShop.MainView
     {
         private int _quantity;
         public ProductItem Product { get; set; }
+        public int MaxQuantity { get; set; }
         public int Quantity
         {
             get => _quantity;
-            set { _quantity = value; OnPropertyChanged("Quantity"); OnPropertyChanged("TotalPrice"); }
+            set { _quantity = value; OnPropertyChanged("Quantity"); OnPropertyChanged("TotalPrice"); OnPropertyChanged("TotalPriceText"); OnPropertyChanged("QuantityHint"); }
         }
         public decimal TotalPrice => (Product?.Price ?? 0) * Quantity;
+        public string QuantityHint => $"Доступно: {MaxQuantity} шт.";
+        public string UnitPriceText => $"Цена/1: {(Product?.Price ?? 0):N2} ₽";
+        public string TotalPriceText => $"Итог: {TotalPrice:N2} ₽";
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string name) =>
