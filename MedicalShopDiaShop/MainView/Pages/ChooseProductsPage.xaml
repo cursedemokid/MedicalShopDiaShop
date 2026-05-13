@@ -71,10 +71,12 @@
                                                    FontFamily="{StaticResource GothamProLight}" 
                                                    TextWrapping="Wrap" Foreground="Gray"/>
                                     </StackPanel>
-                                    <TextBlock Grid.Column="3" FontSize="18" 
-                                               Text="{Binding PricePerUnit, StringFormat='Цена/1: {0:N2} ₽'}" 
-                                               VerticalAlignment="Center" HorizontalAlignment="Right"
-                                               FontFamily="{StaticResource GothamProFamily}" Margin="10,0"/>
+                                    <StackPanel Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10,0">
+                                        <TextBlock FontSize="14" Text="{Binding RetailUnitLabel}"
+                                                   FontFamily="{StaticResource GothamProLight}" Foreground="Gray"/>
+                                        <TextBlock FontSize="16" Text="{Binding WholesaleUnitLabel}"
+                                                   FontFamily="{StaticResource GothamProFamily}" Foreground="#2E7D32"/>
+                                    </StackPanel>
                                 </Grid>
                             </Border>
                         </DataTemplate>
@@ -174,11 +176,16 @@
                     </ListBox.ItemTemplate>
                 </ListBox>
 
-                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
-                    <TextBlock Text="Итого: " FontSize="16" FontWeight="Bold" 
-                               FontFamily="{StaticResource GothamProFamily}"/>
-                    <TextBlock x:Name="TotalPriceText" Text="0,00 ₽" FontSize="16" 
-                               FontFamily="{StaticResource GothamProFamily}"/>
+                <StackPanel Grid.Row="2" Margin="15,0,15,10">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <TextBlock Text="К оплате поставщику: " FontSize="16" FontWeight="Bold" 
+                                   FontFamily="{StaticResource GothamProFamily}"/>
+                        <TextBlock x:Name="TotalPriceText" Text="0,00 ₽" FontSize="16" FontWeight="Bold"
+                                   FontFamily="{StaticResource GothamProFamily}"/>
+                    </StackPanel>
+                    <TextBlock x:Name="SavingsSummaryText" Text="" FontSize="13" Foreground="#555"
+                               FontFamily="{StaticResource GothamProLight}" TextWrapping="Wrap"
+                               HorizontalAlignment="Right" TextAlignment="Right" Margin="0,4,0,0"/>
                 </StackPanel>
             </Grid>
         </Border>

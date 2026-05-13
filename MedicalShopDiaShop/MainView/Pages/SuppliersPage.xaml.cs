@@ -27,14 +27,32 @@ namespace MedicalShopDiaShop.MainView.Pages
         {
             InitializeComponent();
             Loaded += SuppliersPage_Loaded;
+            Unloaded += SuppliersPage_Unloaded;
         }
 
         private void SuppliersPage_Loaded(object sender, RoutedEventArgs e)
         {
+            DataRefreshHub.DataChanged -= SuppliersPage_OnDataRefresh;
+            DataRefreshHub.DataChanged += SuppliersPage_OnDataRefresh;
+
             LoadCityFilter();
             LoadSuppliersFromDatabase();
             LoadSuppliesFromDatabase();
             SetActiveMode(ViewMode.Suppliers);
+        }
+
+        private void SuppliersPage_Unloaded(object sender, RoutedEventArgs e)
+        {
+            DataRefreshHub.DataChanged -= SuppliersPage_OnDataRefresh;
+        }
+
+        private void SuppliersPage_OnDataRefresh(object sender, EventArgs e)
+        {
+            if (!IsLoaded) return;
+            var mode = _currentMode;
+            LoadSuppliersFromDatabase();
+            LoadSuppliesFromDatabase();
+            SetActiveMode(mode);
         }
 
         #region Загрузка данных
@@ -239,15 +257,11 @@ namespace MedicalShopDiaShop.MainView.Pages
         {
             if (_currentMode == ViewMode.Suppliers)
             {
-                var window = new AddEditSupplierWindow();
-                if (window.ShowDialog() == true)
-                    LoadSuppliersFromDatabase();
+                new AddEditSupplierWindow().ShowDialog();
             }
             else
             {
-                var window = new AddSupplyWindow();
-                if (window.ShowDialog() == true)
-                    LoadSuppliesFromDatabase();
+                new AddSupplyWindow().ShowDialog();
             }
         }
 
@@ -262,8 +276,7 @@ namespace MedicalShopDiaShop.MainView.Pages
                     return;
                 }
                 var window = new AddEditSupplierWindow(selected.Id);
-                if (window.ShowDialog() == true)
-                    LoadSuppliersFromDatabase();
+                window.ShowDialog();
             }
             // В режиме поставок кнопка Edit скрыта, поэтому else не требуется
         }
@@ -286,7 +299,7 @@ namespace MedicalShopDiaShop.MainView.Pages
                         App.context.Store.Remove(dbStore);
                         App.context.SaveChanges();
                     }
-                    LoadSuppliersFromDatabase();
+                    DataRefreshHub.Notify();
                     FeedbackService.Information("Поставщик удалён.");
                 }
             }
@@ -308,7 +321,7 @@ namespace MedicalShopDiaShop.MainView.Pages
                         App.context.Supply.Remove(dbSupply);
                         App.context.SaveChanges();
                     }
-                    LoadSuppliesFromDatabase();
+                    DataRefreshHub.Notify();
                     FeedbackService.Information("Поставка удалена.");
                 }
             }
@@ -334,8 +347,7 @@ namespace MedicalShopDiaShop.MainView.Pages
             if (supply != null)
             {
                 var window = new AddSupplyWindow(supply.Id);
-                if (window.ShowDialog() == true)
-                    LoadSuppliesFromDatabase();
+                window.ShowDialog();
             }
         }
 
@@ -417,9 +429,6 @@ namespace MedicalShopDiaShop.MainView.Pages
             {
                 var window = new SupplyDetailsWindow(supply.Id);
                 window.ShowDialog();
-                LoadSuppliesFromDatabase();
-                ApplySupplyFilterAndSearch();
-                SuppliesListBox.ItemsSource = _filteredSupplies;
             }
         }
     }

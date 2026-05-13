@@ -1,4 +1,5 @@
-﻿using MedicalShopDiaShop.Database;
+﻿using MedicalShopDiaShop.AppData;
+using MedicalShopDiaShop.Database;
 using MedicalShopDiaShop.MainView;
 using System;
 using System.Collections.ObjectModel;
@@ -150,8 +151,15 @@ namespace MedicalShopDiaShop.MainView.Pages
 
         private void UpdateTotalPrice()
         {
-            decimal total = _cartItems.Sum(c => c.TotalPrice);
-            TotalPriceText.Text = total.ToString("N2") + " ₽";
+            decimal purchase = _cartItems.Sum(c => c.TotalPrice);
+            decimal retailRef = _cartItems.Sum(c => c.RetailReferenceTotal);
+            TotalPriceText.Text = purchase.ToString("N2") + " ₽";
+            if (SavingsSummaryText != null)
+            {
+                SavingsSummaryText.Text = _cartItems.Count == 0
+                    ? string.Empty
+                    : $"Сумма по справочной рознице: {retailRef:N2} ₽ · экономия к опту: {Math.Max(0, retailRef - purchase):N2} ₽ (закупка = {(SupplyPricing.WholesaleFromRetailFactor * 100m):F0}% от розничной цены за 1 шт.)";
+            }
         }
 
         private void ContinueButton_Click(object sender, RoutedEventArgs e)
@@ -168,20 +176,70 @@ namespace MedicalShopDiaShop.MainView.Pages
             public decimal PricePerTen { get; set; }
             public string Image { get; set; }
             public decimal PricePerUnit => PricePerTen / 10m;
+            public string RetailUnitLabel => $"Спр. розн./1: {PricePerUnit:N2} ₽";
+            public string WholesaleUnitLabel => $"Опт закуп./1: {SupplyPricing.WholesaleUnitPrice(PricePerTen):N2} ₽";
         }
 
         public class CartItem : INotifyPropertyChanged
         {
             public Product Product { get; set; }
+
+            private decimal? _purchaseTotalOverride;
+
+            /// <summary>Если задано (черновик из БД), сумма строки как сохранено; иначе считается по опту.</summary>
+            public decimal? PurchaseTotalOverride
+            {
+                get => _purchaseTotalOverride;
+                set
+                {
+                    _purchaseTotalOverride = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(TotalPrice));
+                    OnPropertyChanged(nameof(TotalPriceText));
+                    OnPropertyChanged(nameof(UnitPriceText));
+                    OnPropertyChanged(nameof(RetailReferenceTotal));
+                    OnPropertyChanged(nameof(SavingsVsRetail));
+                    OnPropertyChanged(nameof(WholesaleUnitEffective));
+                }
+            }
+
             private int _quantity;
             public int Quantity
             {
                 get => _quantity;
-                set { _quantity = value; OnPropertyChanged(); OnPropertyChanged(nameof(TotalPrice)); OnPropertyChanged(nameof(TotalPriceText)); }
+                set
+                {
+                    _quantity = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(TotalPrice));
+                    OnPropertyChanged(nameof(TotalPriceText));
+                    OnPropertyChanged(nameof(UnitPriceText));
+                    OnPropertyChanged(nameof(RetailReferenceTotal));
+                    OnPropertyChanged(nameof(SavingsVsRetail));
+                    OnPropertyChanged(nameof(WholesaleUnitEffective));
+                }
             }
-            public decimal TotalPrice => Product.Price * Quantity / 10m; // Если Price за 10 шт.
-            public string UnitPriceText => $"Цена/1: {Product.Price / 10m:N2} ₽";
-            public string TotalPriceText => $"Итог: {TotalPrice:N2} ₽";
+
+            public decimal RetailReferenceTotal =>
+                Product != null ? SupplyPricing.RetailReferenceLineTotal(Product.Price, Quantity) : 0m;
+
+            public decimal TotalPrice =>
+                PurchaseTotalOverride ?? (Product != null
+                    ? SupplyPricing.WholesaleLineTotal(Product.Price, Quantity)
+                    : 0m);
+
+            public decimal SavingsVsRetail => RetailReferenceTotal - TotalPrice;
+
+            public decimal WholesaleUnitEffective =>
+                Quantity > 0 ? TotalPrice / Quantity : 0m;
+
+            public string UnitPriceText =>
+                Product == null
+                    ? string.Empty
+                    : $"Розн./1: {SupplyPricing.RetailUnitPrice(Product.Price):N2} ₽  ·  Опт/1: {WholesaleUnitEffective:N2} ₽";
+
+            public string TotalPriceText =>
+                $"Опт: {TotalPrice:N2} ₽  (розн. справ.: {RetailReferenceTotal:N2} ₽, −{SavingsVsRetail:N2} ₽)";
 
             public event PropertyChangedEventHandler PropertyChanged;
             protected void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string prop = null)

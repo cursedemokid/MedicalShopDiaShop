@@ -70,15 +70,21 @@ namespace MedicalShopDiaShop.MainView
             if (CurrentSupply.SupplierId.HasValue)
                 SelectedSupplier = _context.Store.Find(CurrentSupply.SupplierId);
 
-            var products = _context.SupplyProduct
+            var rows = _context.SupplyProduct
                 .Where(sp => sp.SupplyId == supplyId)
-                .Select(sp => new ChooseProductsPage.CartItem
+                .ToList();
+
+            SelectedProducts = new ObservableCollection<ChooseProductsPage.CartItem>();
+            foreach (var sp in rows)
+            {
+                var line = new ChooseProductsPage.CartItem
                 {
                     Product = sp.Product,
                     Quantity = sp.Quantity
-                }).ToList();
-
-            SelectedProducts = new ObservableCollection<ChooseProductsPage.CartItem>(products);
+                };
+                line.PurchaseTotalOverride = sp.TotalPrice;
+                SelectedProducts.Add(line);
+            }
             DeliveryDate = CurrentSupply.AroundDate;
         }
 

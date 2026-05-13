@@ -2,6 +2,7 @@
 using MedicalShopDiaShop.Database;
 using MedicalShopDiaShop.MainView.Dto;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -19,10 +20,14 @@ namespace MedicalShopDiaShop.MainView.Pages
         {
             InitializeComponent();
             Loaded += ProductsPage_Loaded;
+            Unloaded += ProductsPage_Unloaded;
         }
 
         private void ProductsPage_Loaded(object sender, RoutedEventArgs e)
         {
+            DataRefreshHub.DataChanged -= ProductsPage_OnDataRefresh;
+            DataRefreshHub.DataChanged += ProductsPage_OnDataRefresh;
+
             LoadProductsFromDatabase();
 
             ProductsListView.ItemsSource = _filteredProducts;
@@ -31,6 +36,17 @@ namespace MedicalShopDiaShop.MainView.Pages
             ProductsListView.Visibility = Visibility.Visible;
             ProductsListBox.Visibility = Visibility.Collapsed;
             SetActiveButton(ListViewOnBtn);
+        }
+
+        private void ProductsPage_Unloaded(object sender, RoutedEventArgs e)
+        {
+            DataRefreshHub.DataChanged -= ProductsPage_OnDataRefresh;
+        }
+
+        private void ProductsPage_OnDataRefresh(object sender, EventArgs e)
+        {
+            if (!IsLoaded) return;
+            LoadProductsFromDatabase();
         }
 
         private void LoadProductsFromDatabase()
@@ -54,7 +70,33 @@ namespace MedicalShopDiaShop.MainView.Pages
                     AvailableQuantity = stockMap != null && stockMap.ContainsKey(p.Id) ? stockMap[p.Id] : 0,
                     IsSelected = false
                 }));
-            _filteredProducts = new ObservableCollection<ProductDto>(_allProducts);
+
+            ApplyProductFiltersFromUi();
+        }
+
+        private void ApplyProductFiltersFromUi()
+        {
+            if (_allProducts == null) return;
+
+            IEnumerable<ProductDto> query = _allProducts;
+
+            if (CategoryFilterComboBox.SelectedItem is ComboBoxItem selectedItem &&
+                selectedItem.Tag is string tag &&
+                int.TryParse(tag, out int selectedCat))
+            {
+                query = query.Where(p => p.Category == selectedCat);
+            }
+
+            string searchText = SearchBox.Text?.Trim().ToLower();
+            if (!string.IsNullOrEmpty(searchText))
+            {
+                query = query.Where(p =>
+                    p.Name.ToLower().Contains(searchText) ||
+                    (p.Description?.ToLower().Contains(searchText) ?? false));
+            }
+
+            _filteredProducts = new ObservableCollection<ProductDto>(query);
+            RefreshProductsList();
         }
 
         private string GetCategoryName(int categoryId)
@@ -72,28 +114,12 @@ namespace MedicalShopDiaShop.MainView.Pages
 
         private void CategoryFilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (CategoryFilterComboBox.SelectedItem is ComboBoxItem selectedItem && selectedItem.Tag is string tag && int.TryParse(tag, out int selectedCat))
-            {
-                _filteredProducts = new ObservableCollection<ProductDto>(_allProducts.Where(p => p.Category == selectedCat));
-            }
-            else
-            {
-                _filteredProducts = new ObservableCollection<ProductDto>(_allProducts);
-            }
-            RefreshProductsList();
+            ApplyProductFiltersFromUi();
         }
 
         private void SearchBtn_Click(object sender, RoutedEventArgs e)
         {
-            string searchText = SearchBox.Text?.Trim().ToLower();
-            if (string.IsNullOrEmpty(searchText))
-                _filteredProducts = new ObservableCollection<ProductDto>(_allProducts);
-            else
-                _filteredProducts = new ObservableCollection<ProductDto>(_allProducts.Where(p =>
-                    p.Name.ToLower().Contains(searchText) ||
-                    (p.Description?.ToLower().Contains(searchText) ?? false)));
-
-            RefreshProductsList();
+            ApplyProductFiltersFromUi();
         }
 
         private void RefreshProductsList()
@@ -106,12 +132,7 @@ namespace MedicalShopDiaShop.MainView.Pages
 
         private void AddBtn_Click(object sender, RoutedEventArgs e)
         {
-            var window = new AddEditProductWindow();
-            if (window.ShowDialog() == true)
-            {
-                LoadProductsFromDatabase();
-                RefreshProductsList();
-            }
+            new AddEditProductWindow().ShowDialog();
         }
 
         private void EditBtn_Click(object sender, RoutedEventArgs e)
@@ -122,12 +143,7 @@ namespace MedicalShopDiaShop.MainView.Pages
                 FeedbackService.Warning("Выберите товар для редактирования.");
                 return;
             }
-            var window = new AddEditProductWindow(selected.Id);
-            if (window.ShowDialog() == true)
-            {
-                LoadProductsFromDatabase();
-                RefreshProductsList();
-            }
+            new AddEditProductWindow(selected.Id).ShowDialog();
         }
 
         private void DeleteBtn_Click(object sender, RoutedEventArgs e)
@@ -146,8 +162,7 @@ namespace MedicalShopDiaShop.MainView.Pages
                 {
                     App.context.Product.Remove(productFromDb);
                     App.context.SaveChanges();
-                    LoadProductsFromDatabase();
-                    RefreshProductsList();
+                    DataRefreshHub.Notify();
                     FeedbackService.Information("Товар удалён.");
                 }
             }

@@ -22,14 +22,29 @@ namespace MedicalShopDiaShop.MainView.Pages
         {
             InitializeComponent();
             Loaded += ClientsPage_Loaded;
+            Unloaded += ClientsPage_Unloaded;
         }
 
         private void ClientsPage_Loaded(object sender, RoutedEventArgs e)
         {
+            DataRefreshHub.DataChanged -= ClientsPage_OnDataRefresh;
+            DataRefreshHub.DataChanged += ClientsPage_OnDataRefresh;
+
             ClientsListView.Visibility = Visibility.Visible;
             ClientsListBox.Visibility = Visibility.Collapsed;
             SetActiveButton(ListViewOnBtn);
 
+            LoadClientsFromDatabase();
+        }
+
+        private void ClientsPage_Unloaded(object sender, RoutedEventArgs e)
+        {
+            DataRefreshHub.DataChanged -= ClientsPage_OnDataRefresh;
+        }
+
+        private void ClientsPage_OnDataRefresh(object sender, EventArgs e)
+        {
+            if (!IsLoaded) return;
             LoadClientsFromDatabase();
         }
 
@@ -55,15 +70,13 @@ namespace MedicalShopDiaShop.MainView.Pages
             });
 
             _allClients = new ObservableCollection<ClientItem>(items);
-            _filteredClients = new ObservableCollection<ClientItem>(_allClients);
-
-            SubscribeToClientChanges(_filteredClients);
-            ClientsListView.ItemsSource = _filteredClients;
-            ClientsListBox.ItemsSource = _filteredClients;
+            ApplyClientSearchFromUi();
         }
 
-        private void SearchBtn_Click(object sender, RoutedEventArgs e)
+        private void ApplyClientSearchFromUi()
         {
+            if (_allClients == null) return;
+
             string searchText = SearchBox.Text?.Trim().ToLower();
             if (string.IsNullOrEmpty(searchText))
             {
@@ -81,6 +94,11 @@ namespace MedicalShopDiaShop.MainView.Pages
             SubscribeToClientChanges(_filteredClients);
             ClientsListView.ItemsSource = _filteredClients;
             ClientsListBox.ItemsSource = _filteredClients;
+        }
+
+        private void SearchBtn_Click(object sender, RoutedEventArgs e)
+        {
+            ApplyClientSearchFromUi();
         }
 
         private void AddBtn_Click(object sender, RoutedEventArgs e)

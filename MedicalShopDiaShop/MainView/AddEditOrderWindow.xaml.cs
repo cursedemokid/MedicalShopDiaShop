@@ -91,20 +91,23 @@ namespace MedicalShopDiaShop.MainView
                         CourierCmb.SelectedValue = delivery.CourierId;
                 }
 
-                var products = context.ProductOrder
+                // Сначала материализуем строки заказа — GetAvailableQuantity нельзя перевести в SQL.
+                var productOrders = context.ProductOrder
                     .Where(po => po.OrderId == _editingOrder.Id)
-                    .Select(po => new CartItem
+                    .ToList();
+
+                var products = productOrders.Select(po => new CartItem
+                {
+                    Product = new ProductItem
                     {
-                        Product = new ProductItem
-                        {
-                            Id = po.Product.Id,
-                            Name = po.Product.Name,
-                            Price = po.Price,
-                            ImagePath = string.IsNullOrEmpty(po.Product.Image) ? "/Resources/placeholder.png" : po.Product.Image,
-                            AvailableQuantity = GetAvailableQuantity(po.Product.Id)
-                        },
-                        Quantity = po.Quantity
-                    }).ToList();
+                        Id = po.Product.Id,
+                        Name = po.Product.Name,
+                        Price = po.Price,
+                        ImagePath = string.IsNullOrEmpty(po.Product.Image) ? "/Resources/placeholder.png" : po.Product.Image,
+                        AvailableQuantity = GetAvailableQuantity(po.Product.Id)
+                    },
+                    Quantity = po.Quantity
+                }).ToList();
 
                 foreach (var item in products)
                     item.MaxQuantity = item.Product.AvailableQuantity + item.Quantity;

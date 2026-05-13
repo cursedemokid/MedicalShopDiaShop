@@ -158,7 +158,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AppData\CalendarScheduleBehavior.cs" />
+    <Compile Include="AppData\DataRefreshHub.cs" />
     <Compile Include="AppData\FeedbackService.cs" />
+    <Compile Include="AppData\SupplyPricing.cs" />
     <Compile Include="AppData\NotificationHelper.cs" />
     <Compile Include="AppData\PasswordHelper.cs" />
     <Compile Include="AppData\ProductWithFavorite.cs" />

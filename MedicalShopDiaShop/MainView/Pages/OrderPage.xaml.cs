@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -21,10 +22,14 @@ namespace MedicalShopDiaShop.MainView.Pages
         {
             InitializeComponent();
             Loaded += OrdersPage_Loaded;
+            Unloaded += OrdersPage_Unloaded;
         }
 
         private void OrdersPage_Loaded(object sender, RoutedEventArgs e)
         {
+            DataRefreshHub.DataChanged -= OrdersPage_OnDataRefresh;
+            DataRefreshHub.DataChanged += OrdersPage_OnDataRefresh;
+
             LoadOrdersFromDatabase();
 
             OrdersListView.ItemsSource = _filteredOrders;
@@ -33,6 +38,17 @@ namespace MedicalShopDiaShop.MainView.Pages
             OrdersListView.Visibility = Visibility.Visible;
             OrdersListBox.Visibility = Visibility.Collapsed;
             SetActiveButton(ListViewOnBtn);
+        }
+
+        private void OrdersPage_Unloaded(object sender, RoutedEventArgs e)
+        {
+            DataRefreshHub.DataChanged -= OrdersPage_OnDataRefresh;
+        }
+
+        private void OrdersPage_OnDataRefresh(object sender, EventArgs e)
+        {
+            if (!IsLoaded) return;
+            LoadOrdersFromDatabase();
         }
 
         #region Загрузка данных из БД
@@ -46,9 +62,38 @@ namespace MedicalShopDiaShop.MainView.Pages
                     .ToList();
 
                 _allOrders = new ObservableCollection<OrderDto>(orders.Select(o => MapToOrderDto(o, context)));
-                _filteredOrders = new ObservableCollection<OrderDto>(_allOrders);
-                SubscribeToOrderChanges(_filteredOrders);
             }
+
+            ApplyOrderFiltersFromUi();
+        }
+
+        private void ApplyOrderFiltersFromUi()
+        {
+            if (_allOrders == null) return;
+
+            IEnumerable<OrderDto> query = _allOrders;
+
+            if (StatusFilterComboBox.SelectedItem is ComboBoxItem selectedItem &&
+                selectedItem.Tag is string tag &&
+                int.TryParse(tag, out int selectedStatus) &&
+                selectedStatus > 0)
+            {
+                query = query.Where(o => o.Status == selectedStatus);
+            }
+
+            string searchText = SearchBox.Text?.Trim().ToLower();
+            if (!string.IsNullOrEmpty(searchText))
+            {
+                query = query.Where(o =>
+                    o.Id.ToString().Contains(searchText) ||
+                    (o.ClientFullName?.ToLower().Contains(searchText) ?? false) ||
+                    (o.WorkerFullName?.ToLower().Contains(searchText) ?? false) ||
+                    (o.CourierFullName?.ToLower().Contains(searchText) ?? false));
+            }
+
+            _filteredOrders = new ObservableCollection<OrderDto>(query);
+            SubscribeToOrderChanges(_filteredOrders);
+            RefreshOrdersList();
         }
 
         private OrderDto MapToOrderDto(Order order, DiaShopEntities context)
@@ -192,7 +237,7 @@ namespace MedicalShopDiaShop.MainView.Pages
                 await context.SaveChangesAsync();
             }
 
-            RefreshOrdersList();
+            DataRefreshHub.Notify();
             FeedbackService.Information($"Статус заказа №{orderId} изменён на {newStatusText}");
         }
 
@@ -216,40 +261,12 @@ namespace MedicalShopDiaShop.MainView.Pages
 
         private void StatusFilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (StatusFilterComboBox.SelectedItem is ComboBoxItem selectedItem)
-            {
-                if (selectedItem.Tag is string tag && int.TryParse(tag, out int selectedStatus) && selectedStatus > 0)
-                {
-                    _filteredOrders = new ObservableCollection<OrderDto>(_allOrders.Where(o => o.Status == selectedStatus));
-                }
-                else
-                {
-                    _filteredOrders = new ObservableCollection<OrderDto>(_allOrders);
-                }
-            }
-            else
-            {
-                _filteredOrders = new ObservableCollection<OrderDto>(_allOrders);
-            }
-            SubscribeToOrderChanges(_filteredOrders);
-            RefreshOrdersList();
+            ApplyOrderFiltersFromUi();
         }
 
         private void SearchBtn_Click(object sender, RoutedEventArgs e)
         {
-            string searchText = SearchBox.Text?.Trim().ToLower();
-            if (string.IsNullOrEmpty(searchText))
-                _filteredOrders = new ObservableCollection<OrderDto>(_allOrders);
-            else
-            {
-                _filteredOrders = new ObservableCollection<OrderDto>(_allOrders.Where(o =>
-                    o.Id.ToString().Contains(searchText) ||
-                    (o.ClientFullName?.ToLower().Contains(searchText) ?? false) ||
-                    (o.WorkerFullName?.ToLower().Contains(searchText) ?? false) ||
-                    (o.CourierFullName?.ToLower().Contains(searchText) ?? false)));
-            }
-            SubscribeToOrderChanges(_filteredOrders);
-            RefreshOrdersList();
+            ApplyOrderFiltersFromUi();
         }
 
         private void RefreshOrdersList()
@@ -266,9 +283,7 @@ namespace MedicalShopDiaShop.MainView.Pages
 
         private void AddBtn_Click(object sender, RoutedEventArgs e)
         {
-            var window = new AddEditOrderWindow();
-            if (window.ShowDialog() == true)
-                LoadOrdersFromDatabase();
+            new AddEditOrderWindow().ShowDialog();
         }
 
         private void EditBtn_Click(object sender, RoutedEventArgs e)
@@ -279,9 +294,7 @@ namespace MedicalShopDiaShop.MainView.Pages
                 FeedbackService.Warning("Выберите заказ для редактирования.");
                 return;
             }
-            var window = new AddEditOrderWindow(selected.Id);
-            if (window.ShowDialog() == true)
-                LoadOrdersFromDatabase();
+            new AddEditOrderWindow(selected.Id).ShowDialog();
         }
 
         private void DeleteBtn_Click(object sender, RoutedEventArgs e)
@@ -313,7 +326,7 @@ namespace MedicalShopDiaShop.MainView.Pages
                         context.SaveChanges();
                     }
                 }
-                LoadOrdersFromDatabase();
+                DataRefreshHub.Notify();
                 FeedbackService.Information("Заказ удалён.");
             }
         }
