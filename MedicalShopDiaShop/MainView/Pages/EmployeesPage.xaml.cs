@@ -225,6 +225,8 @@ namespace MedicalShopDiaShop.MainView.Pages
 
         private void UnsubscribeFromEmployeeChanges(ObservableCollection<EmployeeItem> employees)
         {
+            if (employees == null) return;
+
             employees.CollectionChanged -= OnEmployeesCollectionChanged;
             foreach (var emp in employees)
                 emp.PropertyChanged -= OnEmployeePropertyChanged;
