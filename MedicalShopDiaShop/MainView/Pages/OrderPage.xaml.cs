@@ -188,25 +188,22 @@ namespace MedicalShopDiaShop.MainView.Pages
         private async void OrderStatus_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var combo = sender as ComboBox;
-            if (combo == null || combo.SelectedItem == null) return;
+            if (combo?.SelectedItem == null || e.AddedItems == null || e.AddedItems.Count == 0) return;
+            if (!(combo.Tag is int orderId)) return;
 
-            int orderId = (int)combo.Tag;
-            string newStatusText = combo.SelectedItem.ToString(); // "В обработке" и т.д.
+            // ItemsSource — строки из StatusList; не использовать orderDto.Status как «старое»:
+            // при TwoWay к StatusString привязка успевает обновить DTO до этого обработчика,
+            // из‑за чего oldStatus == newStatus и сохранение в БД не выполнялось.
+            string newStatusText = combo.SelectedItem as string ?? combo.SelectedItem.ToString();
             int newStatus = GetStatusValue(newStatusText);
-
-            var orderDto = _allOrders.FirstOrDefault(o => o.Id == orderId);
-            if (orderDto == null) return;
-
-            int oldStatus = orderDto.Status;
-            if (oldStatus == newStatus) return;
-
-            // Обновляем DTO (привязка уже обновила StatusString, но Status ещё нет)
-            orderDto.Status = newStatus;
 
             using (var context = new DiaShopEntities())
             {
                 var order = context.Order.FirstOrDefault(o => o.Id == orderId);
                 if (order == null) return;
+
+                int oldStatus = order.Status ?? 1;
+                if (oldStatus == newStatus) return;
 
                 order.Status = newStatus;
 
