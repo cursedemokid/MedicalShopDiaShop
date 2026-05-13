@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
-using static MedicalShopDiaShop.AppData.Status;
 
 namespace MedicalShopDiaShop.MainView.Pages
 {
@@ -22,6 +21,29 @@ namespace MedicalShopDiaShop.MainView.Pages
             DataContext = _viewModel;
             _currentStoreId = App.currentUser.StoreId ?? 0;
             LoadAllData();
+        }
+
+        /// <summary>
+        /// Заказ относится к магазину по складу сотрудника (User1 / WorkerId);
+        /// если у сотрудника нет StoreId — по клиенту (User / ClientId), как в старых данных.
+        /// Раньше учитывался только клиент — у розничных клиентов StoreId часто NULL, выручка была 0.
+        /// </summary>
+        private IQueryable<Order> QueryOrdersForCurrentStore(DiaShopEntities context)
+        {
+            return context.Order.Where(o =>
+                (o.User1 != null && o.User1.StoreId == _currentStoreId) ||
+                ((o.User1 == null || o.User1.StoreId == null) &&
+                 o.User != null &&
+                 o.User.StoreId == _currentStoreId));
+        }
+
+        private IQueryable<ProductOrder> QueryProductOrdersForCurrentStore(DiaShopEntities context)
+        {
+            return context.ProductOrder.Where(po =>
+                (po.Order.User1 != null && po.Order.User1.StoreId == _currentStoreId) ||
+                ((po.Order.User1 == null || po.Order.User1.StoreId == null) &&
+                 po.Order.User != null &&
+                 po.Order.User.StoreId == _currentStoreId));
         }
 
         private void LoadAllData()
@@ -40,9 +62,7 @@ namespace MedicalShopDiaShop.MainView.Pages
 
         private void LoadMonthlyRevenue(DiaShopEntities context)
         {
-            var orders = context.Order
-                .Where(o => o.User.StoreId == _currentStoreId)
-                .ToList();
+            var orders = QueryOrdersForCurrentStore(context).ToList();
 
             var monthlyData = orders
                 .GroupBy(o => new { o.DateTime.Year, o.DateTime.Month })
@@ -77,10 +97,13 @@ namespace MedicalShopDiaShop.MainView.Pages
             var series = new SeriesCollection();
             foreach (var item in supplies)
             {
-                var store = context.Store.Find(item.SupplierId);
+                var supplierUser = context.User.Find(item.SupplierId);
+                var title = supplierUser != null
+                    ? $"{supplierUser.LastName} {supplierUser.FirstName}".Trim()
+                    : "Неизвестно";
                 series.Add(new PieSeries
                 {
-                    Title = store?.Name ?? "Неизвестно",
+                    Title = string.IsNullOrEmpty(title) ? "Неизвестно" : title,
                     Values = new ChartValues<int> { item.Count },
                     DataLabels = true
                 });
@@ -90,8 +113,7 @@ namespace MedicalShopDiaShop.MainView.Pages
 
         private void LoadTopProducts(DiaShopEntities context)
         {
-            var topProducts = context.ProductOrder
-                .Where(po => po.Order.User.StoreId == _currentStoreId)
+            var topProducts = QueryProductOrdersForCurrentStore(context)
                 .GroupBy(po => po.ProductId)
                 .Select(g => new { ProductId = g.Key, Quantity = g.Sum(po => po.Quantity) })
                 .OrderByDescending(g => g.Quantity)
@@ -123,9 +145,7 @@ namespace MedicalShopDiaShop.MainView.Pages
 
         private void LoadOrderCount(DiaShopEntities context)
         {
-            var orders = context.Order
-                .Where(o => o.User.StoreId == _currentStoreId)
-                .ToList();
+            var orders = QueryOrdersForCurrentStore(context).ToList();
 
             var monthlyCount = orders
                 .GroupBy(o => new { o.DateTime.Year, o.DateTime.Month })
@@ -149,8 +169,7 @@ namespace MedicalShopDiaShop.MainView.Pages
 
         private void LoadDeliveryTypePie(DiaShopEntities context)
         {
-            var deliveryGroups = context.Order
-                .Where(o => o.User.StoreId == _currentStoreId)
+            var deliveryGroups = QueryOrdersForCurrentStore(context)
                 .GroupBy(o => o.DeliveryType)
                 .Select(g => new { Type = g.Key, Count = g.Count() })
                 .ToList();
@@ -178,8 +197,8 @@ namespace MedicalShopDiaShop.MainView.Pages
             foreach (var product in products)
             {
                 // Приводим к nullable decimal, чтобы обработать null от SUM
-                decimal? sold = context.ProductOrder
-                    .Where(po => po.ProductId == product.Id && po.Order.User.StoreId == _currentStoreId)
+                decimal? sold = QueryProductOrdersForCurrentStore(context)
+                    .Where(po => po.ProductId == product.Id)
                     .Sum(po => (decimal?)po.Quantity * po.Price); // явное приведение к nullable
 
                 decimal? bought = context.SupplyProduct
