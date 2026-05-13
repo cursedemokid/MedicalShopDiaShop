@@ -601,7 +601,7 @@ namespace MedicalShopDiaShop.MainView
         }
         public decimal TotalPrice => (Product?.Price ?? 0) * Quantity;
         public string QuantityHint => $"Доступно: {MaxQuantity} шт.";
-        public string UnitPriceText => $"Цена/1: {(Product?.Price ?? 0):N2} ₽";
+        public string UnitPriceText => $"Цена за 1 шт.: {(Product?.Price ?? 0):N2} ₽";
         public string TotalPriceText => $"Итог: {TotalPrice:N2} ₽";
 
         public event PropertyChangedEventHandler PropertyChanged;

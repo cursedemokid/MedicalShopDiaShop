@@ -101,7 +101,8 @@
                        Width="150" Height="150" Visibility="Visible"/>
 
                 <ListBox x:Name="CartListBox" Grid.Row="1" Visibility="Collapsed"
-                         ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                         ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="ListBoxItem">
                             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -123,53 +124,46 @@
                     </ListBox.ItemsPanel>
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <!-- Карточка товара в корзине -->
-                            <Border CornerRadius="20" Background="White" Margin="10" 
-                                    BorderBrush="LightGray" BorderThickness="1">
+                            <Border CornerRadius="12" Background="White" Margin="6,4" Padding="8"
+                                    BorderBrush="LightGray" BorderThickness="1" HorizontalAlignment="Stretch">
                                 <Border.Effect>
-                                    <DropShadowEffect BlurRadius="15" ShadowDepth="0" Opacity="0.2" Color="Gray"/>
+                                    <DropShadowEffect BlurRadius="10" ShadowDepth="0" Opacity="0.15" Color="Gray"/>
                                 </Border.Effect>
-                                <Grid Margin="10" >
+                                <Grid HorizontalAlignment="Stretch">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="10"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="10"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="10"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="10"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="10"/>
+                                        <ColumnDefinition Width="*" MinWidth="80"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <Image Source="{Binding Product.Image}" Width="100" Height="100"/>
-                                    <TextBlock Grid.Column="2" FontSize="18" Text="{Binding Product.Name}" 
-                                               FontFamily="{StaticResource GothamProFamily}" 
-                                               TextWrapping="Wrap" VerticalAlignment="Center"
-                                               ToolTip="{Binding Product.Description}"/>
-                                    <TextBlock Grid.Column="3" FontSize="16" 
-                                               Text="{Binding UnitPriceText}" 
-                                               VerticalAlignment="Center" HorizontalAlignment="Center"
-                                               FontFamily="{StaticResource GothamProFamily}" Margin="10,0"/>
-                                    <TextBlock Grid.Column="5" FontSize="18" Text="{Binding Quantity}" 
-                                               VerticalAlignment="Center" HorizontalAlignment="Center"
-                                               FontFamily="{StaticResource GothamProFamily}"/>
-                                    <Button Grid.Column="7" Padding="2" HorizontalAlignment="Center" 
-                                            VerticalAlignment="Center" Click="DecreaseQuantity_Click" Tag="{Binding}"
-                                            Height="50">
-                                        <Image x:Name="MinusIcon" Source="/Resources/minus.png" Width="45" Height="45"/>
-                                    </Button>
-                                    <TextBlock Grid.Column="9" FontSize="16" 
-                                               Text="{Binding TotalPriceText}" 
-                                               VerticalAlignment="Center" HorizontalAlignment="Center"
-                                               FontFamily="{StaticResource GothamProFamily}" Margin="10,0"/>
-                                    <Button Grid.Column="11" Padding="2" HorizontalAlignment="Center" 
-                                            VerticalAlignment="Center" Click="IncreaseQuantity_Click" Tag="{Binding}"
-                                            Height="50">
-                                        <Image Source="/Resources/more.png" Width="45" Height="45"/>
-                                    </Button>
+                                    <Image Source="{Binding Product.Image}" Width="64" Height="64"
+                                           VerticalAlignment="Top" Margin="0,2,0,0"/>
+                                    <StackPanel Grid.Column="1" Margin="10,0,6,0" VerticalAlignment="Center">
+                                        <TextBlock FontSize="15" Text="{Binding Product.Name}"
+                                                   FontFamily="{StaticResource GothamProFamily}"
+                                                   TextWrapping="Wrap" ToolTip="{Binding Product.Description}"/>
+                                        <TextBlock FontSize="12" Text="{Binding UnitPriceText}"
+                                                   FontFamily="{StaticResource GothamProLight}" Foreground="#444444"
+                                                   TextWrapping="Wrap" Margin="0,4,0,0"/>
+                                        <TextBlock FontSize="12" Text="{Binding TotalPriceText}"
+                                                   FontFamily="{StaticResource GothamProFamily}" Foreground="#2E7D32"
+                                                   TextWrapping="Wrap" Margin="0,4,0,0"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="2" Orientation="Horizontal"
+                                                VerticalAlignment="Center" HorizontalAlignment="Right">
+                                        <Button Padding="4" Click="DecreaseQuantity_Click" Tag="{Binding}"
+                                                Height="36" Width="36" VerticalAlignment="Center"
+                                                ToolTip="Уменьшить / убрать из корзины">
+                                            <Image Source="/Resources/minus.png" Width="22" Height="22"/>
+                                        </Button>
+                                        <TextBlock Text="{Binding Quantity}" MinWidth="28" TextAlignment="Center"
+                                                   VerticalAlignment="Center" Margin="4,0"
+                                                   FontSize="16" FontFamily="{StaticResource GothamProFamily}"/>
+                                        <Button Padding="4" Click="IncreaseQuantity_Click" Tag="{Binding}"
+                                                Height="36" Width="36" VerticalAlignment="Center"
+                                                ToolTip="Добавить 1 шт.">
+                                            <Image Source="/Resources/more.png" Width="22" Height="22"/>
+                                        </Button>
+                                    </StackPanel>
                                 </Grid>
                             </Border>
                         </DataTemplate>

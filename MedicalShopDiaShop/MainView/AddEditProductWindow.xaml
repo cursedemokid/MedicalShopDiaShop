@@ -64,8 +64,8 @@
                     <ComboBox x:Name="CategoryCmb" FontSize="18" FontFamily="{StaticResource GothamProFamily}"/>
                 </Border>
 
-                <!-- Цена -->
-                <TextBlock Grid.Row="8" Text="Цена (₽)" FontSize="18" FontFamily="{StaticResource GothamProFamily}"
+                <!-- Цена за 1 шт. -->
+                <TextBlock Grid.Row="8" Text="Цена за 1 шт. (₽)" FontSize="18" FontFamily="{StaticResource GothamProFamily}"
                            VerticalAlignment="Center"/>
                 <Border Grid.Row="8" Grid.Column="2" BorderThickness="1" BorderBrush="Black" CornerRadius="5">
                     <TextBox x:Name="PriceTb" FontSize="18" FontFamily="{StaticResource GothamProFamily}" Padding="5"/>

@@ -38,7 +38,7 @@ namespace MedicalShopDiaShop.MainView.Pages
                     Id = p.Id,
                     Name = p.Name,
                     Description = p.Description,
-                    PricePerTen = p.Price,
+                    RetailPricePerUnit = p.Price,
                     Image = string.IsNullOrEmpty(p.Image) ? "/Resources/placeholder.png" : p.Image
                 })
             );
@@ -67,10 +67,10 @@ namespace MedicalShopDiaShop.MainView.Pages
                         Id = product.Id,
                         Name = product.Name,
                         Description = product.Description,
-                        Price = product.PricePerTen,
+                        Price = product.RetailPricePerUnit,
                         Image = product.Image
                     },
-                    Quantity = 10 // начальное количество
+                    Quantity = 1
                 };
                 _cartItems.Add(cartItem);
                 _availableProducts.Remove(product);
@@ -86,9 +86,9 @@ namespace MedicalShopDiaShop.MainView.Pages
             var cartItem = button?.Tag as CartItem;
             if (cartItem != null)
             {
-                cartItem.Quantity += 10;
+                cartItem.Quantity += 1;
                 UpdateTotalPrice();
-                // Обновляем иконку минуса (вдруг было 10 стало 20)
+                // Обновляем отображение строки корзины
                 RefreshCartItemButtons();
             }
         }
@@ -99,23 +99,21 @@ namespace MedicalShopDiaShop.MainView.Pages
             var cartItem = button?.Tag as CartItem;
             if (cartItem != null)
             {
-                if (cartItem.Quantity == 10)
+                if (cartItem.Quantity <= 1)
                 {
-                    // Удаляем из корзины
                     _cartItems.Remove(cartItem);
-                    // Возвращаем в доступные
                     _availableProducts.Add(new ProductItem
                     {
                         Id = cartItem.Product.Id,
                         Name = cartItem.Product.Name,
                         Description = cartItem.Product.Description,
-                        PricePerTen = cartItem.Product.Price,
+                        RetailPricePerUnit = cartItem.Product.Price,
                         Image = cartItem.Product.Image
                     });
                 }
                 else
                 {
-                    cartItem.Quantity -= 10;
+                    cartItem.Quantity -= 1;
                 }
                 UpdateCartVisibility();
                 UpdateTotalPrice();
@@ -125,8 +123,7 @@ namespace MedicalShopDiaShop.MainView.Pages
 
         private void RefreshCartItemButtons()
         {
-            // Принудительно обновляем контейнеры, чтобы изменилась иконка минуса
-            // Простой способ — перезадать ItemsSource
+            // Пересоздаём коллекцию, чтобы ListBox обновил привязки строки.
             var items = _cartItems.ToList();
             _cartItems.Clear();
             foreach (var item in items)
@@ -173,11 +170,11 @@ namespace MedicalShopDiaShop.MainView.Pages
             public int Id { get; set; }
             public string Name { get; set; }
             public string Description { get; set; }
-            public decimal PricePerTen { get; set; }
+            /// <summary>Розничная цена за 1 шт. из БД.</summary>
+            public decimal RetailPricePerUnit { get; set; }
             public string Image { get; set; }
-            public decimal PricePerUnit => PricePerTen / 10m;
-            public string RetailUnitLabel => $"Спр. розн./1: {PricePerUnit:N2} ₽";
-            public string WholesaleUnitLabel => $"Опт закуп./1: {SupplyPricing.WholesaleUnitPrice(PricePerTen):N2} ₽";
+            public string RetailUnitLabel => $"Справ. розница за 1 шт.: {RetailPricePerUnit:N2} ₽";
+            public string WholesaleUnitLabel => $"Опт закуп. за 1 шт.: {SupplyPricing.WholesaleUnitPrice(RetailPricePerUnit):N2} ₽";
         }
 
         public class CartItem : INotifyPropertyChanged
@@ -236,10 +233,10 @@ namespace MedicalShopDiaShop.MainView.Pages
             public string UnitPriceText =>
                 Product == null
                     ? string.Empty
-                    : $"Розн./1: {SupplyPricing.RetailUnitPrice(Product.Price):N2} ₽  ·  Опт/1: {WholesaleUnitEffective:N2} ₽";
+                    : $"Розн. за 1 шт.: {SupplyPricing.RetailUnitPrice(Product.Price):N2} ₽ · Опт за 1 шт.: {WholesaleUnitEffective:N2} ₽";
 
             public string TotalPriceText =>
-                $"Опт: {TotalPrice:N2} ₽  (розн. справ.: {RetailReferenceTotal:N2} ₽, −{SavingsVsRetail:N2} ₽)";
+                $"Опт: {TotalPrice:N2} ₽ (розн.: {RetailReferenceTotal:N2} ₽, −{SavingsVsRetail:N2} ₽)";
 
             public event PropertyChangedEventHandler PropertyChanged;
             protected void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string prop = null)

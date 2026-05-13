@@ -53,7 +53,7 @@
                        FontFamily="{StaticResource GothamProLight}" FontSize="18" 
                        Foreground="{Binding StockColor}"/>
 
-            <TextBlock Grid.Row="8" Margin="0,15,0,5" Text="Цена:" 
+            <TextBlock Grid.Row="8" Margin="0,15,0,5" Text="Цена за 1 шт.:" 
                        FontFamily="{StaticResource GothamProFamily}" FontSize="20" FontWeight="Bold"/>
             <TextBlock Grid.Row="9" x:Name="PriceText" 
                        FontFamily="{StaticResource GothamProLight}" FontSize="18" Foreground="#4CAF50">
