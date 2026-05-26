@@ -47,6 +47,7 @@ namespace MedicalShopDiaShop.MainView.Pages
         private int _tasksTotalPages = 1;
         private const int TasksPageSize = 4;
         private ObservableCollection<TaskItem> _taskItems;
+        private bool _updatingTaskSelection;
 
         // Для истории покупок
         private List<OrderHistoryItem> _allHistory;
@@ -105,6 +106,7 @@ namespace MedicalShopDiaShop.MainView.Pages
             AddTaskBtn.Visibility = _isAdmin ? Visibility.Visible : Visibility.Collapsed;
             EditTaskBtn.Visibility = _isAdmin ? Visibility.Visible : Visibility.Collapsed;
             DeleteTaskBtn.Visibility = _isAdmin ? Visibility.Visible : Visibility.Collapsed;
+            UpdateTaskButtonsState();
         }
 
         private void LoadPersonalInfo()
@@ -432,6 +434,7 @@ namespace MedicalShopDiaShop.MainView.Pages
                 });
             }
             TasksListBox.ItemsSource = _taskItems;
+            UpdateTaskButtonsState();
 
             TasksPageText.Text = $"{_tasksCurrentPage} / {(_tasksTotalPages == 0 ? 1 : _tasksTotalPages)}";
             PrevTasksBtn.IsEnabled = _tasksCurrentPage > 1;
@@ -440,6 +443,41 @@ namespace MedicalShopDiaShop.MainView.Pages
 
         private void PrevTasksBtn_Click(object sender, RoutedEventArgs e) => LoadTasks(_tasksCurrentPage - 1);
         private void NextTasksBtn_Click(object sender, RoutedEventArgs e) => LoadTasks(_tasksCurrentPage + 1);
+
+        private TaskItem GetSelectedTask() =>
+            _taskItems?.FirstOrDefault(t => t.IsChosen);
+
+        private void UpdateTaskButtonsState()
+        {
+            bool hasSelection = GetSelectedTask() != null;
+            if (EditTaskBtn.Visibility == Visibility.Visible)
+                EditTaskBtn.IsEnabled = hasSelection;
+            if (DeleteTaskBtn.Visibility == Visibility.Visible)
+                DeleteTaskBtn.IsEnabled = hasSelection;
+        }
+
+        private void TaskSelectCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            if (_updatingTaskSelection) return;
+            var task = (sender as CheckBox)?.DataContext as TaskItem;
+            if (task == null || _taskItems == null) return;
+
+            _updatingTaskSelection = true;
+            foreach (var item in _taskItems)
+                item.IsChosen = item.Id == task.Id;
+            _updatingTaskSelection = false;
+            UpdateTaskButtonsState();
+        }
+
+        private void TaskSelectCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (_updatingTaskSelection) return;
+            var task = (sender as CheckBox)?.DataContext as TaskItem;
+            if (task == null) return;
+
+            task.IsChosen = false;
+            UpdateTaskButtonsState();
+        }
 
         private void AddTaskBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -450,7 +488,7 @@ namespace MedicalShopDiaShop.MainView.Pages
 
         private void EditTaskBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (TasksListBox.SelectedItem is TaskItem selected)
+            if (GetSelectedTask() is TaskItem selected)
             {
                 var window = new AddEditTaskWindow(_displayedUser.Id, selected.Id);
                 if (window.ShowDialog() == true)
@@ -462,7 +500,7 @@ namespace MedicalShopDiaShop.MainView.Pages
 
         private void DeleteTaskBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (TasksListBox.SelectedItem is TaskItem selected)
+            if (GetSelectedTask() is TaskItem selected)
             {
                 if (FeedbackService.Question($"Удалить задачу \"{selected.Title}\"?") == MessageBoxResult.Yes)
                 {
@@ -641,6 +679,12 @@ namespace MedicalShopDiaShop.MainView.Pages
         {
             get => _isCompleted;
             set { _isCompleted = value; OnPropertyChanged(); }
+        }
+        private bool _isChosen;
+        public bool IsChosen
+        {
+            get => _isChosen;
+            set { _isChosen = value; OnPropertyChanged(); }
         }
         public string AuthorName { get; set; }
 
