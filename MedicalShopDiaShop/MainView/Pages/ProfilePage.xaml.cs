@@ -507,6 +507,15 @@ namespace MedicalShopDiaShop.MainView.Pages
                     var dbTask = App.context.Task.Find(selected.Id);
                     if (dbTask != null)
                     {
+                        // У задачи могут быть связанные уведомления (FK_Notification_Task с ограничением DELETE),
+                        // поэтому перед удалением задачи удаляем зависимые Notification записи.
+                        var linkedNotifications = App.context.Notification
+                            .Where(n => n.TaskId == dbTask.Id)
+                            .ToList();
+
+                        if (linkedNotifications.Count > 0)
+                            App.context.Notification.RemoveRange(linkedNotifications);
+
                         App.context.Task.Remove(dbTask);
                         App.context.SaveChanges();
                         LoadTasks(_tasksCurrentPage);
