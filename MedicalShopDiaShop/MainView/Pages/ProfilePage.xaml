@@ -6,6 +6,7 @@
       xmlns:local="clr-namespace:MedicalShopDiaShop.MainView.Pages"
       xmlns:behaviors="clr-namespace:MedicalShopDiaShop.AppData"
       xmlns:controls="clr-namespace:MedicalShopDiaShop.MainView.Controls"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d" 
       d:DesignHeight="694" d:DesignWidth="1033" d:MaxWidth="1125"
       Title="ProfilePage">
@@ -295,13 +296,13 @@
                                     FontSize="14" Click="DeleteScheduleBtn_Click" Visibility="Collapsed"/>
                         </Grid>
 
-                        <Border Grid.Row="2" CornerRadius="20" BorderBrush="#E0E0E0" BorderThickness="1" Padding="4">
-                            <Calendar Name="ScheduleCalendar" FontFamily="{StaticResource GothamProLight}"
-                                      HorizontalAlignment="Stretch"
-                                      behaviors:CalendarScheduleBehavior.ScheduledDates="{Binding ScheduledDates}"
-                                      behaviors:CalendarScheduleBehavior.DateToolTipSelector="{Binding ScheduleToolTipSelector}"
-                                      SelectedDatesChanged="ScheduleCalendar_SelectedDatesChanged"/>
-                        </Border>
+                        <Calendar Name="ScheduleCalendar" Grid.Row="2"
+                                  FontFamily="{StaticResource GothamProLight}"
+                                  HorizontalAlignment="Stretch"
+                                  materialDesign:ElevationAssist.Elevation="Dp2"
+                                  behaviors:CalendarScheduleBehavior.ScheduledDates="{Binding ScheduledDates}"
+                                  behaviors:CalendarScheduleBehavior.DateToolTipSelector="{Binding ScheduleToolTipSelector}"
+                                  SelectedDatesChanged="ScheduleCalendar_SelectedDatesChanged"/>
 
                         <TextBlock Grid.Row="4" Text="Смены на выбранную дату:" FontSize="16" FontFamily="{StaticResource GothamProFamily}"/>
                         <ListBox x:Name="SchedulesListBox" Grid.Row="6" MaxHeight="160" FontSize="16" FontFamily="{StaticResource GothamProFamily}"

@@ -9,6 +9,8 @@
             <ResourceDictionary.MergedDictionaries>
                 <materialDesign:BundledTheme BaseTheme="Light" PrimaryColor="DeepPurple" SecondaryColor="Pink" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign3.Defaults.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Calendar.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.DatePicker.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <FontFamily x:Key="GothamProFamily">
@@ -29,10 +31,19 @@
             <SolidColorBrush x:Key="AppPrimaryDarkBrush" Color="#512DA8"/>
             <SolidColorBrush x:Key="AppPrimaryForegroundBrush" Color="White"/>
 
-            <Style TargetType="{x:Type Calendar}">
+            <!-- Кисти для темы MaterialDesign Calendar / DatePicker -->
+            <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="#673AB7"/>
+            <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="#512DA8"/>
+            <SolidColorBrush x:Key="PrimaryHueMidForegroundBrush" Color="White"/>
+            <SolidColorBrush x:Key="PrimaryHueLightBrush" Color="#9575CD"/>
+
+            <Style TargetType="{x:Type Calendar}" BasedOn="{StaticResource MaterialDesignCalendarPortrait}">
                 <Setter Property="Language" Value="ru-RU"/>
+                <Setter Property="materialDesign:CalendarAssist.HeaderBackground" Value="{StaticResource AppPrimaryBrush}"/>
+                <Setter Property="materialDesign:CalendarAssist.HeaderForeground" Value="{StaticResource AppPrimaryForegroundBrush}"/>
             </Style>
-            <Style TargetType="{x:Type DatePicker}">
+
+            <Style TargetType="{x:Type DatePicker}" BasedOn="{StaticResource MaterialDesignOutlinedDatePicker}">
                 <Setter Property="Language" Value="ru-RU"/>
             </Style>
 

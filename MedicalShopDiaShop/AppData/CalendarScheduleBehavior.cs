@@ -87,23 +87,11 @@ namespace MedicalShopDiaShop.AppData
                 ApplyHighlight(calendar);
         }
 
-        private static SolidColorBrush GetPrimaryBrush()
+        private static Color GetPrimaryColor()
         {
             if (Application.Current?.TryFindResource("AppPrimaryBrush") is SolidColorBrush brush)
-                return brush;
-            return new SolidColorBrush(Color.FromRgb(103, 58, 183));
-        }
-
-        private static SolidColorBrush GetPrimaryDarkBrush()
-        {
-            if (Application.Current?.TryFindResource("AppPrimaryDarkBrush") is SolidColorBrush brush)
-                return brush;
-            return new SolidColorBrush(Color.FromRgb(81, 45, 168));
-        }
-
-        private static Brush GetOnPrimaryBrush()
-        {
-            return Application.Current?.TryFindResource("AppPrimaryForegroundBrush") as Brush ?? Brushes.White;
+                return brush.Color;
+            return Color.FromRgb(103, 58, 183);
         }
 
         private static void ApplyHighlight(Calendar calendar)
@@ -113,9 +101,7 @@ namespace MedicalShopDiaShop.AppData
             var scheduledDates = GetScheduledDates(calendar)?.Select(d => d.Date).ToHashSet()
                                  ?? new HashSet<DateTime>();
             var toolTipSelector = GetDateToolTipSelector(calendar);
-            var primaryBrush = GetPrimaryBrush();
-            var primaryDarkBrush = GetPrimaryDarkBrush();
-            var onPrimaryBrush = GetOnPrimaryBrush();
+            var primaryColor = GetPrimaryColor();
 
             foreach (var button in FindVisualChildren<CalendarDayButton>(calendar))
             {
@@ -124,21 +110,16 @@ namespace MedicalShopDiaShop.AppData
                     bool isScheduled = scheduledDates.Contains(date.Date);
                     bool isSelected = button.IsSelected;
 
-                    if (isScheduled || isSelected)
+                    button.ClearValue(Control.BackgroundProperty);
+                    button.ClearValue(Control.ForegroundProperty);
+
+                    // Дни со сменами: лёгкая подсветка, не перекрывая MaterialDesign-шаблон выбранной даты
+                    if (isScheduled && !isSelected)
                     {
-                        button.Background = (isScheduled && isSelected) || isSelected
-                            ? primaryDarkBrush
-                            : primaryBrush;
-                        button.Foreground = onPrimaryBrush;
-                        button.FontWeight = isScheduled ? FontWeights.SemiBold : FontWeights.Normal;
-                    }
-                    else
-                    {
-                        button.ClearValue(Control.BackgroundProperty);
-                        button.ClearValue(Control.ForegroundProperty);
-                        button.FontWeight = FontWeights.Normal;
+                        button.Background = new SolidColorBrush(primaryColor) { Opacity = 0.28 };
                     }
 
+                    button.FontWeight = isScheduled ? FontWeights.SemiBold : FontWeights.Normal;
                     button.ToolTip = isScheduled && toolTipSelector != null
                         ? toolTipSelector(date.Date)
                         : null;
