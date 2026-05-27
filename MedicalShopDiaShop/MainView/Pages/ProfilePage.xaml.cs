@@ -282,14 +282,19 @@ namespace MedicalShopDiaShop.MainView.Pages
             UpdateSchedulesList(DateTime.Today);
         }
 
+        private static Brush GetAppPrimaryBrush() =>
+            Application.Current?.TryFindResource("AppPrimaryBrush") as Brush
+            ?? new SolidColorBrush(Color.FromRgb(103, 58, 183));
+
         private void ShowScheduleTab()
         {
             ScheduleTabPanel.Visibility = Visibility.Visible;
             TasksTabPanel.Visibility = Visibility.Collapsed;
 
+            var primaryBrush = GetAppPrimaryBrush();
             ScheduleTabHeader.Background = Brushes.White;
-            ScheduleTabHeader.BorderBrush = (Brush)FindResource("PrimaryHueMidBrush");
-            ScheduleTabHeaderText.Foreground = (Brush)FindResource("PrimaryHueMidBrush");
+            ScheduleTabHeader.BorderBrush = primaryBrush;
+            ScheduleTabHeaderText.Foreground = primaryBrush;
 
             TasksTabHeader.Background = Brushes.Transparent;
             TasksTabHeader.BorderBrush = Brushes.Transparent;
@@ -301,9 +306,10 @@ namespace MedicalShopDiaShop.MainView.Pages
             ScheduleTabPanel.Visibility = Visibility.Collapsed;
             TasksTabPanel.Visibility = Visibility.Visible;
 
+            var primaryBrush = GetAppPrimaryBrush();
             TasksTabHeader.Background = Brushes.White;
-            TasksTabHeader.BorderBrush = (Brush)FindResource("PrimaryHueMidBrush");
-            TasksTabHeaderText.Foreground = (Brush)FindResource("PrimaryHueMidBrush");
+            TasksTabHeader.BorderBrush = primaryBrush;
+            TasksTabHeaderText.Foreground = primaryBrush;
 
             ScheduleTabHeader.Background = Brushes.Transparent;
             ScheduleTabHeader.BorderBrush = Brushes.Transparent;

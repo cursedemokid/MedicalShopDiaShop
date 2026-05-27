@@ -89,21 +89,21 @@ namespace MedicalShopDiaShop.AppData
 
         private static SolidColorBrush GetPrimaryBrush()
         {
-            if (Application.Current?.TryFindResource("PrimaryHueMidBrush") is SolidColorBrush brush)
+            if (Application.Current?.TryFindResource("AppPrimaryBrush") is SolidColorBrush brush)
                 return brush;
             return new SolidColorBrush(Color.FromRgb(103, 58, 183));
         }
 
         private static SolidColorBrush GetPrimaryDarkBrush()
         {
-            if (Application.Current?.TryFindResource("PrimaryHueDarkBrush") is SolidColorBrush brush)
+            if (Application.Current?.TryFindResource("AppPrimaryDarkBrush") is SolidColorBrush brush)
                 return brush;
             return new SolidColorBrush(Color.FromRgb(81, 45, 168));
         }
 
         private static Brush GetOnPrimaryBrush()
         {
-            return Application.Current?.TryFindResource("PrimaryHueMidForegroundBrush") as Brush ?? Brushes.White;
+            return Application.Current?.TryFindResource("AppPrimaryForegroundBrush") as Brush ?? Brushes.White;
         }
 
         private static void ApplyHighlight(Calendar calendar)

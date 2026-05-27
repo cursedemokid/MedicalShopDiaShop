@@ -24,6 +24,11 @@
             
             <FontFamily x:Key="GothamProLight">/Fonts/gothampro_light.ttf#Gotham Pro</FontFamily>
 
+            <!-- Основной цвет приложения (Deep Purple, как в BundledTheme) -->
+            <SolidColorBrush x:Key="AppPrimaryBrush" Color="#673AB7"/>
+            <SolidColorBrush x:Key="AppPrimaryDarkBrush" Color="#512DA8"/>
+            <SolidColorBrush x:Key="AppPrimaryForegroundBrush" Color="White"/>
+
             <Style TargetType="{x:Type Calendar}">
                 <Setter Property="Language" Value="ru-RU"/>
             </Style>

@@ -252,7 +252,7 @@
                             <Border x:Name="ScheduleTabHeader" Background="White" CornerRadius="12,12,0,0"
                                     Padding="22,10" Margin="0,0,4,0" Cursor="Hand"
                                     MouseLeftButtonUp="ScheduleTabHeader_Click"
-                                    BorderBrush="{DynamicResource PrimaryHueMidBrush}" BorderThickness="0,0,0,3">
+                                    BorderBrush="{StaticResource AppPrimaryBrush}" BorderThickness="0,0,0,3">
                                 <TextBlock x:Name="ScheduleTabHeaderText" Text="Смены"
                                            FontFamily="{StaticResource GothamProFamily}" FontSize="16"/>
                             </Border>
