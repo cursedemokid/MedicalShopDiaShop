@@ -8,7 +8,6 @@ using System.Windows.Media;
 using System.Windows.Threading;
 
 namespace MedicalShopDiaShop.AppData
-
 {
     public static class CalendarScheduleBehavior
     {
@@ -42,15 +41,21 @@ namespace MedicalShopDiaShop.AppData
             => obj.SetValue(DateToolTipSelectorProperty, value);
         #endregion
 
+        private static void AttachCalendarHandlers(Calendar calendar)
+        {
+            calendar.Loaded -= Calendar_Loaded;
+            calendar.DisplayDateChanged -= Calendar_DisplayDateChanged;
+            calendar.SelectedDatesChanged -= Calendar_SelectedDatesChanged;
+            calendar.Loaded += Calendar_Loaded;
+            calendar.DisplayDateChanged += Calendar_DisplayDateChanged;
+            calendar.SelectedDatesChanged += Calendar_SelectedDatesChanged;
+        }
+
         private static void OnScheduledDatesChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is Calendar calendar)
             {
-                calendar.Loaded -= Calendar_Loaded;
-                calendar.DisplayDateChanged -= Calendar_DisplayDateChanged;
-                calendar.Loaded += Calendar_Loaded;
-                calendar.DisplayDateChanged += Calendar_DisplayDateChanged;
-
+                AttachCalendarHandlers(calendar);
                 if (calendar.IsLoaded)
                     ApplyHighlight(calendar);
             }
@@ -58,8 +63,12 @@ namespace MedicalShopDiaShop.AppData
 
         private static void OnToolTipSelectorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is Calendar calendar && calendar.IsLoaded)
-                ApplyHighlight(calendar);
+            if (d is Calendar calendar)
+            {
+                AttachCalendarHandlers(calendar);
+                if (calendar.IsLoaded)
+                    ApplyHighlight(calendar);
+            }
         }
 
         private static void Calendar_Loaded(object sender, RoutedEventArgs e)
@@ -72,6 +81,31 @@ namespace MedicalShopDiaShop.AppData
                     DispatcherPriority.Background);
         }
 
+        private static void Calendar_SelectedDatesChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (sender is Calendar calendar)
+                ApplyHighlight(calendar);
+        }
+
+        private static SolidColorBrush GetPrimaryBrush()
+        {
+            if (Application.Current?.TryFindResource("PrimaryHueMidBrush") is SolidColorBrush brush)
+                return brush;
+            return new SolidColorBrush(Color.FromRgb(103, 58, 183));
+        }
+
+        private static SolidColorBrush GetPrimaryDarkBrush()
+        {
+            if (Application.Current?.TryFindResource("PrimaryHueDarkBrush") is SolidColorBrush brush)
+                return brush;
+            return new SolidColorBrush(Color.FromRgb(81, 45, 168));
+        }
+
+        private static Brush GetOnPrimaryBrush()
+        {
+            return Application.Current?.TryFindResource("PrimaryHueMidForegroundBrush") as Brush ?? Brushes.White;
+        }
+
         private static void ApplyHighlight(Calendar calendar)
         {
             if (calendar == null) return;
@@ -79,29 +113,32 @@ namespace MedicalShopDiaShop.AppData
             var scheduledDates = GetScheduledDates(calendar)?.Select(d => d.Date).ToHashSet()
                                  ?? new HashSet<DateTime>();
             var toolTipSelector = GetDateToolTipSelector(calendar);
+            var primaryBrush = GetPrimaryBrush();
+            var primaryDarkBrush = GetPrimaryDarkBrush();
+            var onPrimaryBrush = GetOnPrimaryBrush();
 
             foreach (var button in FindVisualChildren<CalendarDayButton>(calendar))
             {
                 if (button.DataContext is DateTime date)
                 {
                     bool isScheduled = scheduledDates.Contains(date.Date);
+                    bool isSelected = button.IsSelected;
 
-                    // Используем акцентный цвет MaterialDesign (PrimaryHueLightBrush) с прозрачностью
-                    var accentBrush = Application.Current.TryFindResource("PrimaryHueLightBrush") as Brush;
-                    if (accentBrush is SolidColorBrush solidBrush)
+                    if (isScheduled || isSelected)
                     {
-                        button.Background = isScheduled
-                            ? new SolidColorBrush(solidBrush.Color) { Opacity = 0.3 }
-                            : Brushes.Transparent;
+                        button.Background = (isScheduled && isSelected) || isSelected
+                            ? primaryDarkBrush
+                            : primaryBrush;
+                        button.Foreground = onPrimaryBrush;
+                        button.FontWeight = isScheduled ? FontWeights.SemiBold : FontWeights.Normal;
                     }
                     else
                     {
-                        button.Background = isScheduled
-                            ? new SolidColorBrush(Color.FromRgb(255, 235, 200))
-                            : Brushes.Transparent;
+                        button.ClearValue(Control.BackgroundProperty);
+                        button.ClearValue(Control.ForegroundProperty);
+                        button.FontWeight = FontWeights.Normal;
                     }
 
-                    button.FontWeight = isScheduled ? FontWeights.SemiBold : FontWeights.Normal;
                     button.ToolTip = isScheduled && toolTipSelector != null
                         ? toolTipSelector(date.Date)
                         : null;

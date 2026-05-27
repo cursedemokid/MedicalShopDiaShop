@@ -237,6 +237,7 @@ namespace MedicalShopDiaShop.MainView.Pages
 
         private void LoadEmployeeScheduleAndTasks()
         {
+            ShowScheduleTab();
             LoadSchedules();
             LoadTasks(1);
         }
@@ -279,56 +280,39 @@ namespace MedicalShopDiaShop.MainView.Pages
 
             ScheduleCalendar.SelectedDate = DateTime.Today;
             UpdateSchedulesList(DateTime.Today);
-
-            ApplyCalendarHighlight();
         }
 
-        private static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject
+        private void ShowScheduleTab()
         {
-            if (depObj == null) yield break;
-            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
-            {
-                var child = VisualTreeHelper.GetChild(depObj, i);
-                if (child is T t) yield return t;
-                foreach (var childOfChild in FindVisualChildren<T>(child))
-                    yield return childOfChild;
-            }
+            ScheduleTabPanel.Visibility = Visibility.Visible;
+            TasksTabPanel.Visibility = Visibility.Collapsed;
+
+            ScheduleTabHeader.Background = Brushes.White;
+            ScheduleTabHeader.BorderBrush = (Brush)FindResource("PrimaryHueMidBrush");
+            ScheduleTabHeaderText.Foreground = (Brush)FindResource("PrimaryHueMidBrush");
+
+            TasksTabHeader.Background = Brushes.Transparent;
+            TasksTabHeader.BorderBrush = Brushes.Transparent;
+            TasksTabHeaderText.Foreground = new SolidColorBrush(Color.FromRgb(102, 102, 102));
         }
 
-        private void ApplyCalendarHighlight()
+        private void ShowTasksTab()
         {
-            if (ScheduledDates == null) return;
-            var scheduledSet = ScheduledDates.ToHashSet();
-            var accentBrush = TryFindResource("PrimaryHueLightBrush") as Brush ?? Brushes.Orange;
+            ScheduleTabPanel.Visibility = Visibility.Collapsed;
+            TasksTabPanel.Visibility = Visibility.Visible;
 
-            // Принудительно запускаем в потоке рендеринга, чтобы дождаться создания визуальных элементов
-            ScheduleCalendar.Dispatcher.BeginInvoke(new Action(() =>
-            {
-                var buttons = FindVisualChildren<CalendarDayButton>(ScheduleCalendar);
-                if (buttons.Any())
-                {
-                    foreach (var btn in buttons)
-                    {
-                        if (btn.DataContext is DateTime date && scheduledSet.Contains(date.Date))
-                            btn.Background = accentBrush;
-                        else
-                            btn.Background = Brushes.Transparent;
-                    }
-                }
-                else
-                {
-                    // Если кнопки ещё не созданы, повторяем через 50 мс
-                    var timer = new System.Windows.Threading.DispatcherTimer();
-                    timer.Interval = TimeSpan.FromMilliseconds(50);
-                    timer.Tick += (s, args) =>
-                    {
-                        timer.Stop();
-                        ApplyCalendarHighlight();
-                    };
-                    timer.Start();
-                }
-            }), System.Windows.Threading.DispatcherPriority.Render);
+            TasksTabHeader.Background = Brushes.White;
+            TasksTabHeader.BorderBrush = (Brush)FindResource("PrimaryHueMidBrush");
+            TasksTabHeaderText.Foreground = (Brush)FindResource("PrimaryHueMidBrush");
+
+            ScheduleTabHeader.Background = Brushes.Transparent;
+            ScheduleTabHeader.BorderBrush = Brushes.Transparent;
+            ScheduleTabHeaderText.Foreground = new SolidColorBrush(Color.FromRgb(102, 102, 102));
         }
+
+        private void ScheduleTabHeader_Click(object sender, MouseButtonEventArgs e) => ShowScheduleTab();
+
+        private void TasksTabHeader_Click(object sender, MouseButtonEventArgs e) => ShowTasksTab();
 
         private void ScheduleCalendar_SelectedDatesChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -361,10 +345,7 @@ namespace MedicalShopDiaShop.MainView.Pages
         {
             var window = new AddEditScheduleWindow(_displayedUser.Id);
             if (window.ShowDialog() == true)
-            {
                 LoadSchedules();
-                ApplyCalendarHighlight();
-            }
         }
 
         private void EditScheduleBtn_Click(object sender, RoutedEventArgs e)
@@ -636,21 +617,6 @@ namespace MedicalShopDiaShop.MainView.Pages
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string name = null) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-
-        private void ScheduleCalendar_Loaded(object sender, RoutedEventArgs e)
-        {
-            // Даём время на полную отрисовку календаря
-            ApplyCalendarHighlight();
-            // Дополнительная попытка через 200 мс (для уверенности)
-            var timer = new System.Windows.Threading.DispatcherTimer();
-            timer.Interval = TimeSpan.FromMilliseconds(200);
-            timer.Tick += (s, args) =>
-            {
-                timer.Stop();
-                ApplyCalendarHighlight();
-            };
-            timer.Start();
-        }
 
         private void SupplierProductSearchBox_OnTextChanged(object sender, TextChangedEventArgs e)
         {

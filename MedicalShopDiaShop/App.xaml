@@ -24,6 +24,13 @@
             
             <FontFamily x:Key="GothamProLight">/Fonts/gothampro_light.ttf#Gotham Pro</FontFamily>
 
+            <Style TargetType="{x:Type Calendar}">
+                <Setter Property="Language" Value="ru-RU"/>
+            </Style>
+            <Style TargetType="{x:Type DatePicker}">
+                <Setter Property="Language" Value="ru-RU"/>
+            </Style>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>
