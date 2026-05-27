@@ -6,11 +6,14 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Threading;
+using MaterialDesignThemes.Wpf;
 
 namespace MedicalShopDiaShop.AppData
 {
     public static class CalendarScheduleBehavior
     {
+        private const double ScheduledHighlightOpacity = 0.35;
+
         #region ScheduledDates Property
         public static readonly DependencyProperty ScheduledDatesProperty =
             DependencyProperty.RegisterAttached(
@@ -94,6 +97,55 @@ namespace MedicalShopDiaShop.AppData
             return Color.FromRgb(103, 58, 183);
         }
 
+        private static Color GetCalendarSurfaceColor(Calendar calendar)
+        {
+            if (calendar.Background is SolidColorBrush calendarBackground)
+                return calendarBackground.Color;
+            return Colors.White;
+        }
+
+        private static Color BlendColors(Color foreground, double foregroundOpacity, Color background)
+        {
+            double a = foregroundOpacity;
+            return Color.FromRgb(
+                (byte)(foreground.R * a + background.R * (1 - a)),
+                (byte)(foreground.G * a + background.G * (1 - a)),
+                (byte)(foreground.B * a + background.B * (1 - a)));
+        }
+
+        private static double GetColorChannelLuminance(byte channel)
+        {
+            double value = channel / 255.0;
+            return value <= 0.03928 ? value / 12.92 : Math.Pow((value + 0.055) / 1.055, 2.4);
+        }
+
+        private static double GetRelativeLuminance(Color color) =>
+            0.2126 * GetColorChannelLuminance(color.R)
+            + 0.7152 * GetColorChannelLuminance(color.G)
+            + 0.0722 * GetColorChannelLuminance(color.B);
+
+        private static bool IsDarkColor(Color color) => GetRelativeLuminance(color) < 0.5;
+
+        private static Brush GetContrastBrush(Color backgroundColor) =>
+            IsDarkColor(backgroundColor) ? Brushes.White : Brushes.Black;
+
+        private static void ApplySelectionAssist(CalendarDayButton button, Color selectionColor)
+        {
+            var selectionBrush = new SolidColorBrush(selectionColor);
+            selectionBrush.Freeze();
+            CalendarAssist.SetSelectionColor(button, selectionBrush);
+            CalendarAssist.SetSelectionForegroundColor(button,
+                GetContrastBrush(selectionColor));
+        }
+
+        private static void ClearDayButtonHighlight(CalendarDayButton button)
+        {
+            button.ClearValue(Control.BackgroundProperty);
+            button.ClearValue(Control.ForegroundProperty);
+            button.ClearValue(CalendarAssist.SelectionColorProperty);
+            button.ClearValue(CalendarAssist.SelectionForegroundColorProperty);
+        }
+
         private static void ApplyHighlight(Calendar calendar)
         {
             if (calendar == null) return;
@@ -102,6 +154,7 @@ namespace MedicalShopDiaShop.AppData
                                  ?? new HashSet<DateTime>();
             var toolTipSelector = GetDateToolTipSelector(calendar);
             var primaryColor = GetPrimaryColor();
+            var surfaceColor = GetCalendarSurfaceColor(calendar);
 
             foreach (var button in FindVisualChildren<CalendarDayButton>(calendar))
             {
@@ -110,13 +163,19 @@ namespace MedicalShopDiaShop.AppData
                     bool isScheduled = scheduledDates.Contains(date.Date);
                     bool isSelected = button.IsSelected;
 
-                    button.ClearValue(Control.BackgroundProperty);
-                    button.ClearValue(Control.ForegroundProperty);
+                    ClearDayButtonHighlight(button);
 
-                    // Дни со сменами: лёгкая подсветка, не перекрывая MaterialDesign-шаблон выбранной даты
-                    if (isScheduled && !isSelected)
+                    if (isSelected)
                     {
-                        button.Background = new SolidColorBrush(primaryColor) { Opacity = 0.28 };
+                        // Выбранная дата: MaterialDesign + контрастный текст к цвету выделения
+                        ApplySelectionAssist(button, primaryColor);
+                    }
+                    else if (isScheduled)
+                    {
+                        // День со сменой: подсветка с учётом смешения с фоном календаря
+                        var effectiveBackground = BlendColors(primaryColor, ScheduledHighlightOpacity, surfaceColor);
+                        button.Background = new SolidColorBrush(primaryColor) { Opacity = ScheduledHighlightOpacity };
+                        button.Foreground = GetContrastBrush(effectiveBackground);
                     }
 
                     button.FontWeight = isScheduled ? FontWeights.SemiBold : FontWeights.Normal;
