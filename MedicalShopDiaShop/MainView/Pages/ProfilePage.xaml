@@ -391,12 +391,12 @@
                                                    FontSize="18" TextWrapping="Wrap"/>
                                         <StackPanel Grid.Row="4" Orientation="Horizontal">
                                             <TextBlock Text="Начало: " FontFamily="{StaticResource GothamProFamily}" FontSize="14"/>
-                                            <TextBlock Text="{Binding StartDate, StringFormat='{}{0:dd.MM.yyyy HH:mm}'}"
+                                            <TextBlock Text="{Binding StartDate, StringFormat='{}{0:dd.MM.yyyy}'}"
                                                        FontFamily="{StaticResource GothamProLight}" FontSize="14" TextWrapping="Wrap"/>
                                         </StackPanel>
                                         <StackPanel Grid.Row="6" Orientation="Horizontal">
                                             <TextBlock Text="Дедлайн: " FontFamily="{StaticResource GothamProFamily}" FontSize="14"/>
-                                            <TextBlock Text="{Binding Deadline, StringFormat='{}{0:dd.MM.yyyy HH:mm}'}"
+                                            <TextBlock Text="{Binding Deadline, StringFormat='{}{0:dd.MM.yyyy}'}"
                                                        FontFamily="{StaticResource GothamProLight}" FontSize="14" TextWrapping="Wrap"/>
                                         </StackPanel>
                                         <StackPanel Grid.Row="8" Orientation="Horizontal" Margin="0,4,0,0">
