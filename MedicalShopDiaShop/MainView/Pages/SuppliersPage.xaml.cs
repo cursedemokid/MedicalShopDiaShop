@@ -275,10 +275,12 @@ namespace MedicalShopDiaShop.MainView.Pages
             if (_currentMode == ViewMode.Suppliers)
             {
                 new AddEditSupplierWindow().ShowDialog();
+                LoadSuppliersFromDatabase();
             }
             else
             {
                 new AddSupplyWindow().ShowDialog();
+                LoadSuppliesFromDatabase();
             }
         }
 
@@ -294,6 +296,8 @@ namespace MedicalShopDiaShop.MainView.Pages
                 }
                 var window = new AddEditSupplierWindow(selected.Id);
                 window.ShowDialog();
+                LoadSuppliersFromDatabase();
+
             }
             // В режиме поставок кнопка Edit скрыта, поэтому else не требуется
         }
@@ -319,6 +323,8 @@ namespace MedicalShopDiaShop.MainView.Pages
                     DataRefreshHub.Notify();
                     FeedbackService.Information("Поставщик удалён.");
                 }
+                LoadSuppliersFromDatabase();
+
             }
             else
             {
@@ -341,6 +347,7 @@ namespace MedicalShopDiaShop.MainView.Pages
                     DataRefreshHub.Notify();
                     FeedbackService.Information("Поставка удалена.");
                 }
+                LoadSuppliesFromDatabase();
             }
         }
 

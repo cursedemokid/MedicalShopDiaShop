@@ -2,10 +2,12 @@
 using MedicalShopDiaShop.Database;
 using System;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace MedicalShopDiaShop.MainView
 {
@@ -37,11 +39,25 @@ namespace MedicalShopDiaShop.MainView
                 }
 
                 // Загрузка изображения
-                string imagePath = string.IsNullOrEmpty(_product.Image)
-                    ? "/Resources/productPlaceholder.png"
-                    : _product.Image;
-                ProductImage.Source = new System.Windows.Media.Imaging.BitmapImage(
-                    new Uri(imagePath, UriKind.Relative));
+                string imagePath = _product.Image;
+                if (string.IsNullOrEmpty(imagePath) || !File.Exists(imagePath))
+                {
+                    // Плейсхолдер из ресурсов приложения
+                    try
+                    {
+                        var placeholderUri = new Uri("pack://application:,,,/Resources/productPlaceholder.png");
+                        ProductImage.Source = new BitmapImage(placeholderUri);
+                    }
+                    catch
+                    {
+                        // Если ресурс не найден – оставляем пустое изображение
+                        ProductImage.Source = null;
+                    }
+                }
+                else
+                {
+                    ProductImage.Source = new BitmapImage(new Uri(imagePath, UriKind.Absolute));
+                }
 
                 // Заполнение ViewModel
                 _viewModel.Name = _product.Name;

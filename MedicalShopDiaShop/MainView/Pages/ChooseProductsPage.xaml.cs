@@ -59,7 +59,6 @@ namespace MedicalShopDiaShop.MainView.Pages
             var product = border?.DataContext as ProductItem;
             if (product != null)
             {
-                // Перемещаем товар в корзину
                 var cartItem = new CartItem
                 {
                     Product = new Product
@@ -70,7 +69,7 @@ namespace MedicalShopDiaShop.MainView.Pages
                         Price = product.RetailPricePerUnit,
                         Image = product.Image
                     },
-                    Quantity = 1
+                    Quantity = 10   // <-- изначально 10 штук
                 };
                 _cartItems.Add(cartItem);
                 _availableProducts.Remove(product);
@@ -86,9 +85,8 @@ namespace MedicalShopDiaShop.MainView.Pages
             var cartItem = button?.Tag as CartItem;
             if (cartItem != null)
             {
-                cartItem.Quantity += 1;
+                cartItem.Quantity += 10;   // увеличиваем на 10
                 UpdateTotalPrice();
-                // Обновляем отображение строки корзины
                 RefreshCartItemButtons();
             }
         }
@@ -99,7 +97,7 @@ namespace MedicalShopDiaShop.MainView.Pages
             var cartItem = button?.Tag as CartItem;
             if (cartItem != null)
             {
-                if (cartItem.Quantity <= 1)
+                if (cartItem.Quantity <= 10)   // если 10 или меньше, удаляем товар из корзины
                 {
                     _cartItems.Remove(cartItem);
                     _availableProducts.Add(new ProductItem
@@ -113,7 +111,7 @@ namespace MedicalShopDiaShop.MainView.Pages
                 }
                 else
                 {
-                    cartItem.Quantity -= 1;
+                    cartItem.Quantity -= 10;   // уменьшаем на 10
                 }
                 UpdateCartVisibility();
                 UpdateTotalPrice();

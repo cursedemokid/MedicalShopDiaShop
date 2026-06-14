@@ -139,6 +139,7 @@ namespace MedicalShopDiaShop.MainView.Pages
         private void AddBtn_Click(object sender, RoutedEventArgs e)
         {
             new AddEditProductWindow().ShowDialog();
+            LoadProductsFromDatabase();
         }
 
         private void EditBtn_Click(object sender, RoutedEventArgs e)
@@ -150,6 +151,7 @@ namespace MedicalShopDiaShop.MainView.Pages
                 return;
             }
             new AddEditProductWindow(selected.Id).ShowDialog();
+            LoadProductsFromDatabase();
         }
 
         private void DeleteBtn_Click(object sender, RoutedEventArgs e)

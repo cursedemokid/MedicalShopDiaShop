@@ -11,11 +11,11 @@
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
             <TextBlock Text="Выберите ожидаемую дату доставки:" FontSize="18" 
                        FontFamily="{StaticResource GothamProFamily}" Margin="0,0,0,20"/>
-            <DatePicker x:Name="DeliveryDatePicker" Width="200" Height="40" 
-                        FontSize="16" SelectedDateFormat="Long" Language="Ru"/>
+            <DatePicker x:Name="DeliveryDatePicker" Width="200" Height="60" 
+                        FontSize="16" SelectedDateFormat="Long" Language="Ru" FontFamily="{StaticResource GothamProFamily}"/>
             <Button x:Name="CreateSupplyButton" Content="Создать поставку" 
                     Width="200" Height="40" Margin="0,30,0,0"
-                    Style="{StaticResource MaterialDesignFlatButton}" Click="CreateSupplyButton_Click"/>
+                    Style="{StaticResource MaterialDesignFlatButton}" Click="CreateSupplyButton_Click"  FontFamily="{StaticResource GothamProFamily}"/>
         </StackPanel>
     </Grid>
 </Page>

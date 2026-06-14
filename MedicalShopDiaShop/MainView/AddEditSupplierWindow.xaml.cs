@@ -44,13 +44,36 @@ namespace MedicalShopDiaShop.MainView
                 CityComboBox.SelectedValue = _editingStore.City;
             }
         }
+        private string GetCityName(City city)
+        {
+            switch (city)
+            {
+                case City.Moscow: return "Москва";
+                case City.SaintPetersburg: return "Санкт-Петербург";
+                case City.Novosibirsk: return "Новосибирск";
+                case City.Yekaterinburg: return "Екатеринбург";
+                case City.Kazan: return "Казань";
+                case City.NizhnyNovgorod: return "Нижний Новгород";
+                case City.Chelyabinsk: return "Челябинск";
+                case City.Omsk: return "Омск";
+                case City.RostovOnDon: return "Ростов-на-Дону";
+                case City.Ufa: return "Уфа";
+                case City.Krasnoyarsk: return "Красноярск";
+                case City.Perm: return "Пермь";
+                case City.Voronezh: return "Воронеж";
+                case City.Volgograd: return "Волгоград";
+                case City.Krasnodar: return "Краснодар";
+                default: return city.ToString();
+            }
+        }
 
         private void LoadCities()
         {
             var cities = Enum.GetValues(typeof(City))
                 .Cast<City>()
-                .Select(c => new { Id = (int)c, Name = c.ToString() })
+                .Select(c => new { Id = (int)c, Name = GetCityName(c) })
                 .ToList();
+
             CityComboBox.ItemsSource = cities;
             CityComboBox.SelectedIndex = 0;
         }

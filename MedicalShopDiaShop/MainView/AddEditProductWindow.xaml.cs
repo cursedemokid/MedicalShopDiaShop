@@ -58,6 +58,44 @@ namespace MedicalShopDiaShop.MainView
             }
         }
 
+        private string GetImageStorageFolder()
+        {
+            // Специальная папка для данных приложения
+            string appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            string folder = Path.Combine(appData, "MedicalShopDiaShop", "ProductImages");
+            Directory.CreateDirectory(folder); // Гарантированно создаём
+            return folder;
+        }
+
+        private void SelectImageBtn_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new OpenFileDialog
+            {
+                Filter = "Изображения|*.jpg;*.png;*.jpeg;*.bmp",
+                Title = "Выберите изображение товара"
+            };
+
+            if (dialog.ShowDialog() == true)
+            {
+                try
+                {
+                    string destFolder = GetImageStorageFolder();
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(dialog.FileName);
+                    string destPath = Path.Combine(destFolder, fileName);
+
+                    File.Copy(dialog.FileName, destPath, true);
+
+                    // Сохраняем относительный путь от AppData (или абсолютный – как удобнее)
+                    _selectedImagePath = destPath; // будем хранить полный путь
+                    PreviewImage.Source = new BitmapImage(new Uri(destPath, UriKind.Absolute));
+                }
+                catch (Exception ex)
+                {
+                    FeedbackService.Error($"Ошибка сохранения изображения: {ex.Message}");
+                }
+            }
+        }
+
         private void LoadProductData()
         {
             if (!_productId.HasValue) return;
@@ -74,41 +112,11 @@ namespace MedicalShopDiaShop.MainView
             PriceTb.Text = _editingProduct.Price.ToString("F2");
             CategoryCmb.SelectedValue = _editingProduct.Category;
 
-            if (!string.IsNullOrEmpty(_editingProduct.Image))
+            // Загружаем изображение по сохранённому пути
+            if (!string.IsNullOrEmpty(_editingProduct.Image) && File.Exists(_editingProduct.Image))
             {
-                string fullPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, _editingProduct.Image);
-                if (File.Exists(fullPath))
-                    PreviewImage.Source = new BitmapImage(new Uri(fullPath, UriKind.Absolute));
+                PreviewImage.Source = new BitmapImage(new Uri(_editingProduct.Image, UriKind.Absolute));
                 _selectedImagePath = _editingProduct.Image;
-            }
-        }
-
-        private void SelectImageBtn_Click(object sender, RoutedEventArgs e)
-        {
-            var dialog = new OpenFileDialog
-            {
-                Filter = "Изображения|*.jpg;*.png;*.jpeg;*.bmp",
-                Title = "Выберите изображение товара"
-            };
-            if (dialog.ShowDialog() == true)
-            {
-                // Генерируем уникальное имя файла
-                string fileName = Guid.NewGuid().ToString() + System.IO.Path.GetExtension(dialog.FileName);
-                string destFolder = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "ProductsImages");
-                if (!Directory.Exists(destFolder))
-                    Directory.CreateDirectory(destFolder);
-                string destPath = System.IO.Path.Combine(destFolder, fileName);
-
-                try
-                {
-                    File.Copy(dialog.FileName, destPath, true);
-                    _selectedImagePath = $"/Resources/ProductsImages/{fileName}";
-                    PreviewImage.Source = new BitmapImage(new Uri(destPath, UriKind.Absolute));
-                }
-                catch (Exception ex)
-                {
-                    FeedbackService.Error($"Ошибка копирования файла: {ex.Message}");
-                }
             }
         }
 
