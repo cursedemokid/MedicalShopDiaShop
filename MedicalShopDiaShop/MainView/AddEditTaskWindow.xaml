@@ -59,20 +59,20 @@
                 <TextBlock Grid.Row="6" Text="Начало" FontSize="18" FontFamily="{StaticResource GothamProFamily}"
                            VerticalAlignment="Center"/>
                 <Border Grid.Row="6" Grid.Column="2" BorderThickness="1" BorderBrush="Black" CornerRadius="5">
-                    <DatePicker x:Name="StartDatePicker" FontSize="18" FontFamily="{StaticResource GothamProFamily}"/>
+                    <DatePicker x:Name="StartDatePicker" FontSize="18" FontFamily="{StaticResource GothamProFamily}" Language="Ru"/>
                 </Border>
 
                 <!-- Дедлайн -->
                 <TextBlock Grid.Row="8" Text="Дедлайн" FontSize="18" FontFamily="{StaticResource GothamProFamily}"
                            VerticalAlignment="Center"/>
                 <Border Grid.Row="8" Grid.Column="2" BorderThickness="1" BorderBrush="Black" CornerRadius="5">
-                    <DatePicker x:Name="DeadlinePicker" FontSize="18" FontFamily="{StaticResource GothamProFamily}"/>
+                    <DatePicker x:Name="DeadlinePicker" FontSize="18" FontFamily="{StaticResource GothamProFamily}" Language="Ru"/>
                 </Border>
 
                 <TextBlock Grid.Row="10" Text="Факт окончание" FontSize="18" FontFamily="{StaticResource GothamProFamily}"
            VerticalAlignment="Center"/>
                 <Border Grid.Row="10" Grid.Column="2" BorderThickness="1" BorderBrush="Black" CornerRadius="5">
-                    <DatePicker x:Name="EndDatePicker" FontSize="18" FontFamily="{StaticResource GothamProFamily}"/>
+                    <DatePicker x:Name="EndDatePicker" FontSize="18" FontFamily="{StaticResource GothamProFamily}" Language="Ru"/>
                 </Border>
 
                 <!-- Кнопки -->

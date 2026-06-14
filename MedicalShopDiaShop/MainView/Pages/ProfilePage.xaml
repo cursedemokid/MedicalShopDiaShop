@@ -302,7 +302,8 @@
                                   materialDesign:ElevationAssist.Elevation="Dp2"
                                   behaviors:CalendarScheduleBehavior.ScheduledDates="{Binding ScheduledDates}"
                                   behaviors:CalendarScheduleBehavior.DateToolTipSelector="{Binding ScheduleToolTipSelector}"
-                                  SelectedDatesChanged="ScheduleCalendar_SelectedDatesChanged"/>
+                                  SelectedDatesChanged="ScheduleCalendar_SelectedDatesChanged"
+                                  Language="Ru"/>
 
                         <TextBlock Grid.Row="4" Text="Смены на выбранную дату:" FontSize="16" FontFamily="{StaticResource GothamProFamily}"/>
                         <ListBox x:Name="SchedulesListBox" Grid.Row="6" MaxHeight="160" FontSize="16" FontFamily="{StaticResource GothamProFamily}"

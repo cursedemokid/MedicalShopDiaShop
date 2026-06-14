@@ -12,7 +12,7 @@
             <TextBlock Text="Выберите ожидаемую дату доставки:" FontSize="18" 
                        FontFamily="{StaticResource GothamProFamily}" Margin="0,0,0,20"/>
             <DatePicker x:Name="DeliveryDatePicker" Width="200" Height="40" 
-                        FontSize="16" SelectedDateFormat="Long"/>
+                        FontSize="16" SelectedDateFormat="Long" Language="Ru"/>
             <Button x:Name="CreateSupplyButton" Content="Создать поставку" 
                     Width="200" Height="40" Margin="0,30,0,0"
                     Style="{StaticResource MaterialDesignFlatButton}" Click="CreateSupplyButton_Click"/>
